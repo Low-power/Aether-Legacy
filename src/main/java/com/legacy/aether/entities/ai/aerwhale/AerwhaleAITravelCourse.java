@@ -43,29 +43,33 @@ public class AerwhaleAITravelCourse extends EntityAIBase {
 
         int course = this.getCorrectCourse();
 
-        if (course == 0) {
-            if (this.origin_direction == 50D) {
-                this.motionYaw *= 0.9F;
-                this.motionPitch *= 0.9F;
+        switch(course) {
+			case 0:
+            	if (this.origin_direction == 50D) {
+                	this.motionYaw *= 0.9F;
+                	this.motionPitch *= 0.9F;
 
-                if (this.aerwhale.posY > 100) {
-                    this.motionPitch -= 2F;
-                }
-                if (this.aerwhale.posY < 20) {
-                    this.motionPitch += 2F;
-                }
-            } else {
-                this.aerwhale.rotationPitch = -this.aerwhale.rotationPitch;
-                this.aerwhale.rotationYaw = -this.aerwhale.rotationYaw;
-            }
-        } else if (course == 1) {
-            this.motionYaw += 5F;
-        } else if (course == 2) {
-            this.motionPitch -= 5F;
-        } else if (course == 3) {
-            this.motionYaw -= 5F;
-        } else {
-            this.motionPitch += 5F;
+                	if (this.aerwhale.posY > 100) {
+                    	this.motionPitch -= 2F;
+                	} else if (this.aerwhale.posY < 20) {
+                    	this.motionPitch += 2F;
+                	}
+            	} else {
+                	this.aerwhale.rotationPitch = -this.aerwhale.rotationPitch;
+                	this.aerwhale.rotationYaw = -this.aerwhale.rotationYaw;
+            	}
+				break;
+        	case 1:
+            	this.motionYaw += 5F;
+				break;
+			case 2:
+            	this.motionPitch -= 5F;
+				break;
+        	case 3:
+            	this.motionYaw -= 5F;
+				break;
+        	default:
+            	this.motionPitch += 5F;
         }
 
         this.motionYaw += 2F * this.aerwhale.getRNG().nextFloat() - 1F;
@@ -76,9 +80,7 @@ public class AerwhaleAITravelCourse extends EntityAIBase {
 
         if (this.aerwhale.rotationPitch < -60F) {
             this.aerwhale.rotationPitch = -60F;
-        }
-
-        if (this.aerwhale.rotationPitch > 60F) {
+        } else if (this.aerwhale.rotationPitch > 60F) {
             this.aerwhale.rotationPitch = 60F;
         }
 
