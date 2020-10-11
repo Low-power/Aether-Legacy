@@ -21,9 +21,9 @@ version = "1.7.10-v1.1.1"
 group= "com.gildedgames.the_aether" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "aether"
 
-sourceCompatibility = targetCompatibility = '1.8'
+sourceCompatibility = targetCompatibility = '1.7'
 compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+    sourceCompatibility = targetCompatibility = '1.7'
 }
 
 minecraft {
