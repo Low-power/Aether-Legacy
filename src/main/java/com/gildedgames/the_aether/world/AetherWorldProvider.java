@@ -157,7 +157,7 @@ public class AetherWorldProvider extends WorldProvider {
 
 	@Override
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderAether(this.worldObj, this.worldObj.getSeed());
+		return new AetherChunkProvider(this.worldObj, this.worldObj.getSeed());
 	}
 
 	public boolean canDoLightning(Chunk chunk) {

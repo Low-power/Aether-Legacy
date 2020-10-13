@@ -23,7 +23,7 @@ import com.gildedgames.the_aether.world.gen.MapGenLargeColdAercloud;
 import com.gildedgames.the_aether.world.gen.MapGenQuicksoil;
 import com.gildedgames.the_aether.world.gen.MapGenSilverDungeon;
 
-public class ChunkProviderAether implements IChunkProvider {
+public class AetherChunkProvider implements IChunkProvider {
 
 	private Random rand;
 
@@ -55,7 +55,7 @@ public class ChunkProviderAether implements IChunkProvider {
 
 	private MapGenLargeColdAercloud largeColdAercloudStructure = new MapGenLargeColdAercloud();
 
-	public ChunkProviderAether(World world, long seed) {
+	public AetherChunkProvider(World world, long seed) {
 		this.worldObj = world;
 
 		this.rand = new Random(seed);
