@@ -29,11 +29,21 @@ public class ChunkProviderAether implements IChunkProvider {
 
 	private World worldObj;
 
-	private NoiseGeneratorOctaves noiseGen1, perlinNoise1;
+	private NoiseGeneratorOctaves noisegen1;
+	private NoiseGeneratorOctaves noisegen2;
+	private NoiseGeneratorOctaves perlinnoisegen1;	// 3
+	private NoiseGeneratorOctaves noisegen4;
+	private NoiseGeneratorOctaves noisegen5;
+	private NoiseGeneratorOctaves scalenoisegen1;	// 6
+	private NoiseGeneratorOctaves noisegen7;
 
 	private double buffer[];
-
-	double pnr[], ar[], br[];
+	private double pnr[], ar[], br[];
+	private double r4p1[];
+	private double r4p2[];
+	private double r5[];
+	private double r6[];
+	private double r7[];
 
 	protected AetherDungeon dungeon_bronze = new BronzeDungeon();
 
@@ -49,9 +59,19 @@ public class ChunkProviderAether implements IChunkProvider {
 		this.worldObj = world;
 
 		this.rand = new Random(seed);
-
-		this.noiseGen1 = new NoiseGeneratorOctaves(this.rand, 16);
-		this.perlinNoise1 = new NoiseGeneratorOctaves(this.rand, 8);
+/*
+		this.pnr = new double[256];
+		this.ar = new double[256];
+		this.br = new double[256];
+		this.r5 = new double[256];
+*/
+		this.noisegen1 = new NoiseGeneratorOctaves(this.rand, 16);
+		this.noisegen2 = new NoiseGeneratorOctaves(this.rand, 16);
+		this.perlinnoisegen1 = new NoiseGeneratorOctaves(this.rand, 8);
+		this.noisegen4 = new NoiseGeneratorOctaves(this.rand, 4);
+		this.noisegen5 = new NoiseGeneratorOctaves(this.rand, 4);
+		this.scalenoisegen1 = new NoiseGeneratorOctaves(this.rand, 10);
+		this.noisegen7 = new NoiseGeneratorOctaves(this.rand, 16);
 	}
 
 	public void setBlocksInChunk(int x, int z, Block[] blocks) {
@@ -78,7 +98,6 @@ public class ChunkProviderAether implements IChunkProvider {
 
 						for (int i2 = 0; i2 < 8; i2++) {
 							int j2 = i2 + i1 * 8 << 11 | 0 + j1 * 8 << 7 | k1 * 4 + l1;
-							char c = '\200';
 							double d15 = d10;
 							double d16 = (d11 - d10) * 0.125D;
 
@@ -90,7 +109,7 @@ public class ChunkProviderAether implements IChunkProvider {
 								}
 
 								blocks[j2] = filler;
-								j2 += c;
+								j2 += 128;
 								d15 += d16;
 							}
 
@@ -113,10 +132,14 @@ public class ChunkProviderAether implements IChunkProvider {
 	}
 
 	public void buildSurfaces(int i, int j, Block[] blocks) {
+		final double d = 0.03125D;
+		this.r4p1 = noisegen4.generateNoiseOctaves(this.r4p1, i * 16, j * 16, 0, 16, 16, 1, d, d, 1D);
+		this.r4p2 = noisegen4.generateNoiseOctaves(this.r4p2, i * 16, 109, j * 16, 16, 1, 16, d, 1D, d);
+		this.r5 = noisegen5.generateNoiseOctaves(this.r5, i * 16, j * 16, 0, 16, 16, 1, d * 2D, d * 2D, d * 2D);
 		for (int k = 0; k < 16; k++) {
 			for (int l = 0; l < 16; l++) {
+				int i1 = (int)(this.r5[k + l * 16] / 3D + 3D + this.rand.nextDouble() * 0.25D);
 				int j1 = -1;
-				int i1 = (int) (3.0D + this.rand.nextDouble() * 0.25D);
 
 				Block top = BlocksAether.aether_grass;
 				Block filler = BlocksAether.aether_dirt;
@@ -154,30 +177,48 @@ public class ChunkProviderAether implements IChunkProvider {
 
 	private double[] setupNoiseGenerators(double buffer[], int x, int z) {
 		if (buffer == null) {
-			buffer = new double[3366];
+			buffer = new double[3 * 33 * 3];
 		}
 
-		double d = 1368.824D;
-		double d1 = 684.41200000000003D;
+		double d1 = 684.412D;
+		double d2 = 684.412D;
 
-		this.pnr = this.perlinNoise1.generateNoiseOctaves(this.pnr, x, 0, z, 3, 33, 3, d / 80D, d1 / 160D, d / 80D);
-		this.ar = this.noiseGen1.generateNoiseOctaves(this.ar, x, 0, z, 3, 33, 3, d, d1, d);
-		this.br = this.noiseGen1.generateNoiseOctaves(this.br, x, 0, z, 3, 33, 3, d, d1, d);
+		this.r6 = this.scalenoisegen1.generateNoiseOctaves(this.r6, x, z, 3, 3, 1.121D, 1.121D, 0.5D);
+		this.r7 = this.noisegen7.generateNoiseOctaves(this.r7, x, z, 3, 3, 200D, 200D, 0.5D);
 
-		int id = 0;
+		d1 *= 2D;
 
-		for (int j2 = 0; j2 < 3; j2++) {
-			for (int l2 = 0; l2 < 3; l2++) {
+		this.pnr = this.perlinnoisegen1.generateNoiseOctaves(this.pnr, x, 0, z, 3, 33, 3, d1 / 80D, d2 / 160D, d1 / 80D);
+		this.ar = this.noisegen1.generateNoiseOctaves(this.ar, x, 0, z, 3, 33, 3, d1, d2, d1);
+		this.br = this.noisegen2.generateNoiseOctaves(this.br, x, 0, z, 3, 33, 3, d1, d2, d1);
+
+		int i1 = 0;
+		//int i2 = 0;
+
+		for (int j1 = 0; j1 < 3; j1++) {
+			for (int j2 = 0; j2 < 3; j2++) {
+/*
+				double d4 = 0.5D;
+				double d5 = 1D - d4;
+				d5 *= d5;
+				d5 *= d5;
+				d5 = 1D - d5;
+				double d6 = (this.r6[i2] + 256D) / 512D;
+				d6 *= d5;
+				if(d6 > 1D) d6 = 1D;
+				else if(d6 < 0D) d6 = 0D;
+				i2++;
+*/
 				for (int j3 = 0; j3 < 33; j3++) {
 					double d8;
 
-					double d10 = this.ar[id] / 512D;
-					double d11 = this.br[id] / 512D;
-					double d12 = (this.pnr[id] / 10D + 1.0D) / 2D;
+					double d10 = this.ar[i1] / 512D;
+					double d11 = this.br[i1] / 512D;
+					double d12 = (this.pnr[i1] / 10D + 1D) / 2D;
 
-					if (d12 < 0.0D) {
+					if (d12 < 0D) {
 						d8 = d10;
-					} else if (d12 > 1.0D) {
+					} else if (d12 > 1D) {
 						d8 = d11;
 					} else {
 						d8 = d10 + (d11 - d10) * d12;
@@ -187,17 +228,17 @@ public class ChunkProviderAether implements IChunkProvider {
 
 					if (j3 > 33 - 32) {
 						double d13 = (float) (j3 - (33 - 32)) / ((float) 32 - 1.0F);
-						d8 = d8 * (1.0D - d13) + -30D * d13;
+						d8 = d8 * (1D - d13) + -30D * d13;
 					}
 
 					if (j3 < 8) {
 						double d14 = (float) (8 - j3) / ((float) 8 - 1.0F);
-						d8 = d8 * (1.0D - d14) + -30D * d14;
+						d8 = d8 * (1D - d14) + -30D * d14;
 					}
 
-					buffer[id] = d8;
+					buffer[i1] = d8;
 
-					id++;
+					i1++;
 				}
 
 			}
