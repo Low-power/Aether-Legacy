@@ -41,7 +41,6 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.*;
-
 import com.gildedgames.the_aether.blocks.BlocksAether;
 import com.gildedgames.the_aether.blocks.portal.BlockAetherPortal;
 import com.gildedgames.the_aether.entities.EntitiesAether;
@@ -52,23 +51,20 @@ import com.gildedgames.the_aether.items.dungeon.ItemDungeonKey;
 import com.gildedgames.the_aether.items.util.EnumSkyrootBucketType;
 import com.gildedgames.the_aether.items.weapons.ItemSkyrootSword;
 import com.gildedgames.the_aether.registry.achievements.AchievementsAether;
-
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.world.WorldEvent;
-
 import java.util.Random;
 
-public class
-AetherEventHandler {
+public class AetherEventHandler {
 
 	@SubscribeEvent
 	public void checkBlockBannedEvent(PlayerInteractEvent event) {
+		if(event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) return;
 		EntityPlayer player = event.entityPlayer;
-		ItemStack currentStack = player.getCurrentEquippedItem();
-
 		if (player.dimension == AetherConfig.getAetherDimensionID()) {
+			ItemStack currentStack = player.getCurrentEquippedItem();
 			if (currentStack != null) {
 				if (currentStack.getItem() == Items.flint_and_steel || currentStack.getItem() == Item.getItemFromBlock(Blocks.torch) || currentStack.getItem() == Items.fire_charge) {
 					for (int i = 0; i < 10; ++i) {
