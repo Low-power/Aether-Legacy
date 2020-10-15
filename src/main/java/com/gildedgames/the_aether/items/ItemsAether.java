@@ -46,7 +46,7 @@ import com.gildedgames.the_aether.items.weapons.ItemSkyrootSword;
 import com.gildedgames.the_aether.items.weapons.ItemValkyrieLance;
 import com.gildedgames.the_aether.items.weapons.ItemVampireBlade;
 import com.gildedgames.the_aether.items.weapons.ItemZaniteSword;
-import com.gildedgames.the_aether.items.weapons.projectile.ItemDart;
+import com.gildedgames.the_aether.items.weapons.projectile.Dart;
 import com.gildedgames.the_aether.items.weapons.projectile.ItemDartShooter;
 import com.gildedgames.the_aether.items.weapons.projectile.ItemPhoenixBow;
 
@@ -197,7 +197,7 @@ public class ItemsAether {
 
 		dart_shooter = register("dart_shooter", new ItemDartShooter());
 		phoenix_bow = register("phoenix_bow", new ItemPhoenixBow());
-		dart = register("dart", new ItemDart());
+		dart = register("dart", new Dart());
 
 		skyroot_sword = register("skyroot_sword", new ItemSkyrootSword().setTextureName(Aether.find("weapons/skyroot_sword")));
 		holystone_sword = register("holystone_sword", new ItemHolystoneSword().setTextureName(Aether.find("weapons/holystone_sword")));

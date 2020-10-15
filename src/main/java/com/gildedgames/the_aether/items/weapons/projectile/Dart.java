@@ -9,7 +9,7 @@ import com.gildedgames.the_aether.entities.projectile.darts.EntityDartGolden;
 import com.gildedgames.the_aether.entities.projectile.darts.EntityDartPoison;
 import com.gildedgames.the_aether.items.ItemsAether;
 import com.gildedgames.the_aether.items.accessories.ItemAccessory;
-import com.gildedgames.the_aether.items.util.EnumDartType;
+import com.gildedgames.the_aether.items.util.DartType;
 import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -23,12 +23,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.World;
 
-public class ItemDart extends Item {
+public class Dart extends Item {
 
 	@SideOnly(Side.CLIENT)
 	private IIcon goldenIcon;
@@ -43,7 +42,7 @@ public class ItemDart extends Item {
 	{
 		public ItemStack dispense(IBlockSource p_82482_1_, final ItemStack p_82482_2_)
 		{
-			if (p_82482_2_.getItem() == ItemsAether.dart && p_82482_2_.getItemDamage() == EnumDartType.Poison.meta)
+			if (p_82482_2_.getItem() == ItemsAether.dart && p_82482_2_.getItemDamage() == DartType.Poison.meta)
 			{
 				return (new BehaviorProjectileDispense()
 				{
@@ -59,7 +58,7 @@ public class ItemDart extends Item {
 
 				}).dispense(p_82482_1_, p_82482_2_);
 			}
-			else if (p_82482_2_.getItem() == ItemsAether.dart && p_82482_2_.getItemDamage() == EnumDartType.Enchanted.meta)
+			else if (p_82482_2_.getItem() == ItemsAether.dart && p_82482_2_.getItemDamage() == DartType.Enchanted.meta)
 			{
 				return (new BehaviorProjectileDispense()
 				{
@@ -92,7 +91,7 @@ public class ItemDart extends Item {
 		}
 	};
 
-	public ItemDart() {
+	public Dart() {
 		super();
 
 		this.setHasSubtypes(true);
@@ -122,14 +121,13 @@ public class ItemDart extends Item {
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack) {
 		int i = itemstack.getItemDamage();
-
-		return this.getUnlocalizedName() + "_" + EnumDartType.values()[i].toString();
+		return this.getUnlocalizedName() + "_" + DartType.getType(i).toString();
 	}
 
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void getSubItems(Item item, CreativeTabs tab, List subItems) {
-		for (int var4 = 0; var4 < EnumDartType.values().length; ++var4) {
+		for (int var4 = 0; var4 < DartType.values().length; ++var4) {
 			subItems.add(new ItemStack(this, 1, var4));
 		}
 	}
