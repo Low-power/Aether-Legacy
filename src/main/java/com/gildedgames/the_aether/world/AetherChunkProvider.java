@@ -1,8 +1,12 @@
 package com.gildedgames.the_aether.world;
 
-import java.util.List;
-import java.util.Random;
-
+import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.world.dungeon.BronzeDungeon;
+import com.gildedgames.the_aether.world.dungeon.util.AetherDungeon;
+import com.gildedgames.the_aether.world.gen.MapGenGoldenDungeon;
+import com.gildedgames.the_aether.world.gen.MapGenLargeColdAercloud;
+import com.gildedgames.the_aether.world.gen.MapGenQuicksoil;
+import com.gildedgames.the_aether.world.gen.MapGenSilverDungeon;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -14,20 +18,23 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
-
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import com.gildedgames.the_aether.world.dungeon.BronzeDungeon;
-import com.gildedgames.the_aether.world.dungeon.util.AetherDungeon;
-import com.gildedgames.the_aether.world.gen.MapGenGoldenDungeon;
-import com.gildedgames.the_aether.world.gen.MapGenLargeColdAercloud;
-import com.gildedgames.the_aether.world.gen.MapGenQuicksoil;
-import com.gildedgames.the_aether.world.gen.MapGenSilverDungeon;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.Random;
 
 public class AetherChunkProvider implements IChunkProvider {
 
 	private Random rand;
 
-	private World worldObj;
+	private World world;
 
 	private NoiseGeneratorOctaves noisegen1;
 	private NoiseGeneratorOctaves noisegen2;
@@ -56,7 +63,7 @@ public class AetherChunkProvider implements IChunkProvider {
 	private MapGenLargeColdAercloud largeColdAercloudStructure = new MapGenLargeColdAercloud();
 
 	public AetherChunkProvider(World world, long seed) {
-		this.worldObj = world;
+		this.world = world;
 
 		this.rand = new Random(seed);
 /*
@@ -72,6 +79,8 @@ public class AetherChunkProvider implements IChunkProvider {
 		this.noisegen5 = new NoiseGeneratorOctaves(this.rand, 4);
 		this.scalenoisegen1 = new NoiseGeneratorOctaves(this.rand, 10);
 		this.noisegen7 = new NoiseGeneratorOctaves(this.rand, 16);
+
+		check_old_save_directory();
 	}
 
 	public void setBlocksInChunk(int x, int z, Block[] blocks) {
@@ -256,14 +265,14 @@ public class AetherChunkProvider implements IChunkProvider {
 		this.setBlocksInChunk(x, z, ablock);
 		this.buildSurfaces(x, z, ablock);
 
-		this.quicksoilGen.func_151539_a(this, this.worldObj, x, z, ablock);
+		this.quicksoilGen.func_151539_a(this, this.world, x, z, ablock);
 
-		this.largeColdAercloudStructure.func_151539_a(this, this.worldObj, x, z, ablock);
+		this.largeColdAercloudStructure.func_151539_a(this, this.world, x, z, ablock);
 
-		this.silverDungeonStructure.func_151539_a(this, this.worldObj, x, z, ablock);
-		this.goldenDungeonStructure.func_151539_a(this, this.worldObj, x, z, ablock);
+		this.silverDungeonStructure.func_151539_a(this, this.world, x, z, ablock);
+		this.goldenDungeonStructure.func_151539_a(this, this.world, x, z, ablock);
 
-		Chunk chunk = new Chunk(this.worldObj, ablock, x, z);
+		Chunk chunk = new Chunk(this.world, ablock, x, z);
 		chunk.generateSkylightMap();
 
 		return chunk;
@@ -272,14 +281,14 @@ public class AetherChunkProvider implements IChunkProvider {
 	@Override
 	@SuppressWarnings("rawtypes")
 	public List getPossibleCreatures(EnumCreatureType creatureType, int x, int y, int z) {
-		return this.worldObj.getBiomeGenForCoords(x, z).getSpawnableList(creatureType);
+		return this.world.getBiomeGenForCoords(x, z).getSpawnableList(creatureType);
 	}
 
 	@Override
 	public void recreateStructures(int x, int z) {
-		this.largeColdAercloudStructure.func_151539_a(this, this.worldObj, x, z, (Block[]) null);
-		this.silverDungeonStructure.func_151539_a(this, this.worldObj, x, z, (Block[]) null);
-		this.goldenDungeonStructure.func_151539_a(this, this.worldObj, x, z, (Block[]) null);
+		this.largeColdAercloudStructure.func_151539_a(this, this.world, x, z, (Block[]) null);
+		this.silverDungeonStructure.func_151539_a(this, this.world, x, z, (Block[]) null);
+		this.goldenDungeonStructure.func_151539_a(this, this.world, x, z, (Block[]) null);
 	}
 
 	@Override
@@ -293,22 +302,22 @@ public class AetherChunkProvider implements IChunkProvider {
 		int x = chunkX * 16;
 		int z = chunkZ * 16;
 
-		BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(x + 16, z + 16);
+		BiomeGenBase biome = this.world.getBiomeGenForCoords(x + 16, z + 16);
 
-		this.rand.setSeed(this.worldObj.getSeed());
+		this.rand.setSeed(this.world.getSeed());
 		long k = this.rand.nextLong() / 2L * 2L + 1L;
 		long l = this.rand.nextLong() / 2L * 2L + 1L;
-		this.rand.setSeed((long) x * k + (long) z * l ^ this.worldObj.getSeed());
+		this.rand.setSeed((long) x * k + (long) z * l ^ this.world.getSeed());
 
-		this.largeColdAercloudStructure.generateStructuresInChunk(this.worldObj, this.rand, chunkX, chunkZ);
-		this.silverDungeonStructure.generateStructuresInChunk(this.worldObj, this.rand, chunkX, chunkZ);
-		this.goldenDungeonStructure.generateStructuresInChunk(this.worldObj, this.rand, chunkX, chunkZ);
+		this.largeColdAercloudStructure.generateStructuresInChunk(this.world, this.rand, chunkX, chunkZ);
+		this.silverDungeonStructure.generateStructuresInChunk(this.world, this.rand, chunkX, chunkZ);
+		this.goldenDungeonStructure.generateStructuresInChunk(this.world, this.rand, chunkX, chunkZ);
 
-		biome.decorate(this.worldObj, this.rand, x, z);
+		biome.decorate(this.world, this.rand, x, z);
 
-		this.dungeon_bronze.generate(this.worldObj, this.rand, x, this.rand.nextInt(48) + 24, z);
+		this.dungeon_bronze.generate(this.world, this.rand, x, this.rand.nextInt(48) + 24, z);
 
-		SpawnerAnimals.performWorldGenSpawning(this.worldObj, biome, x + 8, z + 8, 16, 16, this.rand);
+		SpawnerAnimals.performWorldGenSpawning(this.world, biome, x + 8, z + 8, 16, 16, this.rand);
 	}
 
 	@Override
@@ -348,7 +357,48 @@ public class AetherChunkProvider implements IChunkProvider {
 
 	@Override
 	public void saveExtraData() {
-
 	}
 
+	private void check_old_save_directory() {
+		Logger log = LogManager.getLogger();
+		File save_dir = world.getSaveHandler().getWorldDirectory();
+		File old_aether_save_dir = new File(save_dir, "Dim-Aether");
+		if(!old_aether_save_dir.isDirectory()) return;
+		Path old_aether_save_dir_path = old_aether_save_dir.toPath();
+		if(Files.isSymbolicLink(old_aether_save_dir_path)) return;
+		File aether_save_dir = new File(save_dir, "AETHER");
+/*
+		if(aether_save_dir.exists() && !aether_save_dir.delete()) {
+			if(!aether_save_dir.isDirectory()) throw new RuntimeException(String.format("Failed to remove non-directory file '%s'", aether_save_dir));
+			FMLLog.log(Level.WARN, "Old Aether save directory '%s' exists, but new directory '%s' cannot be removed (not empty?); old save will not be migrated", old_aether_save_dir, aether_save_dir);
+			return;
+		}
+*/
+		Path aether_save_dir_path = aether_save_dir.toPath();
+/*
+		try {
+			Files.deleteIfExists(aether_save_dir_path);
+		} catch(DirectoryNotEmptyException e) {
+			LogManager.getLogger().log(Level.WARN, String.format("Old Aether save directory '%s' exists, but new directory '%s' is not empty; old save will not be migrated", old_aether_save_dir_path, aether_save_dir_path), e);
+			return;
+		} catch(IOException e) {
+			throw new RuntimeException(String.format("Failed to remove '%s'", aether_save_dir_path), e);
+		}
+*/
+		try {
+			Files.move(old_aether_save_dir_path, aether_save_dir_path, StandardCopyOption.REPLACE_EXISTING);
+		} catch(DirectoryNotEmptyException e) {
+			log.log(Level.WARN, String.format("Old Aether save directory '%s' exists, but new directory '%s' is not empty; old save will not be migrated", old_aether_save_dir_path, aether_save_dir_path), e);
+			return;
+		} catch(IOException e) {
+			throw new RuntimeException(String.format("Failed to move '%s' to '%s'", old_aether_save_dir_path, aether_save_dir_path), e);
+		}
+		try {
+			Files.createSymbolicLink(old_aether_save_dir_path, aether_save_dir_path.getFileName());
+		} catch(UnsupportedOperationException e) {
+			e.printStackTrace();
+		} catch(IOException e) {
+			log.log(Level.WARN, String.format("Failed to create symbolic link '%s'", old_aether_save_dir_path), e);
+		}
+	}
 }

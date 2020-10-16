@@ -191,7 +191,7 @@ public class AetherWorldProvider extends WorldProvider {
 
 	@Override
 	public String getSaveFolder() {
-		return "Dim-Aether";
+		return "AETHER";
 	}
 
 	@Override
