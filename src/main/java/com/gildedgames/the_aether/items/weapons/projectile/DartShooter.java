@@ -120,16 +120,16 @@ public class DartShooter extends Item {
 		}
 
 		if (consume != -1) {
-			world.playSoundEffect(entityplayer.posX, entityplayer.posY, entityplayer.posZ, "aether_legacy:projectile.dart_shooter.shoot", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
+			world.playSoundEffect(entityplayer.posX, entityplayer.posY, entityplayer.posZ, "aether_legacy:projectile.dart_shooter.shoot", 1F, 1F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 			EntityDartBase dart = null;
 
 			if (consume == 1) {
-				dart = new EntityDartPoison(world, entityplayer, 1.0F);
+				dart = new EntityDartPoison(world, entityplayer, 1F);
 			} else if (consume == 2) {
-				dart = new EntityDartEnchanted(world, entityplayer, 1.0F);
+				dart = new EntityDartEnchanted(world, entityplayer, 1F);
 			} else {
-				dart = new EntityDartGolden(world, entityplayer, 1.0F);
+				dart = new EntityDartGolden(world, entityplayer, 1F);
 			}
 
 			if (!world.isRemote) {
