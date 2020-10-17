@@ -3,16 +3,18 @@ package com.gildedgames.the_aether.inventory;
 import com.gildedgames.the_aether.inventory.slots.SlotLore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
 
-public class ContainerLore extends Container {
+public class LoreContainer extends Container {
 
 	public IInventory loreSlot;
 
-	public ContainerLore(InventoryPlayer inventory) {
+	public LoreContainer(InventoryPlayer inventory) {
 		this.loreSlot = new InventoryLore(inventory.player);
 
 		this.addSlotToContainer(new SlotLore(this.loreSlot, 0, 104, -4));
@@ -73,14 +75,16 @@ public class ContainerLore extends Container {
 	}
 
 	@Override
-	public void onContainerClosed(EntityPlayer entityplayer) {
+	public void onContainerClosed(EntityPlayer player) {
+		super.onContainerClosed(player);
+		if(player.worldObj.isRemote) return;
 		ItemStack item = this.loreSlot.getStackInSlot(0);
-
-		if (item != null) {
-			entityplayer.entityDropItem(item, 1.0F);
-		}
-
-		super.onContainerClosed(entityplayer);
+		if(item == null) return;
+		//player.entityDropItem(item, 1F);
+		EntityItem item_entity = new EntityItem(player.worldObj, player.posX, player.posY + 1, player.posZ, item);
+		item_entity.delayBeforeCanPickup = 20;
+		player.worldObj.spawnEntityInWorld(item_entity);
+		player.addStat(StatList.dropStat, 1);
 	}
 
 	@Override

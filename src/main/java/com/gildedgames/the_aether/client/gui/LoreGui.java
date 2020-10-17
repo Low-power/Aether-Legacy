@@ -2,6 +2,9 @@ package com.gildedgames.the_aether.client.gui;
 
 import java.util.List;
 
+import com.gildedgames.the_aether.client.gui.button.GuiLoreButton;
+import com.gildedgames.the_aether.inventory.LoreContainer;
+import com.gildedgames.the_aether.registry.AetherLore;
 import com.gildedgames.the_aether.Aether;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -10,14 +13,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
-import com.gildedgames.the_aether.client.gui.button.GuiLoreButton;
-import com.gildedgames.the_aether.inventory.ContainerLore;
-import com.gildedgames.the_aether.registry.AetherLore;
-
-public class GuiLore extends GuiContainer {
+public class LoreGui extends GuiContainer {
 
 	private static final ResourceLocation TEXTURE_LORE = Aether.locate("textures/gui/lore.png");
 
@@ -31,8 +29,8 @@ public class GuiLore extends GuiContainer {
 
 	private int pageNumber;
 
-	public GuiLore(InventoryPlayer inventoryplayer) {
-		super(new ContainerLore(inventoryplayer));
+	public LoreGui(InventoryPlayer inventory) {
+		super(new LoreContainer(inventory));
 
 		this.xSize = 256;
 		this.ySize = 195;
@@ -69,7 +67,7 @@ public class GuiLore extends GuiContainer {
 
 		this.fontRendererObj.drawString("Item :", 75, 0, 4210752);
 
-		ItemStack searchedStack = ((ContainerLore) this.inventorySlots).loreSlot.getStackInSlot(0);
+		ItemStack searchedStack = ((LoreContainer)this.inventorySlots).loreSlot.getStackInSlot(0);
 
 		if (searchedStack != null) {
 			if (this.currentItem == null || (searchedStack.getItem() != this.currentItem.getItem() || (!searchedStack.isItemStackDamageable() && searchedStack.getItemDamage() != this.currentItem.getItemDamage()))) {
