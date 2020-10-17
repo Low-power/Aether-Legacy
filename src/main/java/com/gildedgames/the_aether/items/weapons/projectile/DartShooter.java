@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemDartShooter extends Item {
+public class DartShooter extends Item {
 
 	@SideOnly(Side.CLIENT)
 	private IIcon goldenIcon;
@@ -34,7 +34,7 @@ public class ItemDartShooter extends Item {
 	@SideOnly(Side.CLIENT)
 	private IIcon enchantedIcon;
 
-	public ItemDartShooter() {
+	public DartShooter() {
 		super();
 
 		this.setMaxStackSize(1);
@@ -74,7 +74,7 @@ public class ItemDartShooter extends Item {
 		}
 	}
 
-	private int consumeItem(EntityPlayer player, Item itemID, int maxDamage) {
+	private int consumeItem(EntityPlayer player, Item item_id, int max_damage) {
 		IInventory inv = player.inventory;
 
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
@@ -84,24 +84,9 @@ public class ItemDartShooter extends Item {
 				continue;
 			}
 
+			if(stack.getItem() != item_id) continue;
 			int damage = stack.getItemDamage();
-
-			if (maxDamage != 3) {
-				if (stack.getItem() == itemID && stack.getItemDamage() == maxDamage) {
-					if (!player.capabilities.isCreativeMode) {
-						--stack.stackSize;
-					}
-
-					if (stack.stackSize == 0) {
-						stack = null;
-					}
-
-					inv.setInventorySlotContents(i, stack);
-
-					return damage;
-				}
-			}
-			if (maxDamage == 3 && stack.getItem() == itemID) {
+			if(max_damage == 3 || damage == max_damage) {
 				if (!player.capabilities.isCreativeMode) {
 					--stack.stackSize;
 				}
@@ -112,7 +97,8 @@ public class ItemDartShooter extends Item {
 
 				inv.setInventorySlotContents(i, stack);
 
-				return 3;
+				//return damage;
+				return max_damage == 3 ? 3 : damage;
 			}
 		}
 
@@ -143,7 +129,7 @@ public class ItemDartShooter extends Item {
 				dart = new EntityDartPoison(world, entityplayer, 1.0F);
 			} else if (consume == 2) {
 				dart = new EntityDartEnchanted(world, entityplayer, 1.0F);
-			} else if (consume == 0) {
+			} else {
 				dart = new EntityDartGolden(world, entityplayer, 1.0F);
 			}
 
