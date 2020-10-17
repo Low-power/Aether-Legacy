@@ -1,7 +1,5 @@
 package com.gildedgames.the_aether.items.weapons.projectile;
 
-import java.util.List;
-
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.entities.projectile.darts.EntityDartBase;
 import com.gildedgames.the_aether.entities.projectile.darts.EntityDartEnchanted;
@@ -19,9 +17,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
 
 public class DartShooter extends Item {
 
@@ -110,41 +108,34 @@ public class DartShooter extends Item {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack heldItem, World world, EntityPlayer entityplayer) {
+	public ItemStack onItemRightClick(ItemStack heldItem, World world, EntityPlayer player) {
 		int consume;
 
-		if (!(entityplayer.capabilities.isCreativeMode)) {
-			consume = this.consumeItem(entityplayer, ItemsAether.dart, heldItem.getItemDamage());
+		if (!player.capabilities.isCreativeMode) {
+			consume = this.consumeItem(player, ItemsAether.dart, heldItem.getItemDamage());
 		} else {
 			consume = heldItem.getItemDamage();
 		}
 
 		if (consume != -1) {
-			world.playSoundEffect(entityplayer.posX, entityplayer.posY, entityplayer.posZ, "aether_legacy:projectile.dart_shooter.shoot", 1F, 1F / (itemRand.nextFloat() * 0.4F + 0.8F));
+			world.playSoundEffect(player.posX, player.posY, player.posZ, "aether_legacy:projectile.dart_shooter.shoot", 1F, 1F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 			EntityDartBase dart = null;
 
 			if (consume == 1) {
-				dart = new EntityDartPoison(world, entityplayer, 1F);
+				dart = new EntityDartPoison(world, player, 1F);
 			} else if (consume == 2) {
-				dart = new EntityDartEnchanted(world, entityplayer, 1F);
+				dart = new EntityDartEnchanted(world, player, 1F);
 			} else {
-				dart = new EntityDartGolden(world, entityplayer, 1F);
+				dart = new EntityDartGolden(world, player, 1F);
 			}
 
 			if (!world.isRemote) {
 				world.spawnEntityInWorld(dart);
-				if (dart != null)
-				{
+				if (dart != null) {
 					dart.setGravityVelocity(0.99F);
 				}
-
-				if (!(entityplayer.capabilities.isCreativeMode)) {
-					dart.canBePickedUp = 1;
-				}
-				if ((entityplayer.capabilities.isCreativeMode)) {
-					dart.canBePickedUp = 2;
-				}
+				dart.canBePickedUp = player.capabilities.isCreativeMode ? 2 : 1;
 			}
 		}
 
