@@ -86,7 +86,7 @@ public class DartShooter extends Item {
 
 			if(stack.getItem() != item_id) continue;
 			int damage = stack.getItemDamage();
-			if(max_damage == 3 || damage == max_damage) {
+			if(damage == max_damage) {
 				if (!player.capabilities.isCreativeMode) {
 					--stack.stackSize;
 				}
@@ -97,8 +97,7 @@ public class DartShooter extends Item {
 
 				inv.setInventorySlotContents(i, stack);
 
-				//return damage;
-				return max_damage == 3 ? 3 : damage;
+				return damage;
 			}
 		}
 
