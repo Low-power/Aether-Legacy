@@ -11,176 +11,174 @@ import net.minecraft.world.World;
 
 public class AerwhaleAITravelCourse extends EntityAIBase {
 
-    private EntityAerwhale aerwhale;
+	private EntityAerwhale aerwhale;
 
-    private World worldObj;
+	private World world;
 
-    private double motionYaw;
+	private double motionYaw;
 
-    private double motionPitch;
+	private double motionPitch;
 
-    private double origin_direction, westward_direction, eastward_direction, upward_direction, downward_direction;
+	private double origin_direction, westward_direction, eastward_direction, upward_direction, downward_direction;
 
-    public AerwhaleAITravelCourse(EntityAerwhale aerwhale) {
-        this.aerwhale = aerwhale;
-        this.worldObj = aerwhale.worldObj;
-        this.setMutexBits(2);
-    }
+	public AerwhaleAITravelCourse(EntityAerwhale aerwhale) {
+		this.aerwhale = aerwhale;
+		this.world = aerwhale.worldObj;
+		this.setMutexBits(2);
+	}
 
-    @Override
-    public boolean shouldExecute() {
-        return !this.aerwhale.isDead;
-    }
+	@Override
+	public boolean shouldExecute() {
+		return !this.aerwhale.isDead;
+	}
 
-    @Override
-    public void updateTask() {
-        this.origin_direction = this.checkForTravelableCourse(0F, 0F);
-        this.westward_direction = this.checkForTravelableCourse(45F, 0F);
-        this.upward_direction = this.checkForTravelableCourse(0F, 45F);
-        this.eastward_direction = this.checkForTravelableCourse(-45F, 0F);
-        this.downward_direction = this.checkForTravelableCourse(0, -45F);
+	@Override
+	public void updateTask() {
+		this.origin_direction = this.checkForTravelableCourse(0F, 0F);
+		this.westward_direction = this.checkForTravelableCourse(45F, 0F);
+		this.upward_direction = this.checkForTravelableCourse(0F, 45F);
+		this.eastward_direction = this.checkForTravelableCourse(-45F, 0F);
+		this.downward_direction = this.checkForTravelableCourse(0, -45F);
 
-        int course = this.getCorrectCourse();
+		int course = this.getCorrectCourse();
 
-        if (course == 0) {
-            if (this.origin_direction == 50D) {
-                this.motionYaw *= 0.9F;
-                this.motionPitch *= 0.9F;
+		switch(course) {
+			case 0:
+				if (this.origin_direction == 50D) {
+					this.motionYaw *= 0.9F;
+					this.motionPitch *= 0.9F;
 
-                if (this.aerwhale.posY > 100) {
-                    this.motionPitch -= 2F;
-                }
-                if (this.aerwhale.posY < 20) {
-                    this.motionPitch += 2F;
-                }
-            } else {
-                this.aerwhale.rotationPitch = -this.aerwhale.rotationPitch;
-                this.aerwhale.rotationYaw = -this.aerwhale.rotationYaw;
-            }
-        } else if (course == 1) {
-            this.motionYaw += 5F;
-        } else if (course == 2) {
-            this.motionPitch -= 5F;
-        } else if (course == 3) {
-            this.motionYaw -= 5F;
-        } else {
-            this.motionPitch += 5F;
-        }
+					if (this.aerwhale.posY > 100) {
+						this.motionPitch -= 2F;
+					} else if (this.aerwhale.posY < 20) {
+						this.motionPitch += 2F;
+					}
+				} else {
+					this.aerwhale.rotationPitch = -this.aerwhale.rotationPitch;
+					this.aerwhale.rotationYaw = -this.aerwhale.rotationYaw;
+				}
+				break;
+			case 1:
+				this.motionYaw += 5F;
+				break;
+			case 2:
+				this.motionPitch -= 5F;
+				break;
+			case 3:
+				this.motionYaw -= 5F;
+				break;
+			default:
+				this.motionPitch += 5F;
+		}
 
-        this.motionYaw += 2F * this.aerwhale.getRNG().nextFloat() - 1F;
-        this.motionPitch += 2F * this.aerwhale.getRNG().nextFloat() - 1F;
+		this.motionYaw += 2F * this.aerwhale.getRNG().nextFloat() - 1F;
+		this.motionPitch += 2F * this.aerwhale.getRNG().nextFloat() - 1F;
 
-        this.aerwhale.rotationPitch += 0.1D * this.motionPitch;
-        this.aerwhale.rotationYaw += 0.1D * this.motionYaw;
+		this.aerwhale.rotationPitch += 0.1D * this.motionPitch;
+		this.aerwhale.rotationYaw += 0.1D * this.motionYaw;
 
-        this.aerwhale.aerwhaleRotationPitch += 0.1D * this.motionPitch;
-        this.aerwhale.aerwhaleRotationYaw += 0.1D * this.motionYaw;
+		this.aerwhale.aerwhaleRotationPitch += 0.1D * this.motionPitch;
+		this.aerwhale.aerwhaleRotationYaw += 0.1D * this.motionYaw;
 
 
-        if (this.aerwhale.rotationPitch < -60F) {
-            this.aerwhale.rotationPitch = -60F;
-        }
+		if (this.aerwhale.rotationPitch < -60F) {
+			this.aerwhale.rotationPitch = -60F;
+		} else if (this.aerwhale.rotationPitch > 60F) {
+			this.aerwhale.rotationPitch = 60F;
+		}
 
-        if (this.aerwhale.aerwhaleRotationPitch < -60D)
-        {
-            this.aerwhale.aerwhaleRotationPitch = -60D;
-        }
+		if (this.aerwhale.aerwhaleRotationPitch < -60D) {
+			this.aerwhale.aerwhaleRotationPitch = -60D;
+		} else if (this.aerwhale.aerwhaleRotationPitch < -60D) {
+			this.aerwhale.aerwhaleRotationPitch = -60D;
+		}
 
-        if (this.aerwhale.rotationPitch > 60F) {
-            this.aerwhale.rotationPitch = 60F;
-        }
+		this.aerwhale.rotationPitch *= 0.99D;
+		this.aerwhale.aerwhaleRotationPitch *= 0.99D;
 
-        if (this.aerwhale.aerwhaleRotationPitch < -60D)
-        {
-            this.aerwhale.aerwhaleRotationPitch = -60D;
-        }
+		this.aerwhale.motionX += 0.005D * Math.cos((this.aerwhale.rotationYaw / 180D) * 3.1415926535897931D) * Math.cos((this.aerwhale.rotationPitch / 180D) * 3.1415926535897931D);
+		this.aerwhale.motionY += 0.005D * Math.sin((this.aerwhale.rotationPitch / 180D) * 3.1415926535897931D);
+		this.aerwhale.motionZ += 0.005D * Math.sin((this.aerwhale.rotationYaw / 180D) * 3.1415926535897931D) * Math.cos((this.aerwhale.rotationPitch / 180D) * 3.1415926535897931D);
 
-        this.aerwhale.rotationPitch *= 0.99D;
-        this.aerwhale.aerwhaleRotationPitch *= 0.99D;
+		this.aerwhale.motionX *= 0.98D;
+		this.aerwhale.motionY *= 0.98D;
+		this.aerwhale.motionZ *= 0.98D;
 
-        this.aerwhale.motionX += 0.005D * Math.cos((this.aerwhale.rotationYaw / 180D) * 3.1415926535897931D) * Math.cos((this.aerwhale.rotationPitch / 180D) * 3.1415926535897931D);
-        this.aerwhale.motionY += 0.005D * Math.sin((this.aerwhale.rotationPitch / 180D) * 3.1415926535897931D);
-        this.aerwhale.motionZ += 0.005D * Math.sin((this.aerwhale.rotationYaw / 180D) * 3.1415926535897931D) * Math.cos((this.aerwhale.rotationPitch / 180D) * 3.1415926535897931D);
+		int x = MathHelper.floor_double(this.aerwhale.posX);
+		int y = MathHelper.floor_double(this.aerwhale.boundingBox.minY);
+		int z = MathHelper.floor_double(this.aerwhale.posZ);
 
-        this.aerwhale.motionX *= 0.98D;
-        this.aerwhale.motionY *= 0.98D;
-        this.aerwhale.motionZ *= 0.98D;
+		if (this.aerwhale.motionX > 0D && this.world.getBlock(x + 1, y, z) != Blocks.air) {
+			this.aerwhale.motionX = -this.aerwhale.motionX;
+			this.motionYaw -= 10F;
+		} else if (this.aerwhale.motionX < 0D && world.getBlock(x - 1, y, z) != Blocks.air) {
+			this.aerwhale.motionX = -this.aerwhale.motionX;
+			this.motionYaw += 10F;
+		}
 
-        int x = MathHelper.floor_double(this.aerwhale.posX);
-        int y = MathHelper.floor_double(this.aerwhale.boundingBox.minY);
-        int z = MathHelper.floor_double(this.aerwhale.posZ);
+		if (this.aerwhale.motionY > 0D && this.world.getBlock(x, y + 1, z) != Blocks.air) {
+			this.aerwhale.motionY = -this.aerwhale.motionY;
+			this.motionPitch -= 10F;
+		} else if (this.aerwhale.motionY < 0D && this.world.getBlock(x, y - 1, z) != Blocks.air) {
+			this.aerwhale.motionY = -this.aerwhale.motionY;
+			this.motionPitch += 10F;
+		}
 
-        if (this.aerwhale.motionX > 0D && this.worldObj.getBlock(x + 1, y, z) != Blocks.air) {
-            this.aerwhale.motionX = -this.aerwhale.motionX;
-            this.motionYaw -= 10F;
-        } else if (this.aerwhale.motionX < 0D && worldObj.getBlock(x - 1, y, z) != Blocks.air) {
-            this.aerwhale.motionX = -this.aerwhale.motionX;
-            this.motionYaw += 10F;
-        }
+		if (this.aerwhale.motionZ > 0D && world.getBlock(x, y, z + 1) != Blocks.air) {
+			this.aerwhale.motionZ = -this.aerwhale.motionZ;
+			this.motionYaw -= 10F;
+		} else if (this.aerwhale.motionZ < 0D && world.getBlock(x, y, z - 1) != Blocks.air) {
+			this.aerwhale.motionZ = -this.aerwhale.motionZ;
+			this.motionYaw += 10F;
+		}
+	}
 
-        if (this.aerwhale.motionY > 0D && this.worldObj.getBlock(x, y + 1, z) != Blocks.air) {
-            this.aerwhale.motionY = -this.aerwhale.motionY;
-            this.motionPitch -= 10F;
-        } else if (this.aerwhale.motionY < 0D && this.worldObj.getBlock(x, y - 1, z) != Blocks.air) {
-            this.aerwhale.motionY = -this.aerwhale.motionY;
-            this.motionPitch += 10F;
-        }
+	private int getCorrectCourse() {
+		double[] distances = new double[]{this.origin_direction, this.westward_direction, this.upward_direction, this.eastward_direction, this.downward_direction};
 
-        if (this.aerwhale.motionZ > 0D && worldObj.getBlock(x, y, z + 1) != Blocks.air) {
-            this.aerwhale.motionZ = -this.aerwhale.motionZ;
-            this.motionYaw -= 10F;
-        } else if (this.aerwhale.motionZ < 0D && worldObj.getBlock(x, y, z - 1) != Blocks.air) {
-            this.aerwhale.motionZ = -this.aerwhale.motionZ;
-            this.motionYaw += 10F;
-        }
-    }
+		int correctCourse = 0;
 
-    private int getCorrectCourse() {
-        double[] distances = new double[]{this.origin_direction, this.westward_direction, this.upward_direction, this.eastward_direction, this.downward_direction};
+		for (int i = 1; i < 5; i++) {
+			if (distances[i] > distances[correctCourse]) {
+				correctCourse = i;
+			}
+		}
 
-        int correctCourse = 0;
+		return correctCourse;
+	}
 
-        for (int i = 1; i < 5; i++) {
-            if (distances[i] > distances[correctCourse]) {
-                correctCourse = i;
-            }
-        }
+	private double checkForTravelableCourse(float rotationYawOffset, float rotationPitchOffset) {
+		double standard = 50D;
 
-        return correctCourse;
-    }
+		float yaw = this.aerwhale.rotationYaw + rotationYawOffset;
+		float pitch = this.aerwhale.rotationPitch + rotationPitchOffset;
 
-    private double checkForTravelableCourse(float rotationYawOffset, float rotationPitchOffset) {
-        double standard = 50D;
+		float f3 = MathHelper.cos(-yaw * 0.01745329F - 3.141593F);
+		float f4 = MathHelper.sin(-yaw * 0.01745329F - 3.141593F);
+		float f5 = MathHelper.cos(-pitch * 0.01745329F);
+		float f6 = MathHelper.sin(-pitch * 0.01745329F);
 
-        float yaw = this.aerwhale.rotationYaw + rotationYawOffset;
-        float pitch = this.aerwhale.rotationPitch + rotationPitchOffset;
+		float f7 = f4 * f5;
+		float f8 = f6;
+		float f9 = f3 * f5;
 
-        float f3 = MathHelper.cos(-yaw * 0.01745329F - 3.141593F);
-        float f4 = MathHelper.sin(-yaw * 0.01745329F - 3.141593F);
-        float f5 = MathHelper.cos(-pitch * 0.01745329F);
-        float f6 = MathHelper.sin(-pitch * 0.01745329F);
+		Vec3 vec3d = Vec3.createVectorHelper(this.aerwhale.posX, this.aerwhale.boundingBox.minY, this.aerwhale.posZ);
+		Vec3 vec3d1 = vec3d.addVector((double) f7 * standard, (double) f8 * standard, (double) f9 * standard);
 
-        float f7 = f4 * f5;
-        float f8 = f6;
-        float f9 = f3 * f5;
+		MovingObjectPosition movingobjectposition = this.world.rayTraceBlocks(vec3d, vec3d1, true);
 
-        Vec3 vec3d = Vec3.createVectorHelper(this.aerwhale.posX, this.aerwhale.boundingBox.minY, this.aerwhale.posZ);
-        Vec3 vec3d1 = vec3d.addVector((double) f7 * standard, (double) f8 * standard, (double) f9 * standard);
+		if (movingobjectposition == null) {
+			return standard;
+		}
 
-        MovingObjectPosition movingobjectposition = this.worldObj.rayTraceBlocks(vec3d, vec3d1, true);
+		if (movingobjectposition.typeOfHit == MovingObjectType.BLOCK) {
+			double i = movingobjectposition.blockX - this.aerwhale.posX;
+			double j = movingobjectposition.blockY - this.aerwhale.boundingBox.minY;
+			double k = movingobjectposition.blockZ - this.aerwhale.posZ;
+			return Math.sqrt(i * i + j * j + k * k);
+		}
 
-        if (movingobjectposition == null) {
-            return standard;
-        }
-
-        if (movingobjectposition.typeOfHit == MovingObjectType.BLOCK) {
-            double i = movingobjectposition.blockX - this.aerwhale.posX;
-            double j = movingobjectposition.blockY - this.aerwhale.boundingBox.minY;
-            double k = movingobjectposition.blockZ - this.aerwhale.posZ;
-            return Math.sqrt(i * i + j * j + k * k);
-        }
-
-        return standard;
-    }
+		return standard;
+	}
 
 }
