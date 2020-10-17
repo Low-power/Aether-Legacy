@@ -1,10 +1,10 @@
 package com.gildedgames.the_aether.world.biome;
 
-import java.util.Random;
 
 import com.gildedgames.the_aether.AetherConfig;
 import com.gildedgames.the_aether.world.biome.decoration.*;
 import com.gildedgames.the_aether.world.biome.decoration.*;
+import com.gildedgames.the_aether.blocks.BlocksAether;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -13,8 +13,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenDoublePlant;
 import net.minecraft.world.gen.feature.WorldGenLakes;
 import net.minecraft.world.gen.feature.WorldGenerator;
-
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import java.util.Random;
 
 public class AetherBiomeDecorator extends BiomeDecorator {
 
@@ -53,7 +52,7 @@ public class AetherBiomeDecorator extends BiomeDecorator {
 	@Override
 	public void decorateChunk(World worldIn, Random random, BiomeGenBase biome, int x, int z) {
 		if (this.world != null) {
-			System.out.println("Already decorating");
+			System.err.println("Already decorating");
 		} else {
 			this.world = worldIn;
 			this.rand = random;
