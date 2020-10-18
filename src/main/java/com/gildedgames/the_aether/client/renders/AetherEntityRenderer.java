@@ -1,7 +1,6 @@
 package com.gildedgames.the_aether.client.renders;
 
-import java.util.List;
-
+import com.gildedgames.the_aether.items.tools.ValkyrieTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManager;
@@ -12,10 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-
-import com.gildedgames.the_aether.items.tools.ItemValkyrieTool;
-
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import java.util.List;
 
 public class AetherEntityRenderer extends EntityRenderer {
 
@@ -40,23 +37,23 @@ public class AetherEntityRenderer extends EntityRenderer {
 			if (this.mc.theWorld != null) {
 				ItemStack stack = this.mc.thePlayer.getCurrentEquippedItem();
 
-				if (stack == null || !(stack.getItem() instanceof ItemValkyrieTool)) {
+				if (stack == null || !(stack.getItem() instanceof ValkyrieTool)) {
 					this.previous.getMouseOver(p_78473_1_);
 					return;
 				}
 
 				this.mc.pointedEntity = null;
-				double d0 = 10.0D;
+				double d0 = 10D;
 				this.mc.objectMouseOver = this.mc.renderViewEntity.rayTrace(d0, p_78473_1_);
 				double d1 = d0;
 				Vec3 vec3 = this.mc.renderViewEntity.getPosition(p_78473_1_);
 
 				if (this.mc.playerController.extendedReach()) {
-					d0 = 6.0D;
-					d1 = 6.0D;
+					d0 = 6D;
+					d1 = 6D;
 				} else {
-					if (d0 > 3.0D) {
-						d1 = 3.0D;
+					if (d0 > 3D) {
+						d1 = 3D;
 					}
 
 					d0 = d1;
@@ -70,7 +67,7 @@ public class AetherEntityRenderer extends EntityRenderer {
 				Vec3 vec32 = vec3.addVector(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0);
 				this.pointedEntity = null;
 				Vec3 vec33 = null;
-				float f1 = 1.0F;
+				float f1 = 1F;
 				List<?> list = this.mc.theWorld.getEntitiesWithinAABBExcludingEntity(this.mc.renderViewEntity, this.mc.renderViewEntity.boundingBox.addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0).expand((double) f1, (double) f1, (double) f1));
 				double d2 = d1;
 
@@ -83,17 +80,17 @@ public class AetherEntityRenderer extends EntityRenderer {
 						MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
 
 						if (axisalignedbb.isVecInside(vec3)) {
-							if (0.0D < d2 || d2 == 0.0D) {
+							if (0D < d2 || d2 == 0D) {
 								this.pointedEntity = entity;
 								vec33 = movingobjectposition == null ? vec3 : movingobjectposition.hitVec;
-								d2 = 0.0D;
+								d2 = 0D;
 							}
 						} else if (movingobjectposition != null) {
 							double d3 = vec3.distanceTo(movingobjectposition.hitVec);
 
-							if (d3 < d2 || d2 == 0.0D) {
+							if (d3 < d2 || d2 == 0D) {
 								if (entity == this.mc.renderViewEntity.ridingEntity && !entity.canRiderInteract()) {
-									if (d2 == 0.0D) {
+									if (d2 == 0D) {
 										this.pointedEntity = entity;
 										vec33 = movingobjectposition.hitVec;
 									}

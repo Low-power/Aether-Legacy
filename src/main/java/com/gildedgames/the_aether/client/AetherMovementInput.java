@@ -1,11 +1,10 @@
 package com.gildedgames.the_aether.client;
 
-import com.gildedgames.the_aether.entities.passive.mountable.EntitySwet;
-import com.gildedgames.the_aether.entities.util.EntityMountable;
+import com.gildedgames.the_aether.entities.passive.mountable.Swet;
+import com.gildedgames.the_aether.entities.util.MountableEntity;
 import com.gildedgames.the_aether.entities.util.EntitySaddleMount;
 import com.gildedgames.the_aether.network.AetherNetwork;
 import com.gildedgames.the_aether.network.packets.PacketSendSneaking;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MovementInputFromOptions;
@@ -51,11 +50,11 @@ public class AetherMovementInput extends MovementInputFromOptions {
 					this.previousSneak = this.currentSneak;
 				}
 
-				if (((EntityMountable) this.mc.thePlayer.ridingEntity).isOnGround()) {
+				if (((MountableEntity)this.mc.thePlayer.ridingEntity).isOnGround()) {
 					this.sneak = isSneaking;
 				}
 			}
-		} else if (this.mc.thePlayer.ridingEntity instanceof EntitySwet && !((EntitySwet) this.mc.thePlayer.ridingEntity).isFriendly()) {
+		} else if (this.mc.thePlayer.ridingEntity instanceof Swet && !((Swet)this.mc.thePlayer.ridingEntity).isFriendly()) {
 			this.sneak = false;
 		}
 	}

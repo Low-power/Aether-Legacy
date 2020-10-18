@@ -1,17 +1,17 @@
 package com.gildedgames.the_aether.entities.ai.aechorplant;
 
-import com.gildedgames.the_aether.entities.hostile.EntityAechorPlant;
-import com.gildedgames.the_aether.entities.projectile.EntityPoisonNeedle;
+import com.gildedgames.the_aether.entities.hostile.AechorPlant;
+import com.gildedgames.the_aether.entities.projectile.PoisonNeedleEntity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.world.EnumDifficulty;
 
 public class AechorPlantAIShootPlayer extends EntityAIBase {
 
-    private EntityAechorPlant shooter;
+    private AechorPlant shooter;
 
     private int reloadTime;
 
-    public AechorPlantAIShootPlayer(EntityAechorPlant aechorplant) {
+    public AechorPlantAIShootPlayer(AechorPlant aechorplant) {
         this.shooter = aechorplant;
         this.setMutexBits(4);
     }
@@ -55,7 +55,7 @@ public class AechorPlantAIShootPlayer extends EntityAIBase {
         x = x * distance;
         z = z * distance;
 
-        EntityPoisonNeedle poisonNeedle = new EntityPoisonNeedle(this.shooter.worldObj, this.shooter, 0.5F);
+        PoisonNeedleEntity poisonNeedle = new PoisonNeedleEntity(this.shooter.worldObj, this.shooter, 0.5F);
 
         poisonNeedle.posY = this.shooter.posY + 1D;
 

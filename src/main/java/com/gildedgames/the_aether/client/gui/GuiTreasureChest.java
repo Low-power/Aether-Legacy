@@ -1,17 +1,14 @@
 package com.gildedgames.the_aether.client.gui;
 
+import com.gildedgames.the_aether.tileentity.TreasureChestTileEntity;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
-import com.gildedgames.the_aether.tileentity.TileEntityTreasureChest;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class GuiTreasureChest extends GuiContainer {
@@ -21,7 +18,7 @@ public class GuiTreasureChest extends GuiContainer {
 
 	private String chestType;
 
-	public GuiTreasureChest(InventoryPlayer playerInventory, TileEntityTreasureChest chestInventory) {
+	public GuiTreasureChest(InventoryPlayer playerInventory, TreasureChestTileEntity chestInventory) {
 		super(new ContainerChest(playerInventory, chestInventory));
 
 		this.allowUserInput = false;

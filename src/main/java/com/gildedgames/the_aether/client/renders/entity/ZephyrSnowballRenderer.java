@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.client.renders.entity;
 
-import com.gildedgames.the_aether.entities.projectile.EntityZephyrSnowball;
+import com.gildedgames.the_aether.entities.projectile.ZephyrSnowballEntity;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -9,7 +9,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -19,7 +18,7 @@ public class ZephyrSnowballRenderer extends Render {
         super();
     }
 
-    public void doRenderFireball(EntityZephyrSnowball entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRenderFireball(ZephyrSnowballEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x, (float) y, (float) z);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -51,7 +50,7 @@ public class ZephyrSnowballRenderer extends Render {
 
     @Override
     public void doRender(Entity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        this.doRenderFireball((EntityZephyrSnowball) entity, x, y, z, entityYaw, partialTicks);
+        this.doRenderFireball((ZephyrSnowballEntity)entity, x, y, z, entityYaw, partialTicks);
     }
 
     @Override

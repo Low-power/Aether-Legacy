@@ -4,7 +4,6 @@ import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.network.packets.*;
 import com.gildedgames.the_aether.network.packets.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -22,16 +21,16 @@ public class AetherNetwork {
 
 		INSTANCE.registerMessage(PacketOpenContainer.class, PacketOpenContainer.class, discriminant++, Side.SERVER);
 
-		INSTANCE.registerMessage(PacketAccessory.class, PacketAccessory.class, discriminant++, Side.CLIENT);
+		INSTANCE.registerMessage(AccessoryPacket.class, AccessoryPacket.class, discriminant++, Side.CLIENT);
 
 		INSTANCE.registerMessage(PacketAchievement.class, PacketAchievement.class, discriminant++, Side.CLIENT);
 
 		INSTANCE.registerMessage(PacketSendPoison.class, PacketSendPoison.class, discriminant++, Side.CLIENT);
 		INSTANCE.registerMessage(PacketSendPoisonTime.class, PacketSendPoisonTime.class, discriminant++, Side.CLIENT);
 
-		INSTANCE.registerMessage(PacketInitiateValkyrieFight.class, PacketInitiateValkyrieFight.class, discriminant++, Side.SERVER);
+		INSTANCE.registerMessage(InitiateValkyrieFightPacket.class, InitiateValkyrieFightPacket.class, discriminant++, Side.SERVER);
 
-		INSTANCE.registerMessage(PacketDisplayDialogue.class, PacketDisplayDialogue.class, discriminant++, Side.CLIENT);
+		INSTANCE.registerMessage(DisplayDialoguePacket.class, DisplayDialoguePacket.class, discriminant++, Side.CLIENT);
 		INSTANCE.registerMessage(PacketDialogueClicked.class, PacketDialogueClicked.class, discriminant++, Side.SERVER);
 
 		INSTANCE.registerMessage(PacketPerkChanged.class, PacketPerkChanged.class, discriminant++, Side.SERVER);

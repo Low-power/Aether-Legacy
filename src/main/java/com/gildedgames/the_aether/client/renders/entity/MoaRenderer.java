@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.client.renders.entity;
 
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.client.models.entities.MoaModel;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityMoa;
+import com.gildedgames.the_aether.entities.passive.mountable.Moa;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,14 +41,14 @@ public class MoaRenderer extends RenderLiving {
 	private static final ResourceLocation RAPTOR = new ResourceLocation("aether_legacy", "textures/entities/moa/raptor.png");
 
 	public MoaRenderer() {
-		super(new MoaModel(0.0F), 1.0F);
+		super(new MoaModel(0F), 1F);
 
 		this.setRenderPassModel(new MoaModel(0.5F));
 	}
 
 	@Override
 	protected void renderModel(EntityLivingBase entity, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float p_77036_7_) {
-		EntityMoa moa = (EntityMoa) entity;
+		Moa moa = (Moa)entity;
 
 		if (!entity.isInvisible()) {
 			if (!(moa.riddenByEntity instanceof EntityPlayer)) {
@@ -60,7 +60,7 @@ public class MoaRenderer extends RenderLiving {
 				if (playerAether.donatorMoaSkin != null && !playerAether.donatorMoaSkin.shouldUseDefualt()) {
 					DonatorMoaSkin skin = playerAether.donatorMoaSkin;
 
-					GL11.glColor3f(1.0F, 1.0F, 1.0F);
+					GL11.glColor3f(1F, 1F, 1F);
 
 					this.bindTexture(TEXTURE_UNCHANGED);
 					this.mainModel.render(moa, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
@@ -89,7 +89,7 @@ public class MoaRenderer extends RenderLiving {
 					GL11.glColor3f(r(skin.getOutsideColor()), g(skin.getOutsideColor()), b(skin.getOutsideColor()));
 					this.mainModel.render(moa, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
 
-					GL11.glColor3f(1.0F, 1.0F, 1.0F);
+					GL11.glColor3f(1F, 1F, 1F);
 				} else {
 					this.bindTexture(this.getEntityTexture(entity));
 					this.mainModel.render(moa, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
@@ -100,9 +100,9 @@ public class MoaRenderer extends RenderLiving {
 		}
 	}
 
-	protected int renderLayer(EntityMoa entity, int pass, float particleTicks) {
+	protected int renderLayer(Moa entity, int pass, float particleTicks) {
 		if (pass == 0 && entity.isSaddled()) {
-			GL11.glTranslatef(0.0F, 0.02F, 0.0F);
+			GL11.glTranslatef(0F, 0.02F, 0F);
 			this.bindTexture(entity.getMoaType() == AetherMoaTypes.black ? BLACK_SADDLE : SADDLE);
 
 			return 1;
@@ -113,40 +113,40 @@ public class MoaRenderer extends RenderLiving {
 
 	@Override
 	protected int shouldRenderPass(EntityLivingBase entity, int pass, float particleTicks) {
-		return this.renderLayer((EntityMoa) entity, pass, particleTicks);
+		return this.renderLayer((Moa)entity, pass, particleTicks);
 	}
 
-	protected float getWingRotation(EntityMoa moa, float f) {
+	protected float getWingRotation(Moa moa, float f) {
 		float f1 = moa.prevWingRotation + (moa.wingRotation - moa.prevWingRotation) * f;
 		float f2 = moa.prevDestPos + (moa.destPos - moa.prevDestPos) * f;
 
-		return (MathHelper.sin(f1) + 1.0F) * f2;
+		return (MathHelper.sin(f1) + 1F) * f2;
 	}
 
 	@Override
-	protected float handleRotationFloat(EntityLivingBase entityliving, float f) {
-		return this.getWingRotation((EntityMoa) entityliving, f);
+	protected float handleRotationFloat(EntityLivingBase entity, float f) {
+		return this.getWingRotation((Moa)entity, f);
 	}
 
-	protected void scaleMoa(EntityMoa entityMoa) {
-		float moaScale = entityMoa.isChild() ? 1.0f : 1.8f;
+	protected void scaleMoa(Moa moa) {
+		float moaScale = moa.isChild() ? 1f : 1.8f;
 
 		GL11.glScalef(moaScale, moaScale, moaScale);
 	}
 
 	@Override
-	protected void preRenderCallback(EntityLivingBase entityliving, float f) {
+	protected void preRenderCallback(EntityLivingBase entity, float f) {
 		/*
 		 * Dear person who finds this,
 		 * have fun :)
-		 * GL11.glRotatef((entityliving.ticksExisted * entityliving.ticksExisted) * (f * f), 0.0F, 1.0F, 0.0F);
+		 * GL11.glRotatef((entityliving.ticksExisted * entityliving.ticksExisted) * (f * f), 0F, 1F, 0F);
 		 */
-		this.scaleMoa((EntityMoa) entityliving);
+		this.scaleMoa((Moa)entity);
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		EntityMoa moa = (EntityMoa) entity;
+		Moa moa = (Moa)entity;
 
 		if (moa.riddenByEntity instanceof EntityPlayer) {
 			PlayerAether player = PlayerAether.get((EntityPlayer) moa.riddenByEntity);

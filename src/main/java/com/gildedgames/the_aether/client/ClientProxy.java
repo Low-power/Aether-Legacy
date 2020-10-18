@@ -7,7 +7,7 @@ import com.gildedgames.the_aether.client.gui.AetherLoadingScreen;
 import com.gildedgames.the_aether.client.gui.GuiAetherInGame;
 import com.gildedgames.the_aether.client.gui.GuiSunAltar;
 import com.gildedgames.the_aether.client.renders.AetherEntityRenderer;
-import com.gildedgames.the_aether.client.renders.RendersAether;
+import com.gildedgames.the_aether.client.renders.AetherRenders;
 import com.gildedgames.the_aether.compatibility.client.AetherClientCompatibility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -33,7 +33,7 @@ public class ClientProxy extends CommonProxy {
 
 		Minecraft.getMinecraft().entityRenderer = new AetherEntityRenderer(Minecraft.getMinecraft(), previousRenderer, Minecraft.getMinecraft().getResourceManager());
 
-		RendersAether.initialization();
+		AetherRenders.initialization();
 
 		registerEvent(new AetherMusicHandler());
 		registerEvent(new AetherClientEvents());

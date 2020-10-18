@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.entities.bosses;
 
-import com.gildedgames.the_aether.entities.hostile.EntityAetherMob;
+import com.gildedgames.the_aether.entities.hostile.AetherHostileMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
@@ -9,7 +9,7 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class EntityFireMinion extends EntityAetherMob {
+public class EntityFireMinion extends AetherHostileMob {
 
 	public EntityFireMinion(World world) {
 		super(world);

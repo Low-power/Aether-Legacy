@@ -1,11 +1,10 @@
 package com.gildedgames.the_aether.client.models.entities;
 
+import com.gildedgames.the_aether.entities.passive.mountable.Moa;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
-
-import com.gildedgames.the_aether.entities.passive.mountable.EntityMoa;
 
 public class MoaModel extends ModelBase {
 
@@ -68,9 +67,9 @@ public class MoaModel extends ModelBase {
 	}
 
 	@Override
-	public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
-		EntityMoa moa = (EntityMoa) entityIn;
+	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
+		Moa moa = (Moa)entity;
 
 		if (!moa.isSitting() || (!moa.onGround && moa.isSitting())) {
 			this.legs.render(scale);
@@ -88,8 +87,8 @@ public class MoaModel extends ModelBase {
 		this.feather3.render(scale);
 	}
 
-	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
-		EntityMoa moa = (EntityMoa) entityIn;
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entity) {
+		Moa moa = (Moa)entity;
 
 		this.head.rotateAngleX = headPitch / 57.29578F;
 		this.head.rotateAngleY = netHeadYaw / 57.29578F;

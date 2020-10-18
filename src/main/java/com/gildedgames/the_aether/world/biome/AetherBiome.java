@@ -1,27 +1,25 @@
 package com.gildedgames.the_aether.world.biome;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import com.gildedgames.the_aether.AetherConfig;
-import com.gildedgames.the_aether.entities.hostile.EntityAechorPlant;
-import com.gildedgames.the_aether.entities.hostile.EntityCockatrice;
+import com.gildedgames.the_aether.entities.hostile.AechorPlant;
+import com.gildedgames.the_aether.entities.hostile.Cockatrice;
 import com.gildedgames.the_aether.entities.hostile.EntityWhirlwind;
 import com.gildedgames.the_aether.entities.hostile.EntityZephyr;
 import com.gildedgames.the_aether.entities.passive.EntityAerwhale;
-import com.gildedgames.the_aether.entities.passive.EntitySheepuff;
+import com.gildedgames.the_aether.entities.passive.Sheepuff;
+import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.entities.passive.mountable.Aerbunny;
+import com.gildedgames.the_aether.entities.passive.mountable.FlyingCow;
+import com.gildedgames.the_aether.entities.passive.mountable.Moa;
+import com.gildedgames.the_aether.entities.passive.mountable.Phyg;
+import com.gildedgames.the_aether.entities.passive.mountable.Swet;
+import com.gildedgames.the_aether.world.biome.decoration.AetherGenOakTree;
+import com.gildedgames.the_aether.world.biome.decoration.AetherGenSkyrootTree;
 import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
-
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityAerbunny;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityFlyingCow;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityMoa;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityPhyg;
-import com.gildedgames.the_aether.entities.passive.mountable.EntitySwet;
-import com.gildedgames.the_aether.world.biome.decoration.AetherGenOakTree;
-import com.gildedgames.the_aether.world.biome.decoration.AetherGenSkyrootTree;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class AetherBiome extends BiomeGenBase {
 
@@ -35,17 +33,11 @@ public class AetherBiome extends BiomeGenBase {
 		this.spawnableWaterCreatureList.clear();
 
 		ArrayList<SpawnListEntry> list = new ArrayList<SpawnListEntry>();
-
-		this.addCreatureEntry(list);
-
+		add_creature_entry(list);
 		this.spawnableCreatureList.addAll(list);
-
 		list.clear();
-
-		this.addMobEntry(list);
-
+		add_monster_entry(list);
 		this.spawnableMonsterList.addAll(list);
-
 		list.clear();
 
 		this.topBlock = BlocksAether.aether_grass;
@@ -56,23 +48,21 @@ public class AetherBiome extends BiomeGenBase {
 		this.setColor(0);
 	}
 
-	private void addCreatureEntry(ArrayList<SpawnListEntry> list)
-	{
-		list.add(new SpawnListEntry(EntitySwet.class, 20, 3, 4));
-		list.add(new SpawnListEntry(EntityAechorPlant.class, 19, 3, 3));
-		list.add(new SpawnListEntry(EntityPhyg.class, 12, 4, 4));
-		list.add(new SpawnListEntry(EntityAerbunny.class, 11, 3, 3));
-		list.add(new SpawnListEntry(EntitySheepuff.class, 10, 4, 4));
-		list.add(new SpawnListEntry(EntityMoa.class, 10, 3, 3));
-		list.add(new SpawnListEntry(EntityFlyingCow.class, 10, 4, 4));
+	private void add_creature_entry(ArrayList<SpawnListEntry> list) {
+		list.add(new SpawnListEntry(Swet.class, 20, 3, 4));
+		list.add(new SpawnListEntry(AechorPlant.class, 19, 3, 3));
+		list.add(new SpawnListEntry(Phyg.class, 12, 4, 4));
+		list.add(new SpawnListEntry(Aerbunny.class, 11, 3, 3));
+		list.add(new SpawnListEntry(Sheepuff.class, 10, 4, 4));
+		list.add(new SpawnListEntry(Moa.class, 10, 3, 3));
+		list.add(new SpawnListEntry(FlyingCow.class, 10, 4, 4));
+		list.add(new SpawnListEntry(EntityAerwhale.class, 2, 1, 1));
 	}
 
-	private void addMobEntry(ArrayList<SpawnListEntry> list)
-	{
+	private void add_monster_entry(ArrayList<SpawnListEntry> list) {
 		list.add(new SpawnListEntry(EntityWhirlwind.class, 8, 2, 2));
-		list.add(new SpawnListEntry(EntityCockatrice.class, 4, 4, 4));
+		list.add(new SpawnListEntry(Cockatrice.class, 4, 4, 4));
 		list.add(new SpawnListEntry(EntityZephyr.class, 2, 1, 1));
-		list.add(new SpawnListEntry(EntityAerwhale.class, 2, 1, 1));
 	}
 
 	@Override

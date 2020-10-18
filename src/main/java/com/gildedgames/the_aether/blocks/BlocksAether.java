@@ -1,8 +1,8 @@
 package com.gildedgames.the_aether.blocks;
 
 import com.gildedgames.the_aether.Aether;
-import com.gildedgames.the_aether.items.ItemsAether;
-import com.gildedgames.the_aether.items.block.ItemAetherSlab;
+import com.gildedgames.the_aether.items.AetherItems;
+import com.gildedgames.the_aether.items.block.AetherSlabItem;
 import com.gildedgames.the_aether.items.block.ItemBlockEnchanter;
 import com.gildedgames.the_aether.items.block.ItemBlockMetadata;
 import com.gildedgames.the_aether.items.block.ItemBlockRarity;
@@ -15,7 +15,7 @@ import net.minecraft.init.Blocks;
 
 import com.gildedgames.the_aether.blocks.container.BlockEnchanter;
 import com.gildedgames.the_aether.blocks.container.BlockFreezer;
-import com.gildedgames.the_aether.blocks.container.BlockIncubator;
+import com.gildedgames.the_aether.blocks.container.Incubator;
 import com.gildedgames.the_aether.blocks.container.BlockSunAltar;
 import com.gildedgames.the_aether.blocks.decorative.BlockAerogel;
 import com.gildedgames.the_aether.blocks.decorative.BlockAetherFence;
@@ -24,25 +24,25 @@ import com.gildedgames.the_aether.blocks.decorative.BlockAetherSlab;
 import com.gildedgames.the_aether.blocks.decorative.BlockAetherStairs;
 import com.gildedgames.the_aether.blocks.decorative.BlockAetherWall;
 import com.gildedgames.the_aether.blocks.decorative.BlockAmbrosiumTorch;
-import com.gildedgames.the_aether.blocks.decorative.BlockPresent;
+import com.gildedgames.the_aether.blocks.decorative.Present;
 import com.gildedgames.the_aether.blocks.decorative.BlockQuicksoilGlass;
 import com.gildedgames.the_aether.blocks.decorative.BlockSkyrootBookshelf;
 import com.gildedgames.the_aether.blocks.decorative.BlockSkyrootPlanks;
 import com.gildedgames.the_aether.blocks.decorative.BlockZanite;
 import com.gildedgames.the_aether.blocks.dungeon.BlockDungeonBase;
-import com.gildedgames.the_aether.blocks.dungeon.BlockDungeonTrap;
+import com.gildedgames.the_aether.blocks.dungeon.DungeonTrap;
 import com.gildedgames.the_aether.blocks.dungeon.BlockMimicChest;
 import com.gildedgames.the_aether.blocks.dungeon.BlockPillar;
-import com.gildedgames.the_aether.blocks.dungeon.BlockTreasureChest;
-import com.gildedgames.the_aether.blocks.natural.BlockAercloud;
+import com.gildedgames.the_aether.blocks.dungeon.TreasureChest;
+import com.gildedgames.the_aether.blocks.natural.Aercloud;
 import com.gildedgames.the_aether.blocks.natural.BlockAetherDirt;
 import com.gildedgames.the_aether.blocks.natural.BlockAetherFlower;
 import com.gildedgames.the_aether.blocks.natural.BlockAetherGrass;
-import com.gildedgames.the_aether.blocks.natural.BlockAetherLeaves;
-import com.gildedgames.the_aether.blocks.natural.BlockAetherLog;
-import com.gildedgames.the_aether.blocks.natural.BlockAetherOre;
-import com.gildedgames.the_aether.blocks.natural.BlockBerryBush;
-import com.gildedgames.the_aether.blocks.natural.BlockBerryBushStem;
+import com.gildedgames.the_aether.blocks.natural.AetherLeaves;
+import com.gildedgames.the_aether.blocks.natural.AetherLog;
+import com.gildedgames.the_aether.blocks.natural.AetherOre;
+import com.gildedgames.the_aether.blocks.natural.BerryBush;
+import com.gildedgames.the_aether.blocks.natural.BerryBushStem;
 import com.gildedgames.the_aether.blocks.natural.BlockEnchantedAetherGrass;
 import com.gildedgames.the_aether.blocks.natural.BlockHolystone;
 import com.gildedgames.the_aether.blocks.natural.BlockQuicksoil;
@@ -121,39 +121,39 @@ public class BlocksAether {
 		holystone = registerMeta("holystone", new BlockHolystone());
 		mossy_holystone = registerMeta("mossy_holystone", new BlockHolystone().setBlockTextureName(Aether.find("mossy_holystone")));
 		holystone_brick = register("holystone_brick", new BlockAether(Material.rock, Aether.find("holystone_brick")).setHardness(0.5F).setResistance(10.0F));
-		aercloud = registerMeta("aercloud", new BlockAercloud());
-		aerogel = registerRarity("aerogel", new BlockAerogel(), ItemsAether.aether_loot);
+		aercloud = registerMeta("aercloud", new Aercloud());
+		aerogel = registerRarity("aerogel", new BlockAerogel(), AetherItems.aether_loot);
 		quicksoil = registerMeta("quicksoil", new BlockQuicksoil());
 		icestone = register("icestone", new BlockIcestone());
-		ambrosium_ore = register("ambrosium_ore", new BlockAetherOre(0).setBlockTextureName(Aether.find("ambrosium_ore")));
-		zanite_ore = register("zanite_ore", new BlockAetherOre(1).setBlockTextureName(Aether.find("zanite_ore")));
+		ambrosium_ore = register("ambrosium_ore", new AetherOre(0).setBlockTextureName(Aether.find("ambrosium_ore")));
+		zanite_ore = register("zanite_ore", new AetherOre(1).setBlockTextureName(Aether.find("zanite_ore")));
 		gravitite_ore = register("gravitite_ore", new BlockFloating(Material.rock, false).setHardness(5.0F).setBlockTextureName(Aether.find("gravitite_ore")));
 		enchanted_gravitite = registerRarity("enchanted_gravitite", new BlockFloating(Material.rock, true).setHardness(5.0F).setBlockTextureName(Aether.find("enchanted_gravitite")), EnumRarity.rare);
 		zanite_block = register("zanite_block", new BlockZanite());
-		skyroot_leaves = register("skyroot_leaves", new BlockAetherLeaves().setBlockTextureName(Aether.find("skyroot_leaves")));
-		golden_oak_leaves = register("golden_oak_leaves", new BlockAetherLeaves().setBlockTextureName(Aether.find("golden_oak_leaves")));
-		crystal_leaves = register("crystal_leaves", new BlockAetherLeaves().setBlockTextureName(Aether.find("crystal_leaves")));
-		crystal_fruit_leaves = register("crystal_fruit_leaves", new BlockAetherLeaves().setBlockTextureName(Aether.find("crystal_fruit_leaves")));
-		holiday_leaves = register("holiday_leaves", new BlockAetherLeaves().setBlockTextureName(Aether.find("holiday_leaves")));
-		decorated_holiday_leaves = register("decorated_holiday_leaves", new BlockAetherLeaves().setBlockTextureName(Aether.find("decorated_holiday_leaves")));
-		present = register("present", new BlockPresent());
-		skyroot_log = registerMeta("skyroot_log", new BlockAetherLog().setBlockTextureName(Aether.find("skyroot_log")));
-		golden_oak_log = registerMeta("golden_oak_log", new BlockAetherLog().setBlockTextureName(Aether.find("golden_oak_log")));
+		skyroot_leaves = register("skyroot_leaves", new AetherLeaves().setBlockTextureName(Aether.find("skyroot_leaves")));
+		golden_oak_leaves = register("golden_oak_leaves", new AetherLeaves().setBlockTextureName(Aether.find("golden_oak_leaves")));
+		crystal_leaves = register("crystal_leaves", new AetherLeaves().setBlockTextureName(Aether.find("crystal_leaves")));
+		crystal_fruit_leaves = register("crystal_fruit_leaves", new AetherLeaves().setBlockTextureName(Aether.find("crystal_fruit_leaves")));
+		holiday_leaves = register("holiday_leaves", new AetherLeaves().setBlockTextureName(Aether.find("holiday_leaves")));
+		decorated_holiday_leaves = register("decorated_holiday_leaves", new AetherLeaves().setBlockTextureName(Aether.find("decorated_holiday_leaves")));
+		present = register("present", new Present());
+		skyroot_log = registerMeta("skyroot_log", new AetherLog().setBlockTextureName(Aether.find("skyroot_log")));
+		golden_oak_log = registerMeta("golden_oak_log", new AetherLog().setBlockTextureName(Aether.find("golden_oak_log")));
 		skyroot_planks = register("skyroot_planks", new BlockSkyrootPlanks());
 		quicksoil_glass = registerRarity("quicksoil_glass", new BlockQuicksoilGlass(), EnumRarity.rare);
 		ambrosium_torch = register("ambrosium_torch", new BlockAmbrosiumTorch().setBlockTextureName(Aether.find("ambrosium_torch")));
-		berry_bush_stem = register("berry_bush_stem", new BlockBerryBushStem());
-		berry_bush = register("berry_bush", new BlockBerryBush());
+		berry_bush_stem = register("berry_bush_stem", new BerryBushStem());
+		berry_bush = register("berry_bush", new BerryBush());
 		purple_flower = register("purple_flower", new BlockAetherFlower().setBlockTextureName(Aether.find("purple_flower")));
 		white_flower = register("white_flower", new BlockAetherFlower().setBlockTextureName(Aether.find("white_flower")));
 		skyroot_sapling = register("skyroot_sapling", new BlockAetherSapling(new AetherGenSkyrootTree(false)).setBlockTextureName(Aether.find("skyroot_sapling")));
 		golden_oak_sapling = register("golden_oak_sapling", new BlockAetherSapling(new AetherGenOakTree()).setBlockTextureName(Aether.find("golden_oak_sapling")));
 		enchanter = registerEnchanter("enchanter", new BlockEnchanter());
 		freezer = registerMeta("freezer", new BlockFreezer());
-		incubator = registerMeta("incubator", new BlockIncubator());
+		incubator = registerMeta("incubator", new Incubator());
 		sun_altar = register("sun_altar", new BlockSunAltar());
 		chest_mimic = register("chest_mimic", new BlockMimicChest());
-		treasure_chest = register("treasure_chest", new BlockTreasureChest());
+		treasure_chest = register("treasure_chest", new TreasureChest());
 		aether_portal = register("aether_portal", new BlockAetherPortal()).setCreativeTab(null);
 		pillar = register("pillar", new BlockPillar("pillar_top", "pillar_side"));
 		pillar_top = register("pillar_top", new BlockPillar("pillar_top", "pillar_carved"));
@@ -169,9 +169,9 @@ public class BlocksAether {
 		locked_light_angelic_stone = register("locked_light_angelic_stone", new BlockDungeonBase(light_angelic_stone, true).setBlockTextureName(Aether.find("light_angelic_stone"))).setCreativeTab(null);
 		locked_hellfire_stone = register("locked_hellfire_stone", new BlockDungeonBase(hellfire_stone, false).setBlockTextureName(Aether.find("hellfire_stone"))).setCreativeTab(null);
 		locked_light_hellfire_stone = register("locked_light_hellfire_stone", new BlockDungeonBase(light_hellfire_stone, true).setBlockTextureName(Aether.find("light_hellfire_stone"))).setCreativeTab(null);
-		carved_trap = register("carved_trap", new BlockDungeonTrap(carved_stone).setBlockTextureName(Aether.find("carved_stone"))).setCreativeTab(null);
-		angelic_trap = register("angelic_trap", new BlockDungeonTrap(angelic_stone).setBlockTextureName(Aether.find("angelic_stone"))).setCreativeTab(null);
-		hellfire_trap = register("hellfire_trap", new BlockDungeonTrap(hellfire_stone).setBlockTextureName(Aether.find("hellfire_stone"))).setCreativeTab(null);
+		carved_trap = register("carved_trap", new DungeonTrap(carved_stone).setBlockTextureName(Aether.find("carved_stone"))).setCreativeTab(null);
+		angelic_trap = register("angelic_trap", new DungeonTrap(angelic_stone).setBlockTextureName(Aether.find("angelic_stone"))).setCreativeTab(null);
+		hellfire_trap = register("hellfire_trap", new DungeonTrap(hellfire_stone).setBlockTextureName(Aether.find("hellfire_stone"))).setCreativeTab(null);
 		skyroot_fence = register("skyroot_fence", new BlockAetherFence());
 		skyroot_fence_gate = register("skyroot_fence_gate", new BlockAetherFenceGate());
 		carved_wall = register("carved_wall", new BlockAetherWall(carved_stone));
@@ -180,7 +180,7 @@ public class BlocksAether {
 		holystone_wall = register("holystone_wall", new BlockAetherWall(holystone));
 		holystone_brick_wall = register("holystone_brick_wall", new BlockAetherWall(holystone_brick));
 		mossy_holystone_wall = register("mossy_holystone_wall", new BlockAetherWall(mossy_holystone));
-		aerogel_wall = registerRarity("aerogel_wall", new BlockAetherWall(aerogel), ItemsAether.aether_loot);
+		aerogel_wall = registerRarity("aerogel_wall", new BlockAetherWall(aerogel), AetherItems.aether_loot);
 		carved_stairs = register("carved_stairs", new BlockAetherStairs(carved_stone));
 		angelic_stairs = register("angelic_stairs", new BlockAetherStairs(angelic_stone));
 		hellfire_stairs = register("hellfire_stairs", new BlockAetherStairs(hellfire_stone));
@@ -188,7 +188,7 @@ public class BlocksAether {
 		holystone_stairs = register("holystone_stairs", new BlockAetherStairs(holystone));
 		holystone_brick_stairs = register("holystone_brick_stairs", new BlockAetherStairs(holystone_brick));
 		mossy_holystone_stairs = register("mossy_holystone_stairs", new BlockAetherStairs(mossy_holystone));
-		aerogel_stairs = registerRarity("aerogel_stairs", new BlockAetherStairs(aerogel), ItemsAether.aether_loot);
+		aerogel_stairs = registerRarity("aerogel_stairs", new BlockAetherStairs(aerogel), AetherItems.aether_loot);
 		skyroot_double_slab = register("skyroot_double_slab", new BlockAetherSlab("skyroot_double_slab", true, Material.wood).setBlockTextureName(Aether.find("skyroot_planks")).setHardness(2.0F).setResistance(5.0F)).setCreativeTab(null);
 		carved_double_slab = register("carved_double_slab", new BlockAetherSlab("carved_double_slab", true, Material.rock).setBlockTextureName(Aether.find("carved_stone")).setHardness(2.0F).setResistance(10.0F)).setCreativeTab(null);
 		angelic_double_slab = register("angelic_double_slab", new BlockAetherSlab("angelic_double_slab", true, Material.rock).setBlockTextureName(Aether.find("angelic_stone")).setHardness(2.0F).setResistance(10.0F)).setCreativeTab(null);
@@ -206,11 +206,10 @@ public class BlocksAether {
 		holystone_brick_slab = registerSlab("holystone_brick_slab", new BlockAetherSlab("holystone_brick_slab", false, Material.rock).setBlockTextureName(Aether.find("holystone_brick")).setHardness(0.5F).setResistance(10.0F), holystone_brick_double_slab);
 		aerogel_slab = registerSlab("aerogel_slab", new BlockAetherSlab("aerogel_slab", false, Material.rock).setBlockTextureName(Aether.find("aerogel")).setHardness(0.5F).setResistance(2000F).setLightOpacity(3).setStepSound(Block.soundTypeMetal), aerogel_double_slab);
 		skyroot_bookshelf = register("skyroot_bookshelf", new BlockSkyrootBookshelf());
-		skyroot_bed = registerBed("skyroot_bed", new BlockSkyrootBed().setBlockTextureName(Aether.find("skyroot_bed")));
+		skyroot_bed = registerBed("skyroot_bed", new SkyrootBedBlock().setBlockTextureName(Aether.find("skyroot_bed")));
 	}
 
-	public static void initializeHarvestLevels()
-	{
+	public static void initializeHarvestLevels() {
 		BlocksAether.aether_grass.setHarvestLevel("shovel", 0);
 		BlocksAether.enchanted_aether_grass.setHarvestLevel("shovel", 0);
 		BlocksAether.aether_dirt.setHarvestLevel("shovel", 0);
@@ -285,7 +284,7 @@ public class BlocksAether {
 		slab1.setBlockName(name);
 		slab1.setCreativeTab(AetherCreativeTabs.blocks);
 
-		GameRegistry.registerBlock(slab1, ItemAetherSlab.class, name, (BlockAetherSlab) slab1, (BlockAetherSlab) slab2, false);
+		GameRegistry.registerBlock(slab1, AetherSlabItem.class, name, (BlockAetherSlab)slab1, (BlockAetherSlab)slab2, false);
 
 		return slab1;
 	}

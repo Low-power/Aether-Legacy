@@ -1,10 +1,15 @@
 package com.gildedgames.the_aether.player;
 
 import com.gildedgames.the_aether.AetherConfig;
-import com.gildedgames.the_aether.inventory.InventoryAccessories;
-import com.gildedgames.the_aether.items.ItemsAether;
-import com.gildedgames.the_aether.registry.achievements.AchievementsAether;
+import com.gildedgames.the_aether.inventory.AccessoriesInventory;
+import com.gildedgames.the_aether.items.AetherItems;
+import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
 import com.gildedgames.the_aether.registry.achievements.AetherAchievement;
+import com.gildedgames.the_aether.entities.util.EntityHook;
+import com.gildedgames.the_aether.network.AetherNetwork;
+import com.gildedgames.the_aether.network.packets.AccessoryPacket;
+import com.gildedgames.the_aether.network.packets.PacketAchievement;
+import com.gildedgames.the_aether.player.abilities.RepulsionAbility;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,13 +25,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.entity.player.PlayerEvent.Clone;
-
-import com.gildedgames.the_aether.entities.util.EntityHook;
-import com.gildedgames.the_aether.network.AetherNetwork;
-import com.gildedgames.the_aether.network.packets.PacketAccessory;
-import com.gildedgames.the_aether.network.packets.PacketAchievement;
-import com.gildedgames.the_aether.player.abilities.AbilityRepulsion;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -48,7 +46,7 @@ public class PlayerAetherEvents {
 		if (!event.player.worldObj.isRemote) {
 			PlayerAether playerAether = PlayerAether.get(event.player);
 
-			AetherNetwork.sendTo(new PacketAccessory(playerAether), (EntityPlayerMP) event.player);
+			AetherNetwork.sendTo(new AccessoryPacket(playerAether), (EntityPlayerMP) event.player);
 			playerAether.updateShardCount(playerAether.getShardsUsed());
 
 			if (!AetherConfig.shouldAetherStart())
@@ -84,7 +82,7 @@ public class PlayerAetherEvents {
 		if (!event.player.worldObj.isRemote) {
 			PlayerAether playerAether = PlayerAether.get(event.player);
 
-			AetherNetwork.sendTo(new PacketAccessory(playerAether), (EntityPlayerMP) event.player);
+			AetherNetwork.sendTo(new AccessoryPacket(playerAether), (EntityPlayerMP) event.player);
 			playerAether.updateShardCount(playerAether.getShardsUsed());
 
 			playerAether.isPoisoned = false;
@@ -99,7 +97,7 @@ public class PlayerAetherEvents {
 		if (!event.player.worldObj.isRemote) {
 			PlayerAether playerAether = PlayerAether.get(event.player);
 
-			AetherNetwork.sendTo(new PacketAccessory(playerAether), (EntityPlayerMP) event.player);
+			AetherNetwork.sendTo(new AccessoryPacket(playerAether), (EntityPlayerMP)event.player);
 			playerAether.updateShardCount(playerAether.getShardsUsed());
 		}
 	}
@@ -142,14 +140,14 @@ public class PlayerAetherEvents {
 			if (playerAether.getAccessoryInventory().isWearingPhoenixSet() && event.source.isFireDamage()) {
 				event.setCanceled(true);
 			} else if (playerAether.getAbilities().get(3).shouldExecute()) {
-				event.setCanceled(((AbilityRepulsion) playerAether.getAbilities().get(3)).onPlayerAttacked(event.source));
+				event.setCanceled(((RepulsionAbility)playerAether.getAbilities().get(3)).onPlayerAttacked(event.source));
 			}
 		}
 	}
 
 	@SubscribeEvent
 	public void onUpdateBreakSpeed(BreakSpeed event) {
-		((InventoryAccessories) PlayerAether.get(event.entityPlayer).getAccessoryInventory()).getCurrentPlayerStrVsBlock(event.newSpeed);
+		((AccessoriesInventory)PlayerAether.get(event.entityPlayer).getAccessoryInventory()).getCurrentPlayerStrVsBlock(event.newSpeed);
 	}
 
 	@SubscribeEvent
@@ -161,16 +159,16 @@ public class PlayerAetherEvents {
 			return;
 		}
 
-		int achievementType = achievement == AchievementsAether.defeat_bronze ? 1 : achievement == AchievementsAether.defeat_silver ? 2 : 0;
+		int achievementType = achievement == AetherAchievements.defeat_bronze ? 1 : achievement == AetherAchievements.defeat_silver ? 2 : 0;
 
 		if (!player.worldObj.isRemote && ((EntityPlayerMP) player).func_147099_x().canUnlockAchievement(achievement) && !((EntityPlayerMP) player).func_147099_x().hasAchievementUnlocked(achievement)) {
-			if (event.achievement == AchievementsAether.enter_aether) {
-				if (!player.inventory.addItemStackToInventory(new ItemStack(ItemsAether.lore_book))) {
-					player.worldObj.spawnEntityInWorld(new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, new ItemStack(ItemsAether.lore_book)));
+			if (event.achievement == AetherAchievements.enter_aether) {
+				if (!player.inventory.addItemStackToInventory(new ItemStack(AetherItems.lore_book))) {
+					player.worldObj.spawnEntityInWorld(new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, new ItemStack(AetherItems.lore_book)));
 				}
 
-				if (!player.inventory.addItemStackToInventory(new ItemStack(ItemsAether.golden_parachute))) {
-					player.worldObj.spawnEntityInWorld(new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, new ItemStack(ItemsAether.golden_parachute)));
+				if (!player.inventory.addItemStackToInventory(new ItemStack(AetherItems.golden_parachute))) {
+					player.worldObj.spawnEntityInWorld(new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, new ItemStack(AetherItems.golden_parachute)));
 				}
 			}
 

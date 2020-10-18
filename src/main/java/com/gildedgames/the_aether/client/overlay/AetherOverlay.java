@@ -1,5 +1,10 @@
 package com.gildedgames.the_aether.client.overlay;
 
+import com.gildedgames.the_aether.api.player.util.IAetherBoss;
+import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.entities.passive.mountable.Moa;
+import com.gildedgames.the_aether.items.AetherItems;
+import com.gildedgames.the_aether.player.PlayerAether;
 import com.gildedgames.the_aether.Aether;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -12,17 +17,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
-import com.gildedgames.the_aether.api.player.util.IAetherBoss;
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityMoa;
-import com.gildedgames.the_aether.items.ItemsAether;
-import com.gildedgames.the_aether.player.PlayerAether;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class AetherOverlay {
@@ -124,7 +121,7 @@ public class AetherOverlay {
 
 		mc.renderEngine.bindTexture(Gui.icons);
 
-		int bubbleAmount = PlayerAether.get(mc.thePlayer).getAccessoryInventory().getAccessoryCount(new ItemStack(ItemsAether.iron_bubble));
+		int bubbleAmount = PlayerAether.get(mc.thePlayer).getAccessoryInventory().getAccessoryCount(new ItemStack(AetherItems.iron_bubble));
 
 		if (mc.playerController.shouldDrawHUD() && mc.thePlayer.isInWater() && mc.thePlayer.isInsideOfMaterial(Material.water)) {
 			for (int i = 0; i < bubbleAmount; ++i) {
@@ -177,13 +174,13 @@ public class AetherOverlay {
 	public static void renderJumps(Minecraft mc) {
 		EntityPlayer player = mc.thePlayer;
 
-		if (player == null || player.ridingEntity == null || !(player.ridingEntity instanceof EntityMoa)) {
+		if (player == null || player.ridingEntity == null || !(player.ridingEntity instanceof Moa)) {
 			return;
 		}
 
 		ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 
-		EntityMoa moa = (EntityMoa) (player.ridingEntity);
+		Moa moa = (Moa)player.ridingEntity;
 
 		int width = scaledresolution.getScaledWidth();
 

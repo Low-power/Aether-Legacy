@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.entities.hostile;
 
-import com.gildedgames.the_aether.entities.projectile.EntityZephyrSnowball;
+import com.gildedgames.the_aether.entities.projectile.ZephyrSnowballEntity;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -117,7 +117,7 @@ public class EntityZephyr extends EntityFlying implements IMob {
 				} else if (this.attackCounter == 20) {
 					this.playSound("aether_legacy:aemob.zephyr.call", 3F, this.base);
 
-					EntityZephyrSnowball projectile = new EntityZephyrSnowball(this.worldObj, this, x, y, z);
+					ZephyrSnowballEntity projectile = new ZephyrSnowballEntity(this.worldObj, this, x, y, z);
 					Vec3 lookVector = this.getLook(1.0F);
 
 					projectile.posX = this.posX + lookVector.xCoord * 4D;

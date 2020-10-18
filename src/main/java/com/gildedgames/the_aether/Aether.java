@@ -1,20 +1,18 @@
 package com.gildedgames.the_aether;
 
 import com.gildedgames.the_aether.events.AetherEntityEvents;
-import net.minecraft.util.ResourceLocation;
-
 import com.gildedgames.the_aether.blocks.BlocksAether;
-import com.gildedgames.the_aether.entities.EntitiesAether;
-import com.gildedgames.the_aether.items.ItemsAether;
+import com.gildedgames.the_aether.entities.AetherEntities;
+import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.network.AetherNetwork;
 import com.gildedgames.the_aether.player.PlayerAetherEvents;
 import com.gildedgames.the_aether.player.perks.AetherRankings;
 import com.gildedgames.the_aether.registry.AetherRegistries;
-import com.gildedgames.the_aether.registry.achievements.AchievementsAether;
+import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
 import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
 import com.gildedgames.the_aether.tileentity.AetherTileEntities;
 import com.gildedgames.the_aether.world.AetherWorld;
-
+import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -44,13 +42,13 @@ public class Aether {
 	public void init(FMLInitializationEvent event) {
 		BlocksAether.initialization();
 		BlocksAether.initializeHarvestLevels();
-		ItemsAether.initialization();
+		AetherItems.initialization();
 		AetherRegistries.register();
-		EntitiesAether.initialization();
+		AetherEntities.initialization();
 		AetherCreativeTabs.initialization();
 		AetherTileEntities.initialization();
 		AetherWorld.initialization();
-		AchievementsAether.initialization();
+		AetherAchievements.initialization();
 
 		proxy.init();
 

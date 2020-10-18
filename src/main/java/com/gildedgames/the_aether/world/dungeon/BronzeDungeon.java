@@ -1,22 +1,20 @@
 package com.gildedgames.the_aether.world.dungeon;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
-
-import com.gildedgames.the_aether.entities.bosses.slider.EntitySlider;
-import com.gildedgames.the_aether.items.ItemsAether;
+import com.gildedgames.the_aether.entities.bosses.slider.Slider;
+import com.gildedgames.the_aether.items.AetherItems;
+import com.gildedgames.the_aether.blocks.BlocksAether;
 import com.gildedgames.the_aether.world.util.RandomTracker;
+import com.gildedgames.the_aether.world.dungeon.util.AetherDungeon;
+import com.gildedgames.the_aether.world.dungeon.util.PositionData;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
-
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import com.gildedgames.the_aether.world.dungeon.util.AetherDungeon;
-import com.gildedgames.the_aether.world.dungeon.util.PositionData;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 public class BronzeDungeon extends AetherDungeon {
 	private boolean needsCorridor;
@@ -40,20 +38,14 @@ public class BronzeDungeon extends AetherDungeon {
 		return true;
 	}
 
-	public boolean generateBossRoom(World world, Random random, int i, int j, int k)
-	{
+	public boolean generateBossRoom(World world, Random random, int i, int j, int k) {
 		if (!isBoxSolid(world, new PositionData(i, j - 3, k), new PositionData(16, 18, 16)) || !isBoxSolid(world, new PositionData(i + 20, j, k + 2), new PositionData(12, 12, 12))) {
 			return false;
 		}
 
 		RandomTracker randomTracker = new RandomTracker();
-
-		if (randomTracker.testRandom(random,15) != 0)
-		{
-			if (randomTracker.testRandom(random,40) != 0)
-			{
-				return false;
-			}
+		if (randomTracker.testRandom(random,15) != 0 && randomTracker.testRandom(random,40) != 0) {
+			return false;
 		}
 
 		setBlocks(this.lockedBlock(), this.lockedLightBlock(), 20);
@@ -62,7 +54,7 @@ public class BronzeDungeon extends AetherDungeon {
 
 		addHollowBox(world, random, new PositionData(i + 6, j - 2, k + 6), new PositionData(4, 4, 4));
 
-		EntitySlider slider = new EntitySlider(world);
+		Slider slider = new Slider(world);
 		slider.setPosition(i + 8, j + 2, k + 8);
 		slider.setDungeon(slider.posX - 8, slider.posY - 2, slider.posZ - 8);
 
@@ -77,16 +69,14 @@ public class BronzeDungeon extends AetherDungeon {
 		return true;
 	}
 
-	public boolean generateEmptyRoom(World world, Random random, int i, int j, int k)
-	{
+	public boolean generateEmptyRoom(World world, Random random, int i, int j, int k) {
 		int x = i;
 		int y = j;
 		int z = k;
 
 		int rooms = random.nextInt(4);
 
-		switch (rooms)
-		{
+		switch (rooms) {
 			case 0:
 			{
 				//EAST
@@ -192,23 +182,19 @@ public class BronzeDungeon extends AetherDungeon {
 			}
 		}
 
-		if ((!determineRoomPosition(world, random, new PositionData(x, y, z)) && roomCount == 0))
-		{
+		if ((!determineRoomPosition(world, random, new PositionData(x, y, z)) && roomCount == 0)) {
 			return false;
 		}
 
-		if (needsCorridor)
-		{
+		if (needsCorridor) {
 			endCorridor(world, random, new PositionData(x, y, z));
 		}
 
 		return true;
 	}
 
-	public boolean determineRoomPosition(World world, Random random, PositionData pos)
-	{
-		if (roomCount >= roomMaximum)
-		{
+	public boolean determineRoomPosition(World world, Random random, PositionData pos) {
+		if (roomCount >= roomMaximum) {
 			this.needsCorridor = true;
 			return true;
 		}
@@ -221,38 +207,27 @@ public class BronzeDungeon extends AetherDungeon {
 
 		Collections.shuffle(sides);
 
-		if (generateRoomWithSide(world, random, pos, sides.get(0)))
-		{
+		if (generateRoomWithSide(world, random, pos, sides.get(0))) {
 			return true;
-		}
-		else if (generateRoomWithSide(world, random, pos, sides.get(1)))
-		{
+		} else if (generateRoomWithSide(world, random, pos, sides.get(1))) {
 			return true;
-		}
-		else if (generateRoomWithSide(world, random, pos, sides.get(2)))
-		{
+		} else if (generateRoomWithSide(world, random, pos, sides.get(2))) {
 			return true;
-		}
-		else if (generateRoomWithSide(world, random, pos, sides.get(3)))
-		{
+		} else if (generateRoomWithSide(world, random, pos, sides.get(3))) {
 			return true;
-		}
-		else
-		{
+		} else {
 			this.needsCorridor = true;
 			return false;
 		}
 	}
 
-	public boolean generateRoomWithSide(World world, Random random, PositionData pos, int switchCase)
-	{
+	public boolean generateRoomWithSide(World world, Random random, PositionData pos, int switchCase) {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
 		int dir = 0;
 
-		switch (switchCase)
-		{
+		switch (switchCase) {
 			case 1:
 			{
 				x += 16;
@@ -361,16 +336,14 @@ public class BronzeDungeon extends AetherDungeon {
 
 		roomCount++;
 
-		if(!determineRoomPosition(world, random,  new PositionData(x, y, z)))
-		{
+		if(!determineRoomPosition(world, random,  new PositionData(x, y, z))) {
 			return false;
 		}
 
 		return determineRoomPosition(world, random, new PositionData(x, y, z));
 	}
 
-	public boolean endCorridor(World world, Random random, PositionData pos)
-	{
+	public boolean endCorridor(World world, Random random, PositionData pos) {
 		ArrayList<Integer> sides = new ArrayList<>();
 		sides.add(1);
 		sides.add(2);
@@ -379,39 +352,27 @@ public class BronzeDungeon extends AetherDungeon {
 
 		Collections.shuffle(sides);
 
-		if (generateEndCorridor(world, random, pos, sides.get(0)))
-		{
+		if (generateEndCorridor(world, random, pos, sides.get(0))) {
 			return true;
-		}
-		else if (generateEndCorridor(world, random, pos, sides.get(1)))
-		{
+		} else if (generateEndCorridor(world, random, pos, sides.get(1))) {
 			return true;
-		}
-		else if (generateEndCorridor(world, random, pos, sides.get(2)))
-		{
+		} else if (generateEndCorridor(world, random, pos, sides.get(2))) {
 			return true;
-		}
-		else if (generateEndCorridor(world, random, pos, sides.get(3)))
-		{
+		} else if (generateEndCorridor(world, random, pos, sides.get(3))) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
-	public boolean generateEndCorridor(World world, Random random, PositionData pos, int switchCase)
-	{
-		if (!this.needsCorridor)
-		{
+	public boolean generateEndCorridor(World world, Random random, PositionData pos, int switchCase) {
+		if (!this.needsCorridor) {
 			return false;
 		}
 
 		replaceAir = false;
 
-		switch (switchCase)
-		{
+		switch (switchCase) {
 			case 1:
 			{
 				//EAST
@@ -425,26 +386,21 @@ public class BronzeDungeon extends AetherDungeon {
 				x += 11;
 				z += 3;
 
-				if (!isBoxSolid(world, new PositionData(x + 1, y, z), new PositionData(2, 8, 6)))
-				{
+				if (!isBoxSolid(world, new PositionData(x + 1, y, z), new PositionData(2, 8, 6))) {
 					return false;
 				}
 
-				while(tunnelling)
-				{
-					if(isBoxEmpty(world, new PositionData(x, y, z), new PositionData(1, 8, 6)))
-					{
+				while(tunnelling) {
+					if(isBoxEmpty(world, new PositionData(x, y, z), new PositionData(1, 8, 6))) {
 						tunnelling = false;
 					}
 
-					if (hasBlock(world, new PositionData(x + 1, y, z), new PositionData(2, 8, 6), BlocksAether.carved_stone)
-							|| hasBlock(world, new PositionData(x + 1, y, z), new PositionData(2, 8, 6), BlocksAether.locked_carved_stone))
-					{
+					if (hasBlock(world, new PositionData(x + 1, y, z), new PositionData(2, 8, 6), BlocksAether.carved_stone) ||
+					    hasBlock(world, new PositionData(x + 1, y, z), new PositionData(2, 8, 6), BlocksAether.locked_carved_stone)) {
 						tunnelling = false;
 					}
 
-					if (x - pos.getX() > 100)
-					{
+					if (x - pos.getX() > 100) {
 						maxLength = true;
 						tunnelling = false;
 					}
@@ -457,14 +413,8 @@ public class BronzeDungeon extends AetherDungeon {
 
 					x++;
 				}
-
-				if (maxLength)
-				{
-					return false;
-				}
-
+				if (maxLength) return false;
 				this.needsCorridor = false;
-
 				return true;
 			}
 			case 2:
@@ -480,26 +430,21 @@ public class BronzeDungeon extends AetherDungeon {
 				x -= 0;
 				z += 3;
 
-				if (!isBoxSolid(world, new PositionData(x - 1, y, z), new PositionData(1, 8, 6)))
-				{
+				if (!isBoxSolid(world, new PositionData(x - 1, y, z), new PositionData(1, 8, 6))) {
 					return false;
 				}
 
-				while(tunnelling)
-				{
-					if(isBoxEmpty(world, new PositionData(x, y, z), new PositionData(1, 8, 6)))
-					{
+				while(tunnelling) {
+					if(isBoxEmpty(world, new PositionData(x, y, z), new PositionData(1, 8, 6))) {
 						tunnelling = false;
 					}
 
-					if (hasBlock(world, new PositionData(x - 1, y, z), new PositionData(1, 8, 6), BlocksAether.carved_stone)
-							|| hasBlock(world, new PositionData(x - 1, y, z), new PositionData(1, 8, 6), BlocksAether.locked_carved_stone))
-					{
+					if (hasBlock(world, new PositionData(x - 1, y, z), new PositionData(1, 8, 6), BlocksAether.carved_stone) ||
+					    hasBlock(world, new PositionData(x - 1, y, z), new PositionData(1, 8, 6), BlocksAether.locked_carved_stone)) {
 						tunnelling = false;
 					}
 
-					if (pos.getX() - x > 100)
-					{
+					if (pos.getX() - x > 100) {
 						maxLength = true;
 						tunnelling = false;
 					}
@@ -512,14 +457,8 @@ public class BronzeDungeon extends AetherDungeon {
 
 					x--;
 				}
-
-				if (maxLength)
-				{
-					return false;
-				}
-
+				if (maxLength) return false;
 				this.needsCorridor = false;
-
 				return true;
 			}
 			case 3:
@@ -536,26 +475,21 @@ public class BronzeDungeon extends AetherDungeon {
 				x += 3;
 				z += 11;
 
-				if (!isBoxSolid(world, new PositionData(x, y, z + 1), new PositionData(6, 8, 2)))
-				{
+				if (!isBoxSolid(world, new PositionData(x, y, z + 1), new PositionData(6, 8, 2))) {
 					return false;
 				}
 
-				while(tunnelling)
-				{
-					if(isBoxEmpty(world, new PositionData(x, y, z), new PositionData(6, 8, 1)))
-					{
+				while(tunnelling) {
+					if(isBoxEmpty(world, new PositionData(x, y, z), new PositionData(6, 8, 1))) {
 						tunnelling = false;
 					}
 
-					if (hasBlock(world, new PositionData(x, y, z + 1), new PositionData(6, 8, 2), BlocksAether.carved_stone)
-							|| hasBlock(world, new PositionData(x, y, z + 1), new PositionData(6, 8, 2), BlocksAether.locked_carved_stone))
-					{
+					if (hasBlock(world, new PositionData(x, y, z + 1), new PositionData(6, 8, 2), BlocksAether.carved_stone) ||
+					    hasBlock(world, new PositionData(x, y, z + 1), new PositionData(6, 8, 2), BlocksAether.locked_carved_stone)) {
 						tunnelling = false;
 					}
 
-					if (z - pos.getZ() > 100)
-					{
+					if (z - pos.getZ() > 100) {
 						maxLength = true;
 						tunnelling = false;
 					}
@@ -568,14 +502,8 @@ public class BronzeDungeon extends AetherDungeon {
 
 					z++;
 				}
-
-				if (maxLength)
-				{
-					return false;
-				}
-
+				if (maxLength) return false;
 				this.needsCorridor = false;
-
 				return true;
 			}
 			case 4:
@@ -591,26 +519,21 @@ public class BronzeDungeon extends AetherDungeon {
 				x += 3;
 				z -= 0;
 
-				if (!isBoxSolid(world, new PositionData(x, y, z - 1), new PositionData(6, 8, 1)))
-				{
+				if (!isBoxSolid(world, new PositionData(x, y, z - 1), new PositionData(6, 8, 1))) {
 					return false;
 				}
 
-				while(tunnelling)
-				{
-					if(isBoxEmpty(world, new PositionData(x, y, z), new PositionData(6, 8, 1)))
-					{
+				while(tunnelling) {
+					if(isBoxEmpty(world, new PositionData(x, y, z), new PositionData(6, 8, 1))) {
 						tunnelling = false;
 					}
 
-					if (hasBlock(world, new PositionData(x, y, z - 1), new PositionData(6, 8, 1), BlocksAether.carved_stone)
-							|| hasBlock(world, new PositionData(x, y, z - 1), new PositionData(6, 8, 1), BlocksAether.locked_carved_stone))
-					{
+					if (hasBlock(world, new PositionData(x, y, z - 1), new PositionData(6, 8, 1), BlocksAether.carved_stone) ||
+					    hasBlock(world, new PositionData(x, y, z - 1), new PositionData(6, 8, 1), BlocksAether.locked_carved_stone)) {
 						tunnelling = false;
 					}
 
-					if (pos.getZ() - z > 100)
-					{
+					if (pos.getZ() - z > 100) {
 						maxLength = true;
 						tunnelling = false;
 					}
@@ -623,14 +546,8 @@ public class BronzeDungeon extends AetherDungeon {
 
 					z--;
 				}
-
-				if (maxLength)
-				{
-					return false;
-				}
-
+				if (maxLength) return false;
 				this.needsCorridor = false;
-
 				return true;
 			}
 		}
@@ -642,32 +559,32 @@ public class BronzeDungeon extends AetherDungeon {
 		int item = random.nextInt(15);
 		switch (item) {
 			case 0:
-				return new ItemStack(ItemsAether.zanite_pickaxe);
+				return new ItemStack(AetherItems.zanite_pickaxe);
 			case 1:
-				return new ItemStack(ItemsAether.zanite_axe);
+				return new ItemStack(AetherItems.zanite_axe);
 			case 2:
-				return new ItemStack(ItemsAether.zanite_sword);
+				return new ItemStack(AetherItems.zanite_sword);
 			case 3:
-				return new ItemStack(ItemsAether.zanite_shovel);
+				return new ItemStack(AetherItems.zanite_shovel);
 			case 4:
-				return new ItemStack(ItemsAether.swet_cape);
+				return new ItemStack(AetherItems.swet_cape);
 			case 5:
-				return new ItemStack(ItemsAether.ambrosium_shard, random.nextInt(10) + 1);
+				return new ItemStack(AetherItems.ambrosium_shard, random.nextInt(10) + 1);
 			case 6:
-				return new ItemStack(ItemsAether.dart, random.nextInt(5) + 1, 0);
+				return new ItemStack(AetherItems.dart, random.nextInt(5) + 1, 0);
 			case 7:
-				return new ItemStack(ItemsAether.dart, random.nextInt(3) + 1, 1);
+				return new ItemStack(AetherItems.dart, random.nextInt(3) + 1, 1);
 			case 8:
-				return new ItemStack(ItemsAether.dart, random.nextInt(3) + 1, 2);
+				return new ItemStack(AetherItems.dart, random.nextInt(3) + 1, 2);
 			case 9: {
 				if (random.nextInt(20) == 0) {
-					return new ItemStack(ItemsAether.aether_tune);
+					return new ItemStack(AetherItems.aether_tune);
 				}
 
 				break;
 			}
 			case 10:
-				return new ItemStack(ItemsAether.skyroot_bucket, 1, 2);
+				return new ItemStack(AetherItems.skyroot_bucket, 1, 2);
 			case 11: {
 				if (random.nextInt(10) == 0) {
 					return new ItemStack(Items.record_cat);
@@ -677,13 +594,13 @@ public class BronzeDungeon extends AetherDungeon {
 			}
 			case 12: {
 				if (random.nextInt(4) == 0) {
-					return new ItemStack(ItemsAether.iron_ring);
+					return new ItemStack(AetherItems.iron_ring);
 				}
 				break;
 			}
 			case 13: {
 				if (random.nextInt(10) == 0) {
-					return new ItemStack(ItemsAether.golden_ring);
+					return new ItemStack(AetherItems.golden_ring);
 				}
 				break;
 			}
@@ -695,26 +612,26 @@ public class BronzeDungeon extends AetherDungeon {
 		int item = random.nextInt(10);
 		switch (item) {
 			case 0:
-				return new ItemStack(ItemsAether.gummy_swet, random.nextInt(7) + 1, random.nextInt(2));
+				return new ItemStack(AetherItems.gummy_swet, random.nextInt(7) + 1, random.nextInt(2));
 			case 1:
-				return new ItemStack(ItemsAether.phoenix_bow);
+				return new ItemStack(AetherItems.phoenix_bow);
 			case 2:
-				return new ItemStack(ItemsAether.flaming_sword);
+				return new ItemStack(AetherItems.flaming_sword);
 			case 3:
-				return new ItemStack(ItemsAether.notch_hammer);
+				return new ItemStack(AetherItems.notch_hammer);
 			case 4:
-				return new ItemStack(ItemsAether.lightning_knife, random.nextInt(20) + 1);
+				return new ItemStack(AetherItems.lightning_knife, random.nextInt(20) + 1);
 			case 5:
-				return new ItemStack(ItemsAether.valkyrie_lance);
+				return new ItemStack(AetherItems.valkyrie_lance);
 			case 6:
-				return new ItemStack(ItemsAether.agility_cape);
+				return new ItemStack(AetherItems.agility_cape);
 			case 7:
-				return new ItemStack(ItemsAether.sentry_boots);
+				return new ItemStack(AetherItems.sentry_boots);
 			case 8:
-				return new ItemStack(ItemsAether.repulsion_shield);
+				return new ItemStack(AetherItems.repulsion_shield);
 		}
 
-		return new ItemStack(ItemsAether.cloud_staff);
+		return new ItemStack(AetherItems.cloud_staff);
 	}
 
 	public Block lockedLightBlock() {

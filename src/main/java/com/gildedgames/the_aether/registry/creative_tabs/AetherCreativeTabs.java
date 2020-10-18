@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import com.gildedgames.the_aether.blocks.BlocksAether;
-import com.gildedgames.the_aether.items.ItemsAether;
+import com.gildedgames.the_aether.items.AetherItems;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,13 +23,13 @@ public class AetherCreativeTabs {
 
 	public static void initialization() {
 		blocks.setIcon(new ItemStack(BlocksAether.aether_grass));
-		tools.setIcon(new ItemStack(ItemsAether.gravitite_pickaxe));
-		weapons.setIcon(new ItemStack(ItemsAether.gravitite_sword));
-		armor.setIcon(new ItemStack(ItemsAether.gravitite_helmet));
-		food.setIcon(new ItemStack(ItemsAether.blueberry));
-		accessories.setIcon(new ItemStack(ItemsAether.gravitite_gloves));
-		material.setIcon(new ItemStack(ItemsAether.ambrosium_shard));
-		misc.setIcon(new ItemStack(ItemsAether.dungeon_key));
+		tools.setIcon(new ItemStack(AetherItems.gravitite_pickaxe));
+		weapons.setIcon(new ItemStack(AetherItems.gravitite_sword));
+		armor.setIcon(new ItemStack(AetherItems.gravitite_helmet));
+		food.setIcon(new ItemStack(AetherItems.blueberry));
+		accessories.setIcon(new ItemStack(AetherItems.gravitite_gloves));
+		material.setIcon(new ItemStack(AetherItems.ambrosium_shard));
+		misc.setIcon(new ItemStack(AetherItems.dungeon_key));
 	}
 
 	public static class AetherTab extends CreativeTabs {

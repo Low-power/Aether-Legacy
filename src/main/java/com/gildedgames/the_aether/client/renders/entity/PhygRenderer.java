@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.client.renders.entity;
 
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.client.models.entities.PhygWingModel;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityPhyg;
+import com.gildedgames.the_aether.entities.passive.mountable.Phyg;
 import net.minecraft.client.model.ModelPig;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
@@ -25,7 +25,7 @@ public class PhygRenderer extends RenderLiving {
 		super(new ModelPig(), 0.7F);
 	}
 
-	protected int renderLayers(EntityPhyg entity, int pass, float particleTicks) {
+	protected int renderLayers(Phyg entity, int pass, float particleTicks) {
 		if (entity.isInvisible()) {
 			return 0;
 		} else if (pass == 0) {
@@ -45,7 +45,7 @@ public class PhygRenderer extends RenderLiving {
 
 	@Override
 	protected int shouldRenderPass(EntityLivingBase entity, int pass, float particleTicks) {
-		return this.renderLayers((EntityPhyg) entity, pass, particleTicks);
+		return this.renderLayers((Phyg)entity, pass, particleTicks);
 	}
 
 	@Override

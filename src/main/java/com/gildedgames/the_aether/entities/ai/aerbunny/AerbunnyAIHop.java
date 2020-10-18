@@ -1,13 +1,13 @@
 package com.gildedgames.the_aether.entities.ai.aerbunny;
 
-import com.gildedgames.the_aether.entities.passive.mountable.EntityAerbunny;
+import com.gildedgames.the_aether.entities.passive.mountable.Aerbunny;
 import net.minecraft.entity.ai.EntityAIBase;
 
 public class AerbunnyAIHop extends EntityAIBase {
 
-    private EntityAerbunny aerbunny;
+    private Aerbunny aerbunny;
 
-    public AerbunnyAIHop(EntityAerbunny aerbunny) {
+    public AerbunnyAIHop(Aerbunny aerbunny) {
         this.aerbunny = aerbunny;
         this.setMutexBits(8);
     }

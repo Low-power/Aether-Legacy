@@ -1,12 +1,10 @@
 package com.gildedgames.the_aether.client.models.entities;
 
-import org.lwjgl.opengl.GL11;
-
+import com.gildedgames.the_aether.entities.passive.mountable.Phyg;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-
-import com.gildedgames.the_aether.entities.passive.mountable.EntityPhyg;
+import org.lwjgl.opengl.GL11;
 
 public class PhygWingModel extends ModelBase {
 
@@ -25,8 +23,8 @@ public class PhygWingModel extends ModelBase {
 	}
 
 	@Override
-	public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		EntityPhyg pig = ((EntityPhyg) entityIn);
+	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+		Phyg pig = (Phyg)entity;
 		float wingBend;
 		float x;
 		float y;
@@ -95,7 +93,7 @@ public class PhygWingModel extends ModelBase {
 	}
 
 	@Override
-	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entity) {
 	}
 
 }

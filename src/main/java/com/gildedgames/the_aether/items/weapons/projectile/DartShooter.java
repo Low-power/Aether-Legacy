@@ -2,10 +2,10 @@ package com.gildedgames.the_aether.items.weapons.projectile;
 
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.entities.projectile.darts.EntityDartBase;
-import com.gildedgames.the_aether.entities.projectile.darts.EntityDartEnchanted;
-import com.gildedgames.the_aether.entities.projectile.darts.EntityDartGolden;
-import com.gildedgames.the_aether.entities.projectile.darts.EntityDartPoison;
-import com.gildedgames.the_aether.items.ItemsAether;
+import com.gildedgames.the_aether.entities.projectile.darts.EnchantedDartEntity;
+import com.gildedgames.the_aether.entities.projectile.darts.GoldenDartEntity;
+import com.gildedgames.the_aether.entities.projectile.darts.PoisonDartEntity;
+import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.util.EnumDartShooterType;
 import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -112,7 +112,7 @@ public class DartShooter extends Item {
 		int consume;
 
 		if (!player.capabilities.isCreativeMode) {
-			consume = this.consumeItem(player, ItemsAether.dart, heldItem.getItemDamage());
+			consume = this.consumeItem(player, AetherItems.dart, heldItem.getItemDamage());
 		} else {
 			consume = heldItem.getItemDamage();
 		}
@@ -123,11 +123,11 @@ public class DartShooter extends Item {
 			EntityDartBase dart = null;
 
 			if (consume == 1) {
-				dart = new EntityDartPoison(world, player, 1F);
+				dart = new PoisonDartEntity(world, player, 1F);
 			} else if (consume == 2) {
-				dart = new EntityDartEnchanted(world, player, 1F);
+				dart = new EnchantedDartEntity(world, player, 1F);
 			} else {
-				dart = new EntityDartGolden(world, player, 1F);
+				dart = new GoldenDartEntity(world, player, 1F);
 			}
 
 			if (!world.isRemote) {

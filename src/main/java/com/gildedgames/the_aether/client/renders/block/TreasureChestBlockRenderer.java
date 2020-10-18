@@ -1,25 +1,22 @@
 package com.gildedgames.the_aether.client.renders.block;
 
+import com.gildedgames.the_aether.tileentity.TreasureChestTileEntity;
 import com.gildedgames.the_aether.CommonProxy;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.world.IBlockAccess;
-
-import com.gildedgames.the_aether.tileentity.TileEntityTreasureChest;
-
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class TreasureChestBlockRenderer implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
-		GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(90F, 0F, 1F, 0F);
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-		TileEntityRendererDispatcher.instance.renderTileEntityAt(new TileEntityTreasureChest(), 0.0, 0.0, 0.0, 0f);
+		TileEntityRendererDispatcher.instance.renderTileEntityAt(new TreasureChestTileEntity(), 0d, 0d, 0d, 0f);
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 	}
 

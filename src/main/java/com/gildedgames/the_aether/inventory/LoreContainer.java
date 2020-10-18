@@ -15,7 +15,7 @@ public class LoreContainer extends Container {
 	public IInventory loreSlot;
 
 	public LoreContainer(InventoryPlayer inventory) {
-		this.loreSlot = new InventoryLore(inventory.player);
+		this.loreSlot = new LoreInventory(inventory.player);
 
 		this.addSlotToContainer(new SlotLore(this.loreSlot, 0, 104, -4));
 

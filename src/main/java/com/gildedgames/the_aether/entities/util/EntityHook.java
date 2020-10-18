@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.entities.util;
 
 import com.gildedgames.the_aether.AetherConfig;
 import com.gildedgames.the_aether.api.player.util.IAetherBoss;
-import com.gildedgames.the_aether.items.ItemsAether;
+import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.player.PlayerAether;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -80,7 +80,7 @@ public class EntityHook implements IExtendedEntityProperties {
 			if (livingEntity.getAttackTarget() instanceof EntityPlayer) {
 				PlayerAether playerAether = PlayerAether.get((EntityPlayer) livingEntity.getAttackTarget());
 
-				if (playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(ItemsAether.invisibility_cape))) {
+				if (playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
 					livingEntity.setAttackTarget(null);
 				}
 			}
@@ -92,7 +92,7 @@ public class EntityHook implements IExtendedEntityProperties {
 			if (creature.getEntityToAttack() instanceof EntityPlayer) {
 				PlayerAether playerAether = PlayerAether.get((EntityPlayer) creature.getEntityToAttack());
 
-				if (playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(ItemsAether.invisibility_cape))) {
+				if (playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
 					creature.setTarget(null);
 				}
 			}
@@ -105,7 +105,7 @@ public class EntityHook implements IExtendedEntityProperties {
 			if (living.getAITarget() instanceof EntityPlayer) {
 				PlayerAether playerAether = PlayerAether.get((EntityPlayer) living.getAITarget());
 
-				if (playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(ItemsAether.invisibility_cape))) {
+				if (playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
 					living.setRevengeTarget(null);
 				}
 			}

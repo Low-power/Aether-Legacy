@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.client.renders.entity;
 
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.client.models.entities.ValkyrieModel;
-import com.gildedgames.the_aether.entities.bosses.valkyrie_queen.EntityValkyrieQueen;
+import com.gildedgames.the_aether.entities.bosses.valkyrie_queen.ValkyrieQueen;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,7 +17,7 @@ public class ValkyrieQueenRenderer extends RenderLiving {
     }
 
     protected void preRenderCallback(EntityLivingBase valkyrie, float partialTickTime) {
-        ((ValkyrieModel) this.mainModel).sinage = ((EntityValkyrieQueen) valkyrie).sinage;
+        ((ValkyrieModel) this.mainModel).sinage = ((ValkyrieQueen)valkyrie).sinage;
         ((ValkyrieModel) this.mainModel).gonRound = valkyrie.onGround;
         ((ValkyrieModel) this.mainModel).halow = true;
     }

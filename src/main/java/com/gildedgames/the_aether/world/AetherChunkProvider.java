@@ -3,10 +3,10 @@ package com.gildedgames.the_aether.world;
 import com.gildedgames.the_aether.blocks.BlocksAether;
 import com.gildedgames.the_aether.world.dungeon.BronzeDungeon;
 import com.gildedgames.the_aether.world.dungeon.util.AetherDungeon;
-import com.gildedgames.the_aether.world.gen.MapGenGoldenDungeon;
+import com.gildedgames.the_aether.world.gen.GoldenDungeonStructure;
 import com.gildedgames.the_aether.world.gen.MapGenLargeColdAercloud;
 import com.gildedgames.the_aether.world.gen.MapGenQuicksoil;
-import com.gildedgames.the_aether.world.gen.MapGenSilverDungeon;
+import com.gildedgames.the_aether.world.gen.SilverDungeonStructure;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -56,9 +56,9 @@ public class AetherChunkProvider implements IChunkProvider {
 
 	private MapGenQuicksoil quicksoilGen = new MapGenQuicksoil();
 
-	private MapGenSilverDungeon silverDungeonStructure = new MapGenSilverDungeon();
+	private SilverDungeonStructure silverDungeonStructure = new SilverDungeonStructure();
 
-	private MapGenGoldenDungeon goldenDungeonStructure = new MapGenGoldenDungeon();
+	private GoldenDungeonStructure goldenDungeonStructure = new GoldenDungeonStructure();
 
 	private MapGenLargeColdAercloud largeColdAercloudStructure = new MapGenLargeColdAercloud();
 

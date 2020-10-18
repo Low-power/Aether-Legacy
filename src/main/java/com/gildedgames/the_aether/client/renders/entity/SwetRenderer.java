@@ -2,13 +2,12 @@ package com.gildedgames.the_aether.client.renders.entity;
 
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.entities.hostile.swet.EnumSwetType;
-import com.gildedgames.the_aether.entities.passive.mountable.EntitySwet;
+import com.gildedgames.the_aether.entities.passive.mountable.Swet;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
 public class SwetRenderer extends RenderLiving {
@@ -23,7 +22,7 @@ public class SwetRenderer extends RenderLiving {
 		this.setRenderPassModel(new ModelSlime(0));
 	}
 
-	protected int renderEyeGlow(EntitySwet entity, int pass, float particleTicks) {
+	protected int renderEyeGlow(Swet entity, int pass, float particleTicks) {
 		if (entity.isInvisible()) {
 			return 0;
 		} else if (pass == 0) {
@@ -34,16 +33,16 @@ public class SwetRenderer extends RenderLiving {
 		} else {
 			if (pass == 1) {
 				GL11.glDisable(GL11.GL_BLEND);
-				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				GL11.glColor4f(1F, 1F, 1F, 1F);
 			}
 
 			return -1;
 		}
 	}
 
-	protected void setupAnimation(EntitySwet swet, float f) {
-		float f2 = 1.0F;
-		float f1 = 1.0F;
+	protected void setupAnimation(Swet swet, float f) {
+		float f2 = 1F;
+		float f1 = 1F;
 		float f3 = 1.5F;
 
 		if (!swet.onGround && swet.worldObj.isRemote) {
@@ -61,7 +60,7 @@ public class SwetRenderer extends RenderLiving {
 		}
 
 		if (swet.riddenByEntity != null) {
-			f3 = 1.5F + (swet.riddenByEntity.width + swet.riddenByEntity.height) * 2.0F;
+			f3 = 1.5F + (swet.riddenByEntity.width + swet.riddenByEntity.height) * 2F;
 		}
 
 		GL11.glScalef(f2 * f3, f1 * f3, f2 * f3);
@@ -69,16 +68,16 @@ public class SwetRenderer extends RenderLiving {
 
 	@Override
 	protected int shouldRenderPass(EntityLivingBase entity, int pass, float particleTicks) {
-		return this.renderEyeGlow((EntitySwet) entity, pass, particleTicks);
+		return this.renderEyeGlow((Swet)entity, pass, particleTicks);
 	}
 
 	@Override
 	protected void preRenderCallback(EntityLivingBase swet, float f) {
-		this.setupAnimation((EntitySwet) swet, f);
+		this.setupAnimation((Swet)swet, f);
 	}
 
 	@Override
 	public ResourceLocation getEntityTexture(Entity swet) {
-		return ((EntitySwet) swet).getSwetType() == EnumSwetType.BLUE ? TEXTURE_BLUE : TEXTURE_GOLDEN;
+		return ((Swet)swet).getSwetType() == EnumSwetType.BLUE ? TEXTURE_BLUE : TEXTURE_GOLDEN;
 	}
 }

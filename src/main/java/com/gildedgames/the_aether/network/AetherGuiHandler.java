@@ -2,20 +2,20 @@ package com.gildedgames.the_aether.network;
 
 import com.gildedgames.the_aether.client.gui.GuiEnchanter;
 import com.gildedgames.the_aether.client.gui.GuiFreezer;
-import com.gildedgames.the_aether.client.gui.GuiIncubator;
+import com.gildedgames.the_aether.client.gui.IncubatorGui;
 import com.gildedgames.the_aether.client.gui.LoreGui;
 import com.gildedgames.the_aether.client.gui.GuiTreasureChest;
 import com.gildedgames.the_aether.inventory.ContainerAccessories;
 import com.gildedgames.the_aether.inventory.ContainerEnchanter;
 import com.gildedgames.the_aether.inventory.ContainerFreezer;
-import com.gildedgames.the_aether.inventory.ContainerIncubator;
+import com.gildedgames.the_aether.inventory.IncubatorContainer;
 import com.gildedgames.the_aether.inventory.LoreContainer;
-import com.gildedgames.the_aether.client.gui.inventory.GuiAccessories;
+import com.gildedgames.the_aether.client.gui.inventory.AccessoriesGui;
 import com.gildedgames.the_aether.player.PlayerAether;
 import com.gildedgames.the_aether.tileentity.TileEntityEnchanter;
 import com.gildedgames.the_aether.tileentity.TileEntityFreezer;
-import com.gildedgames.the_aether.tileentity.TileEntityIncubator;
-import com.gildedgames.the_aether.tileentity.TileEntityTreasureChest;
+import com.gildedgames.the_aether.tileentity.IncubatorTileEntity;
+import com.gildedgames.the_aether.tileentity.TreasureChestTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
@@ -37,7 +37,7 @@ public class AetherGuiHandler implements IGuiHandler {
 		} else if (ID == freezer) {
 			return new ContainerFreezer(player.inventory, (TileEntityFreezer) world.getTileEntity(x, y, z));
 		} else if (ID == incubator) {
-			return new ContainerIncubator(player, player.inventory, (TileEntityIncubator) world.getTileEntity(x, y, z));
+			return new IncubatorContainer(player, player.inventory, (IncubatorTileEntity)world.getTileEntity(x, y, z));
 		} else if (ID == treasure_chest) {
 			return new ContainerChest(player.inventory, (IInventory) world.getTileEntity(x, y, z));
 		} else if (ID == lore) {
@@ -51,15 +51,15 @@ public class AetherGuiHandler implements IGuiHandler {
 	@SideOnly(Side.CLIENT)
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == accessories) {
-			return new GuiAccessories(PlayerAether.get(player));
+			return new AccessoriesGui(PlayerAether.get(player));
 		} else if (ID == enchanter) {
 			return new GuiEnchanter(player.inventory, (TileEntityEnchanter) world.getTileEntity(x, y, z));
 		} else if (ID == freezer) {
 			return new GuiFreezer(player.inventory, (TileEntityFreezer) world.getTileEntity(x, y, z));
 		} else if (ID == incubator) {
-			return new GuiIncubator(player, player.inventory, (TileEntityIncubator) world.getTileEntity(x, y, z));
+			return new IncubatorGui(player, player.inventory, (IncubatorTileEntity)world.getTileEntity(x, y, z));
 		} else if (ID == treasure_chest) {
-			return new GuiTreasureChest(player.inventory, (TileEntityTreasureChest) world.getTileEntity(x, y, z));
+			return new GuiTreasureChest(player.inventory, (TreasureChestTileEntity)world.getTileEntity(x, y, z));
 		} else if (ID == lore) {
 			return new LoreGui(player.inventory);
 		}

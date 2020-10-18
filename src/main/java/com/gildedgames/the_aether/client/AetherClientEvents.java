@@ -1,7 +1,5 @@
 package com.gildedgames.the_aether.client;
 
-import java.util.List;
-
 import com.gildedgames.the_aether.client.gui.GuiCustomizationScreen;
 import com.gildedgames.the_aether.client.gui.GuiEnterAether;
 import com.gildedgames.the_aether.client.gui.button.GuiAccessoryButton;
@@ -13,7 +11,17 @@ import com.gildedgames.the_aether.client.gui.menu.GuiMenuToggleButton;
 import com.gildedgames.the_aether.network.packets.PacketCapeChanged;
 import com.gildedgames.the_aether.network.packets.PacketExtendedAttack;
 import com.gildedgames.the_aether.player.perks.AetherRankings;
-import cpw.mods.fml.client.FMLClientHandler;
+import com.gildedgames.the_aether.AetherConfig;
+import com.gildedgames.the_aether.client.gui.AetherLoadingScreen;
+import com.gildedgames.the_aether.client.renders.entity.PlayerAetherRenderer;
+import com.gildedgames.the_aether.entities.AetherEntities;
+import com.gildedgames.the_aether.items.AetherSpawnEgg;
+import com.gildedgames.the_aether.items.AetherItems;
+import com.gildedgames.the_aether.items.armor.AetherArmor;
+import com.gildedgames.the_aether.network.AetherGuiHandler;
+import com.gildedgames.the_aether.network.AetherNetwork;
+import com.gildedgames.the_aether.network.packets.PacketOpenContainer;
+import com.gildedgames.the_aether.player.PlayerAether;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -35,23 +43,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel;
-
-import com.gildedgames.the_aether.AetherConfig;
-import com.gildedgames.the_aether.client.gui.AetherLoadingScreen;
-import com.gildedgames.the_aether.client.renders.entity.PlayerAetherRenderer;
-import com.gildedgames.the_aether.entities.EntitiesAether;
-import com.gildedgames.the_aether.items.ItemAetherSpawnEgg;
-import com.gildedgames.the_aether.items.ItemsAether;
-import com.gildedgames.the_aether.items.armor.ItemAetherArmor;
-import com.gildedgames.the_aether.network.AetherGuiHandler;
-import com.gildedgames.the_aether.network.AetherNetwork;
-import com.gildedgames.the_aether.network.packets.PacketOpenContainer;
-import com.gildedgames.the_aether.player.PlayerAether;
-
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
+import java.util.List;
 
 public class AetherClientEvents {
 
@@ -156,7 +153,7 @@ public class AetherClientEvents {
 
 	public boolean isValkyrieItem(Item stackID)
 	{
-		return stackID == ItemsAether.valkyrie_shovel || stackID == ItemsAether.valkyrie_axe || stackID == ItemsAether.valkyrie_pickaxe || stackID == ItemsAether.valkyrie_lance;
+		return stackID == AetherItems.valkyrie_shovel || stackID == AetherItems.valkyrie_axe || stackID == AetherItems.valkyrie_pickaxe || stackID == AetherItems.valkyrie_lance;
 	}
 
 	@SubscribeEvent
@@ -207,10 +204,10 @@ public class AetherClientEvents {
 		}
 
 		if (target.entityHit != null) {
-			int id = EntitiesAether.getEntityID(target.entityHit);
+			int id = AetherEntities.getEntityID(target.entityHit);
 
-			if (id >= 0 && ItemAetherSpawnEgg.entityEggs.containsKey(id)) {
-				result = new ItemStack(ItemsAether.aether_spawn_egg, 1, id);
+			if (id >= 0 && AetherSpawnEgg.entityEggs.containsKey(id)) {
+				result = new ItemStack(AetherItems.aether_spawn_egg, 1, id);
 			}
 		}
 
@@ -250,7 +247,7 @@ public class AetherClientEvents {
 
 		Item item = player.getCurrentEquippedItem().getItem();
 
-		if (item == ItemsAether.phoenix_bow) {
+		if (item == AetherItems.phoenix_bow) {
 			int i = player.getItemInUseDuration();
 			float f1 = (float) i / 20.0F;
 
@@ -388,7 +385,7 @@ public class AetherClientEvents {
 		PlayerAether playerAether = PlayerAether.get(player);
 
 		if (playerAether != null) {
-			if (playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(ItemsAether.invisibility_cape))) {
+			if (playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
 				event.setCanceled(true);
 			}
 		}
@@ -403,7 +400,7 @@ public class AetherClientEvents {
 
 	@SubscribeEvent
 	public void onRenderAetherArmor(SetArmorModel event) {
-		if (event.stack != null && event.stack.getItem() instanceof ItemAetherArmor) {
+		if (event.stack != null && event.stack.getItem() instanceof AetherArmor) {
 			event.result = PlayerAetherRenderer.instance().renderAetherArmor(PlayerAether.get(event.entityPlayer), event.renderer, event.stack, 3 - event.slot);
 		}
 	}

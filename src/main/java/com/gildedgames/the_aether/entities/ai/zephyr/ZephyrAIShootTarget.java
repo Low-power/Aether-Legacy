@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.entities.ai.zephyr;
 
 import com.gildedgames.the_aether.entities.hostile.EntityZephyr;
-import com.gildedgames.the_aether.entities.projectile.EntityZephyrSnowball;
+import com.gildedgames.the_aether.entities.projectile.ZephyrSnowballEntity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
@@ -62,7 +62,7 @@ public class ZephyrAIShootTarget extends EntityAIBase {
                 } else if (this.attackCounter == 20) {
                     this.zephyr.playSound("aether_legacy:aemob.zephyr.call", 3F, this.base);
 
-                    EntityZephyrSnowball projectile = new EntityZephyrSnowball(this.worldObj, this.zephyr, x, y, z);
+                    ZephyrSnowballEntity projectile = new ZephyrSnowballEntity(this.worldObj, this.zephyr, x, y, z);
                     Vec3 lookVector = this.zephyr.getLook(1.0F);
 
                     projectile.posX = this.zephyr.posX + lookVector.xCoord * 4D;

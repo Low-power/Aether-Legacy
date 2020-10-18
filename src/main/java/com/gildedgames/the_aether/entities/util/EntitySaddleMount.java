@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public abstract class EntitySaddleMount extends EntityMountable {
+public abstract class EntitySaddleMount extends MountableEntity {
 
 	public EntitySaddleMount(World world) {
 		super(world);
@@ -20,19 +20,19 @@ public abstract class EntitySaddleMount extends EntityMountable {
 	}
 
 	@Override
-	public boolean interact(EntityPlayer entityplayer) {
+	public boolean interact(EntityPlayer player) {
 		if (!this.canSaddle()) {
-			return super.interact(entityplayer);
+			return super.interact(player);
 		}
 
 		if (!this.isSaddled()) {
-			if (entityplayer.inventory.getCurrentItem() != null && (entityplayer.inventory.getCurrentItem().getItem() == Items.saddle) && !this.isChild()) {
-				if (!entityplayer.capabilities.isCreativeMode) {
-					entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+			if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Items.saddle && !this.isChild()) {
+				if (!player.capabilities.isCreativeMode) {
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 				}
 
-				if (entityplayer.worldObj.isRemote) {
-					entityplayer.worldObj.playSoundAtEntity(this, "mob.horse.leather", 0.5F, 1.0F);
+				if (player.worldObj.isRemote) {
+					player.worldObj.playSoundAtEntity(this, "mob.horse.leather", 0.5F, 1.0F);
 				}
 
 				this.setSaddled(true);
@@ -40,15 +40,15 @@ public abstract class EntitySaddleMount extends EntityMountable {
 				return true;
 			}
 		} else if (this.riddenByEntity == null) {
-			if (!entityplayer.worldObj.isRemote) {
-				entityplayer.mountEntity(this);
-				entityplayer.prevRotationYaw = entityplayer.rotationYaw = this.rotationYaw;
+			if (!player.worldObj.isRemote) {
+				player.mountEntity(this);
+				player.prevRotationYaw = player.rotationYaw = this.rotationYaw;
 			}
 
 			return true;
 		}
 
-		return super.interact(entityplayer);
+		return super.interact(player);
 	}
 
 	@Override

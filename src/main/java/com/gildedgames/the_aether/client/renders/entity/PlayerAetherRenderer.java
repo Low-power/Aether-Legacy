@@ -21,9 +21,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import com.gildedgames.the_aether.api.accessories.AccessoryType;
-import com.gildedgames.the_aether.items.ItemsAether;
-import com.gildedgames.the_aether.items.accessories.ItemAccessory;
-import com.gildedgames.the_aether.items.armor.ItemAetherArmor;
+import com.gildedgames.the_aether.items.AetherItems;
+import com.gildedgames.the_aether.items.accessories.Accessory;
+import com.gildedgames.the_aether.items.armor.AetherArmor;
 import com.gildedgames.the_aether.player.PlayerAether;
 import com.gildedgames.the_aether.player.perks.AetherRankings;
 
@@ -63,8 +63,8 @@ public class PlayerAetherRenderer {
         if (stack != null) {
             Item item = stack.getItem();
 
-            if (item instanceof ItemAetherArmor) {
-                ItemAetherArmor itemarmor = (ItemAetherArmor) item;
+            if (item instanceof AetherArmor) {
+                AetherArmor armor = (AetherArmor)item;
 
                 this.mc.getTextureManager().bindTexture(RenderBiped.getArmorResource(playerAether.getEntity(), stack, slotType, null));
                 ModelBiped modelbiped = slotType == 2 ? renderPlayer.modelArmor : renderPlayer.modelArmorChestplate;
@@ -81,7 +81,7 @@ public class PlayerAetherRenderer {
                 modelbiped.isRiding = renderPlayer.modelBipedMain.isRiding;
                 modelbiped.isChild = renderPlayer.modelBipedMain.isChild;
 
-                int j = itemarmor.getColorFromItemStack(stack, 0);
+                int j = armor.getColorFromItemStack(stack, 0);
 
                 if (j != -1) {
                     float f1 = (float) (j >> 16 & 255) / 255.0F;
@@ -208,7 +208,7 @@ public class PlayerAetherRenderer {
         this.modelGlow.setRotationAngles(limbSwing, prevLimbSwing, rotation, interpolateRotation, prevRotationPitch, scale, player);
 
         if (playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.PENDANT) != null) {
-            ItemAccessory pendant = (ItemAccessory) playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.PENDANT).getItem();
+            Accessory pendant = (Accessory)playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.PENDANT).getItem();
 
             this.mc.getTextureManager().bindTexture(pendant.texture);
 
@@ -228,8 +228,8 @@ public class PlayerAetherRenderer {
             GL11.glColor3f(1.0F, 1.0F, 1.0F);
         }
 
-        if (playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.CAPE) != null && !playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(ItemsAether.invisibility_cape))) {
-            ItemAccessory cape = (ItemAccessory) playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.CAPE).getItem();
+        if (playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.CAPE) != null && !playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
+            Accessory cape = (Accessory)playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.CAPE).getItem();
 
             if (!player.isInvisible()) {
                 if (playerAether.shouldRenderCape) {
@@ -290,7 +290,7 @@ public class PlayerAetherRenderer {
         GL11.glScalef(0.9375F, 0.9375F, 0.9375F);
 
         if (playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.GLOVES) != null) {
-            ItemAccessory gloves = (ItemAccessory) playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.GLOVES).getItem();
+            Accessory gloves = (Accessory)playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.GLOVES).getItem();
 
             this.mc.getTextureManager().bindTexture(gloves.texture);
 
@@ -301,7 +301,7 @@ public class PlayerAetherRenderer {
 
             if (player.hurtTime > 0) {
                 GL11.glColor3f(1.0F, 0.5F, 0.5F);
-            } else if (gloves != ItemsAether.phoenix_gloves) {
+            } else if (gloves != AetherItems.phoenix_gloves) {
                 GL11.glColor3f(red, green, blue);
             }
 
@@ -312,7 +312,7 @@ public class PlayerAetherRenderer {
         }
 
         if (playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.SHIELD) != null) {
-            ItemAccessory shield = (ItemAccessory) playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.SHIELD).getItem();
+            Accessory shield = (Accessory)playerAether.getAccessoryInventory().getStackInSlot(AccessoryType.SHIELD).getItem();
 
             if (player.motionX == 0.0 && (player.motionY == -0.0784000015258789 || player.motionY == 0.0) && player.motionZ == 0.0 && shield.hasInactiveTexture())
             {

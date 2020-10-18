@@ -7,8 +7,8 @@ public class AetherTileEntities {
 	public static void initialization() {
 		GameRegistry.registerTileEntity(TileEntityEnchanter.class, "enchanter");
 		GameRegistry.registerTileEntity(TileEntityFreezer.class, "freezer");
-		GameRegistry.registerTileEntity(TileEntityIncubator.class, "incubator");
-		GameRegistry.registerTileEntity(TileEntityTreasureChest.class, "treasure_chest");
+		GameRegistry.registerTileEntity(IncubatorTileEntity.class, "incubator");
+		GameRegistry.registerTileEntity(TreasureChestTileEntity.class, "treasure_chest");
 		GameRegistry.registerTileEntity(TileEntityChestMimic.class, "chest_mimic");
 	}
 

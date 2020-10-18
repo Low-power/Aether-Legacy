@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether;
 
 import com.gildedgames.the_aether.api.player.IPlayerAether;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityAerbunny;
+import com.gildedgames.the_aether.entities.passive.mountable.Aerbunny;
 import com.gildedgames.the_aether.network.AetherNetwork;
 import com.gildedgames.the_aether.network.packets.PacketSendEternalDay;
 import com.gildedgames.the_aether.network.packets.PacketSendShouldCycle;
@@ -43,14 +43,14 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.*;
 import com.gildedgames.the_aether.blocks.BlocksAether;
 import com.gildedgames.the_aether.blocks.portal.BlockAetherPortal;
-import com.gildedgames.the_aether.entities.EntitiesAether;
-import com.gildedgames.the_aether.entities.bosses.EntityValkyrie;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityFlyingCow;
-import com.gildedgames.the_aether.items.ItemsAether;
-import com.gildedgames.the_aether.items.dungeon.ItemDungeonKey;
-import com.gildedgames.the_aether.items.util.EnumSkyrootBucketType;
+import com.gildedgames.the_aether.entities.AetherEntities;
+import com.gildedgames.the_aether.entities.bosses.Valkyrie;
+import com.gildedgames.the_aether.entities.passive.mountable.FlyingCow;
+import com.gildedgames.the_aether.items.AetherItems;
+import com.gildedgames.the_aether.items.dungeon.DungeonKey;
+import com.gildedgames.the_aether.items.util.SkyrootBucketType;
 import com.gildedgames.the_aether.items.weapons.ItemSkyrootSword;
-import com.gildedgames.the_aether.registry.achievements.AchievementsAether;
+import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
@@ -68,7 +68,7 @@ public class AetherEventHandler {
 			if (currentStack != null) {
 				if (currentStack.getItem() == Items.flint_and_steel || currentStack.getItem() == Item.getItemFromBlock(Blocks.torch) || currentStack.getItem() == Items.fire_charge) {
 					for (int i = 0; i < 10; ++i) {
-						event.world.spawnParticle("smoke", event.x, event.y, event.z, 0.0D, 0.0D, 0.0D);
+						event.world.spawnParticle("smoke", event.x, event.y, event.z, 0D, 0D, 0D);
 					}
 
 					event.setCanceled(true);
@@ -84,27 +84,27 @@ public class AetherEventHandler {
 		if (event.target instanceof EntityAgeable) {
 			ItemStack itemstack = event.entityPlayer.inventory.getCurrentItem();
 
-			if (itemstack != null && itemstack.getItem() == ItemsAether.aether_spawn_egg) {
+			if (itemstack != null && itemstack.getItem() == AetherItems.aether_spawn_egg) {
 				if (!event.entityPlayer.worldObj.isRemote) {
-					Class<?> oclass = EntitiesAether.getClassFromID(itemstack.getItemDamage());
+					Class<?> oclass = AetherEntities.getClassFromID(itemstack.getItemDamage());
 
 					if (oclass != null && oclass.isAssignableFrom(this.getClass())) {
-						EntityAgeable entityageable = ((EntityAgeable) event.target).createChild((EntityAgeable) event.target);
+						EntityAgeable child = ((EntityAgeable)event.target).createChild((EntityAgeable) event.target);
 
-						if (entityageable != null) {
-							entityageable.setGrowingAge(-24000);
-							entityageable.setLocationAndAngles(event.target.posX, event.target.posY, event.target.posZ, 0.0F, 0.0F);
-							event.entityPlayer.worldObj.spawnEntityInWorld(entityageable);
+						if (child != null) {
+							child.setGrowingAge(-24000);
+							child.setLocationAndAngles(event.target.posX, event.target.posY, event.target.posZ, 0F, 0F);
+							event.entityPlayer.worldObj.spawnEntityInWorld(child);
 
 							if (itemstack.hasDisplayName()) {
-								entityageable.setCustomNameTag(itemstack.getDisplayName());
+								child.setCustomNameTag(itemstack.getDisplayName());
 							}
 
 							if (!event.entityPlayer.capabilities.isCreativeMode) {
 								--itemstack.stackSize;
 
 								if (itemstack.stackSize <= 0) {
-									event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, (ItemStack) null);
+									event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, (ItemStack)null);
 								}
 							}
 						}
@@ -113,19 +113,19 @@ public class AetherEventHandler {
 			}
 		}
 
-		if (event.target instanceof EntityCow || event.target instanceof EntityFlyingCow) {
+		if (event.target instanceof EntityCow || event.target instanceof FlyingCow) {
 			EntityPlayer player = event.entityPlayer;
 			ItemStack heldItem = player.getCurrentEquippedItem();
 
-			if (heldItem != null && heldItem.getItem() == ItemsAether.skyroot_bucket && EnumSkyrootBucketType.getType(heldItem.getItemDamage()) == EnumSkyrootBucketType.Empty) {
+			if (heldItem != null && heldItem.getItem() == AetherItems.skyroot_bucket && SkyrootBucketType.getType(heldItem.getItemDamage()) == SkyrootBucketType.Empty) {
 				if (!player.capabilities.isCreativeMode) {
 					--heldItem.stackSize;
 				}
 
 				if (heldItem.stackSize <= 0) {
-					player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(ItemsAether.skyroot_bucket, 1, EnumSkyrootBucketType.Milk.meta));
-				} else if (!player.inventory.addItemStackToInventory(new ItemStack(ItemsAether.skyroot_bucket, 1, EnumSkyrootBucketType.Milk.meta))) {
-					player.dropPlayerItemWithRandomChoice(new ItemStack(ItemsAether.skyroot_bucket, 1, EnumSkyrootBucketType.Milk.meta), false);
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(AetherItems.skyroot_bucket, 1, SkyrootBucketType.Milk.meta));
+				} else if (!player.inventory.addItemStackToInventory(new ItemStack(AetherItems.skyroot_bucket, 1, SkyrootBucketType.Milk.meta))) {
+					player.dropPlayerItemWithRandomChoice(new ItemStack(AetherItems.skyroot_bucket, 1, SkyrootBucketType.Milk.meta), false);
 				}
 			}
 		}
@@ -138,7 +138,7 @@ public class AetherEventHandler {
 		ItemStack stack = event.current;
 		EntityPlayer player = event.entityPlayer;
 
-		boolean isWater = (!AetherConfig.activateOnlyWithSkyroot() && stack.getItem() == Items.water_bucket) || (stack.getItem() == ItemsAether.skyroot_bucket && stack.getItemDamage() == 1);
+		boolean isWater = (!AetherConfig.activateOnlyWithSkyroot() && stack.getItem() == Items.water_bucket) || (stack.getItem() == AetherItems.skyroot_bucket && stack.getItemDamage() == 1);
 		boolean isLava = stack.getItem() == Items.lava_bucket;
 
 		boolean validDimension = (player.dimension == AetherConfig.getTravelDimensionID() || player.dimension == AetherConfig.getAetherDimensionID());
@@ -148,31 +148,29 @@ public class AetherEventHandler {
 			int j = target.blockY;
 			int k = target.blockZ;
 
-			if (target.sideHit == 0) {
-				--j;
-			}
-
-			if (target.sideHit == 1) {
-				++j;
-			}
-
-			if (target.sideHit == 2) {
-				--k;
-			}
-
-			if (target.sideHit == 3) {
-				++k;
-			}
-
-			if (target.sideHit == 4) {
-				--i;
+			switch(target.sideHit) {
+				case 0:
+					j--;
+					break;
+				case 1:
+					j++;
+					break;
+				case 2:
+					k--;
+					break;
+				case 3:
+					k++;
+					break;
+				case 4:
+					i--;
+					break;
 			}
 
 			if (isWater) {
 				if (((BlockAetherPortal) BlocksAether.aether_portal).trySpawnPortal(worldObj, i, j, k)) {
 					if (!player.capabilities.isCreativeMode) {
-						if (stack.getItem() == ItemsAether.skyroot_bucket && stack.getItemDamage() == 1) {
-							event.result = new ItemStack(ItemsAether.skyroot_bucket);
+						if (stack.getItem() == AetherItems.skyroot_bucket && stack.getItemDamage() == 1) {
+							event.result = new ItemStack(AetherItems.skyroot_bucket);
 						}
 
 						if (stack.getItem() == Items.water_bucket) {
@@ -205,9 +203,9 @@ public class AetherEventHandler {
 	@SubscribeEvent
 	public void onCrafting(ItemCraftedEvent event) {
 		if (this.isGravititeTool(event.crafting.getItem())) {
-			event.player.triggerAchievement(AchievementsAether.grav_tools);
+			event.player.triggerAchievement(AetherAchievements.grav_tools);
 		} else if (event.crafting.getItem() == Item.getItemFromBlock(BlocksAether.enchanter)) {
-			event.player.triggerAchievement(AchievementsAether.enchanter);
+			event.player.triggerAchievement(AetherAchievements.enchanter);
 		}
 	}
 
@@ -221,11 +219,11 @@ public class AetherEventHandler {
 				EntityPlayer player = (EntityPlayer) source.getEntity();
 				ItemStack currentItem = player.inventory.getCurrentItem();
 
-				if (currentItem != null && currentItem.getItem() instanceof ItemSkyrootSword && !(entity instanceof EntityPlayer) && !(entity instanceof EntityWither) && !(entity instanceof EntityValkyrie)) {
+				if (currentItem != null && currentItem.getItem() instanceof ItemSkyrootSword && !(entity instanceof EntityPlayer) && !(entity instanceof EntityWither) && !(entity instanceof Valkyrie)) {
 					for (EntityItem items : event.drops) {
 						ItemStack stack = items.getEntityItem();
 
-						if (!(stack.getItem() instanceof ItemDungeonKey) && stack.getItem() != ItemsAether.victory_medal && stack.getItem() != Items.skull) {
+						if (!(stack.getItem() instanceof DungeonKey) && stack.getItem() != AetherItems.victory_medal && stack.getItem() != Items.skull) {
 							EntityItem item = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ, items.getEntityItem());
 
 							entity.worldObj.spawnEntityInWorld(item);
@@ -237,16 +235,11 @@ public class AetherEventHandler {
 	}
 
 	@SubscribeEvent
-	public void onEntityStruckByLightning(EntityStruckByLightningEvent event)
-	{
-		if (event.entity instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer) event.entity;
-
-			if (player.inventory.getCurrentItem() != null)
-			{
-				if (player.inventory.getCurrentItem().getItem() == ItemsAether.lightning_sword || player.inventory.getCurrentItem().getItem() == ItemsAether.lightning_knife)
-				{
+	public void onEntityStruckByLightning(EntityStruckByLightningEvent event) {
+		if (event.entity instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer)event.entity;
+			if (player.inventory.getCurrentItem() != null) {
+				if (player.inventory.getCurrentItem().getItem() == AetherItems.lightning_sword || player.inventory.getCurrentItem().getItem() == AetherItems.lightning_knife) {
 					event.setCanceled(true);
 				}
 			}
@@ -254,58 +247,43 @@ public class AetherEventHandler {
 	}
 
 	@SubscribeEvent
-	public void onEntityDamage(LivingAttackEvent event)
-	{
-		if (event.entityLiving instanceof EntityAerbunny)
-		{
-			EntityAerbunny aerbunny = (EntityAerbunny) event.entityLiving;
-
-			if (aerbunny.isRiding() && aerbunny.ridingEntity instanceof EntityPlayer)
-			{
+	public void onEntityDamage(LivingAttackEvent event) {
+		if (event.entityLiving instanceof Aerbunny) {
+			Aerbunny aerbunny = (Aerbunny)event.entityLiving;
+			if (aerbunny.isRiding() && aerbunny.ridingEntity instanceof EntityPlayer) {
 				event.setCanceled(true);
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public void onEntityAttack(AttackEntityEvent event)
-	{
-		if (event.entityPlayer.getHeldItem() != null)
-		{
-			if (event.entityPlayer.getHeldItem().getItem() == ItemsAether.flaming_sword)
-			{
-				if (event.target.canAttackWithItem())
-				{
-					if (!event.target.hitByEntity(event.entityPlayer))
-					{
-						if (event.target instanceof EntityLivingBase)
-						{
-							int defaultTime = 30;
-							int fireAspectModifier = EnchantmentHelper.getFireAspectModifier(event.entityPlayer);
-							if (fireAspectModifier > 0)
-							{
-								defaultTime += (fireAspectModifier * 4);
-							}
-							event.target.setFire(defaultTime);
+	public void onEntityAttack(AttackEntityEvent event) {
+		if (event.entityPlayer.getHeldItem() == null) return;
+		if (event.entityPlayer.getHeldItem().getItem() == AetherItems.flaming_sword) {
+			if (event.target.canAttackWithItem()) {
+				if (!event.target.hitByEntity(event.entityPlayer)) {
+					if (event.target instanceof EntityLivingBase) {
+						int defaultTime = 30;
+						int fireAspectModifier = EnchantmentHelper.getFireAspectModifier(event.entityPlayer);
+						if (fireAspectModifier > 0) {
+							defaultTime += (fireAspectModifier * 4);
 						}
+						event.target.setFire(defaultTime);
 					}
 				}
 			}
-			else if (event.entityPlayer.getHeldItem().getItem() == ItemsAether.pig_slayer)
-			{
-				String s = EntityList.getEntityString((Entity) event.target);
+		} else if (event.entityPlayer.getHeldItem().getItem() == AetherItems.pig_slayer) {
+			String s = EntityList.getEntityString((Entity)event.target);
 
-				if (s != null && (s.toLowerCase().contains("pig") || s.toLowerCase().contains("phyg") || s.toLowerCase().contains("taegore") || event.target.getUniqueID().toString().equals("1d680bb6-2a9a-4f25-bf2f-a1af74361d69"))) {
-					if (event.target.worldObj.isRemote)
-					{
-						for (int j = 0; j < 20; j++) {
-							Random itemRand = new Random();
-							double d = itemRand.nextGaussian() * 0.02D;
-							double d1 = itemRand.nextGaussian() * 0.02D;
-							double d2 = itemRand.nextGaussian() * 0.02D;
-							double d3 = 5D;
-							event.target.worldObj.spawnParticle("flame", (event.target.posX + (double) (itemRand.nextFloat() * event.target.width * 2.0F)) - (double) event.target.width - d * d3, (event.target.posY + (double) (itemRand.nextFloat() * event.target.height)) - d1 * d3, (event.target.posZ + (double) (itemRand.nextFloat() * event.target.width * 2.0F)) - (double) event.target.width - d2 * d3, d, d1, d2);
-						}
+			if (s != null && (s.toLowerCase().contains("pig") || s.toLowerCase().contains("phyg") || s.toLowerCase().contains("taegore") || event.target.getUniqueID().toString().equals("1d680bb6-2a9a-4f25-bf2f-a1af74361d69"))) {
+				if (event.target.worldObj.isRemote) {
+					for (int j = 0; j < 20; j++) {
+						Random itemRand = new Random();
+						double d = itemRand.nextGaussian() * 0.02D;
+						double d1 = itemRand.nextGaussian() * 0.02D;
+						double d2 = itemRand.nextGaussian() * 0.02D;
+						double d3 = 5D;
+						event.target.worldObj.spawnParticle("flame", (event.target.posX + (double) (itemRand.nextFloat() * event.target.width * 2F)) - (double) event.target.width - d * d3, (event.target.posY + (double) (itemRand.nextFloat() * event.target.height)) - d1 * d3, (event.target.posZ + (double) (itemRand.nextFloat() * event.target.width * 2F)) - (double) event.target.width - d2 * d3, d, d1, d2);
 					}
 				}
 			}
@@ -313,21 +291,18 @@ public class AetherEventHandler {
 	}
 
 	public boolean isGravititeTool(Item stackID) {
-		return stackID == ItemsAether.gravitite_shovel || stackID == ItemsAether.gravitite_axe || stackID == ItemsAether.gravitite_pickaxe;
+		return stackID == AetherItems.gravitite_shovel || stackID == AetherItems.gravitite_axe || stackID == AetherItems.gravitite_pickaxe;
 	}
 
 	@SubscribeEvent
-	public void onWorldTick(TickEvent.WorldTickEvent event)
-	{
-		if (!event.world.isRemote)
-		{
+	public void onWorldTick(TickEvent.WorldTickEvent event) {
+		if (!event.world.isRemote) {
 			AetherData data = AetherData.getInstance(event.world);
 
 			WorldProvider provider = event.world.provider;
 
-			if (provider instanceof AetherWorldProvider)
-			{
-				AetherWorldProvider providerAether = (AetherWorldProvider) provider;
+			if (provider instanceof AetherWorldProvider) {
+				AetherWorldProvider providerAether = (AetherWorldProvider)provider;
 
 				providerAether.setIsEternalDay(data.isEternalDay());
 				AetherNetwork.sendToAll(new PacketSendEternalDay(providerAether.getIsEternalDay()));
@@ -337,66 +312,52 @@ public class AetherEventHandler {
 			}
 		}
 
-		for (Object entity : event.world.loadedEntityList)
-		{
-			if (entity instanceof EntityItem)
-			{
-				EntityItem entityItem = (EntityItem) entity;
+		for (Object entity : event.world.loadedEntityList) {
+			if (entity instanceof EntityItem) {
+				EntityItem item_entity = (EntityItem)entity;
 
-				if (entityItem.getEntityItem().getItem() == ItemsAether.dungeon_key)
-				{
-					ObfuscationReflectionHelper.setPrivateValue(Entity.class, entityItem, true, "invulnerable", "field_83001_bt");
+				if (item_entity.getEntityItem().getItem() == AetherItems.dungeon_key) {
+					ObfuscationReflectionHelper.setPrivateValue(Entity.class, item_entity, true, "invulnerable", "field_83001_bt");
 				}
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public void onPlayerSleepInBed(PlayerWakeUpEvent event)
-	{
+	public void onPlayerSleepInBed(PlayerWakeUpEvent event) {
 		final World world = event.entityPlayer.worldObj;
 
-		if (!world.isRemote && event.entityPlayer.dimension == AetherConfig.getAetherDimensionID())
-		{
+		if (!world.isRemote && event.entityPlayer.dimension == AetherConfig.getAetherDimensionID()) {
 			final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 
-			final WorldServer worldServer = server.worldServerForDimension(0);
+			final WorldServer server_world = server.worldServerForDimension(0);
 
-			if (worldServer.playerEntities.size() > 0)
-			{
-				if (worldServer.areAllPlayersAsleep())
-				{
-					performTimeSet(event, world, worldServer);
+			if (server_world.playerEntities.size() > 0) {
+				if (server_world.areAllPlayersAsleep()) {
+					performTimeSet(event, world, server_world);
 				}
-			}
-			else
-			{
-				performTimeSet(event, world, worldServer);
+			} else {
+				performTimeSet(event, world, server_world);
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public void onFall(LivingFallEvent event)
-	{
-		if (event.entityLiving instanceof EntityPlayer)
-		{
+	public void onFall(LivingFallEvent event) {
+		if (event.entityLiving instanceof EntityPlayer) {
 			IPlayerAether playerAether = PlayerAether.get((EntityPlayer) event.entityLiving);
 
-			if (playerAether.getAccessoryInventory().wearingArmor(new ItemStack(ItemsAether.sentry_boots)) || playerAether.getAccessoryInventory().isWearingGravititeSet() || playerAether.getAccessoryInventory().isWearingValkyrieSet())
-			{
+			if (playerAether.getAccessoryInventory().wearingArmor(new ItemStack(AetherItems.sentry_boots)) || playerAether.getAccessoryInventory().isWearingGravititeSet() || playerAether.getAccessoryInventory().isWearingValkyrieSet()) {
 				event.setCanceled(true);
 			}
 		}
 	}
 
-	private void performTimeSet(PlayerWakeUpEvent event, World world, WorldServer worldServer)
-	{
-		if (world.getGameRules().getGameRuleBooleanValue("doDaylightCycle") && event.entityPlayer.isPlayerFullyAsleep())
-		{
-			final long i = worldServer.getWorldInfo().getWorldTime() + 24000L;
+	private void performTimeSet(PlayerWakeUpEvent event, World world, WorldServer server_world) {
+		if (world.getGameRules().getGameRuleBooleanValue("doDaylightCycle") && event.entityPlayer.isPlayerFullyAsleep()) {
+			final long i = server_world.getWorldInfo().getWorldTime() + 24000L;
 
-			worldServer.getWorldInfo().setWorldTime(i - i % 24000L);
+			server_world.getWorldInfo().setWorldTime(i - i % 24000L);
 
 			PlayerAether.get(event.entityPlayer).setBedLocation(event.entityPlayer.getBedLocation(AetherConfig.getAetherDimensionID()));
 		}
