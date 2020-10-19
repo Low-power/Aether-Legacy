@@ -51,7 +51,11 @@ public class InitiateValkyrieFightPacket extends AetherPacket<InitiateValkyrieFi
 			medal_count += stack_count;
 			player.inventory.setInventorySlotContents(slot_i, null);
 		} while(medal_count < 10 && --slot_i >= 0);
-		if(medal_count < 10) return;
+		if(medal_count < 10) {
+			ItemStack item_stack = new ItemStack(AetherItems.victory_medal, medal_count);
+			player.entityDropItem(item_stack, 1F);
+			return;
+		}
 
 		Entity entity = player.worldObj.getEntityByID(message.entityId);
 
