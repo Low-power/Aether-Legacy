@@ -403,8 +403,7 @@ public class ValkyrieQueen extends EntityBossMob implements IAetherBoss {
 				if (this.getEntityToAttack() == null) {
 					this.chatTime = 0;
 					chatItUp(player, "This will be your final battle!");
-					if (ds.getEntity() instanceof EntityLivingBase)
-						becomeAngryAt((EntityLivingBase) ds.getEntity());
+					becomeAngryAt(player);
 				} else {
 					this.timeUntilTeleport += 60;
 				}
