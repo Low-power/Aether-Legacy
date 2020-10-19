@@ -366,7 +366,7 @@ public class AetherMainMenu extends GuiMainMenu {
 
 	private static boolean is_hovering_aether_menu_button(AetherMainMenuButton button, int x, int y) {
 		int button_x_pos = button.xPosition;
-		if(button_x_pos < 64 && button_x_pos > 30) button_x_pos = 30;
+		if(button_x_pos < 46 && button_x_pos >= 30) button_x_pos = 46;
 		if(x < button_x_pos || x >= button.xPosition + button.width) return false;
 		return y >= button.yPosition && y < button.yPosition + button.height;
 	}
