@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.items.tools;
 
-import com.gildedgames.the_aether.entities.passive.mountable.EntityParachute;
+import com.gildedgames.the_aether.entities.passive.mountable.ParachuteEntity;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,14 +19,14 @@ public class AetherParachute extends Item {
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		ItemStack heldItem = player.getHeldItem();
 
-		if (EntityParachute.entityHasRoomForCloud(world, player)) {
+		if (ParachuteEntity.entityHasRoomForCloud(world, player)) {
 			if (this == AetherItems.golden_parachute) {
 				heldItem.damageItem(1, player);
 			} else {
 				--heldItem.stackSize;
 			}
 
-			world.spawnEntityInWorld(new EntityParachute(world, player, this == AetherItems.golden_parachute));
+			world.spawnEntityInWorld(new ParachuteEntity(world, player, this == AetherItems.golden_parachute));
 
 			return heldItem;
 		}

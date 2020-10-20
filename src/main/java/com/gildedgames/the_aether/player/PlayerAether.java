@@ -5,7 +5,7 @@ import com.gildedgames.the_aether.api.player.IPlayerAether;
 import com.gildedgames.the_aether.api.player.util.IAccessoryInventory;
 import com.gildedgames.the_aether.api.player.util.IAetherAbility;
 import com.gildedgames.the_aether.api.player.util.IAetherBoss;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityParachute;
+import com.gildedgames.the_aether.entities.passive.mountable.ParachuteEntity;
 import com.gildedgames.the_aether.inventory.AccessoriesInventory;
 import com.gildedgames.the_aether.network.packets.*;
 import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
@@ -30,6 +30,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
@@ -290,39 +291,37 @@ public class PlayerAether implements IPlayerAether {
 	}
 
 	private void activateParachute() {
-		if (!this.player.capabilities.isCreativeMode) {
-			EntityParachute parachute = null;
+		if(this.player.capabilities.isCreativeMode) return;
 
-			ItemStack itemstack = null;
+		ParachuteEntity parachute = null;
+		ItemStack itemstack = null;
 
-			for (int i = 0; i < this.getEntity().inventory.getSizeInventory(); i++) {
-				ItemStack stackInSlot = this.getEntity().inventory.getStackInSlot(i);
+		for (int i = 0; i < this.getEntity().inventory.getSizeInventory(); i++) {
+			ItemStack stackInSlot = this.getEntity().inventory.getStackInSlot(i);
 
-				if(stackInSlot != null && stackInSlot.getItem() == AetherItems.cloud_parachute) {
+			if(stackInSlot != null && stackInSlot.getItem() == AetherItems.cloud_parachute) {
+				itemstack = stackInSlot;
+				break;
+			} else {
+				if (stackInSlot != null && stackInSlot.getItem() == AetherItems.golden_parachute) {
 					itemstack = stackInSlot;
 					break;
-				} else {
-					if (stackInSlot != null && stackInSlot.getItem() == AetherItems.golden_parachute) {
-						itemstack = stackInSlot;
-						break;
-					}
 				}
 			}
+		}
 
-			if (itemstack != null) {
-				if (itemstack.getItem() == AetherItems.cloud_parachute) {
-					parachute = new EntityParachute(this.getEntity().worldObj, this.getEntity(), false);
-					parachute.setPosition(this.getEntity().posX, this.getEntity().posY, this.getEntity().posZ);
-					this.getEntity().worldObj.spawnEntityInWorld(parachute);
-					this.getEntity().inventory.consumeInventoryItem(itemstack.getItem());
-				} else {
-					if (itemstack.getItem() == AetherItems.golden_parachute) {
-						itemstack.damageItem(1, this.getEntity());
-						parachute = new EntityParachute(this.getEntity().worldObj, this.getEntity(), true);
-						parachute.setPosition(this.getEntity().posX, this.getEntity().posY, this.getEntity().posZ);
-						this.getEntity().worldObj.spawnEntityInWorld(parachute);
-					}
-				}
+		if (itemstack != null) {
+			Item item = itemstack.getItem();
+			if(item == AetherItems.cloud_parachute) {
+				parachute = new ParachuteEntity(this.getEntity().worldObj, this.getEntity(), false);
+				parachute.setPosition(this.getEntity().posX, this.getEntity().posY, this.getEntity().posZ);
+				this.getEntity().worldObj.spawnEntityInWorld(parachute);
+				this.getEntity().inventory.consumeInventoryItem(itemstack.getItem());
+			} else if(item == AetherItems.golden_parachute) {
+				itemstack.damageItem(1, this.getEntity());
+				parachute = new ParachuteEntity(this.getEntity().worldObj, this.getEntity(), true);
+				parachute.setPosition(this.getEntity().posX, this.getEntity().posY, this.getEntity().posZ);
+				this.getEntity().worldObj.spawnEntityInWorld(parachute);
 			}
 		}
 	}

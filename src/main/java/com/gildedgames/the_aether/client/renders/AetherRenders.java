@@ -51,7 +51,7 @@ import com.gildedgames.the_aether.entities.hostile.EntityZephyr;
 import com.gildedgames.the_aether.entities.passive.mountable.Aerbunny;
 import com.gildedgames.the_aether.entities.passive.mountable.FlyingCow;
 import com.gildedgames.the_aether.entities.passive.mountable.Moa;
-import com.gildedgames.the_aether.entities.passive.mountable.EntityParachute;
+import com.gildedgames.the_aether.entities.passive.mountable.ParachuteEntity;
 import com.gildedgames.the_aether.entities.passive.mountable.Phyg;
 import com.gildedgames.the_aether.entities.passive.mountable.Swet;
 import com.gildedgames.the_aether.entities.projectile.EntityHammerProjectile;
@@ -74,7 +74,7 @@ public class AetherRenders {
 		/* Misc */
 		register(EntityHammerProjectile.class, new HammerProjectileRenderer());
 		register(EntityFloatingBlock.class, new FloatingBlockRenderer());
-		register(EntityParachute.class, new ParachuteRenderer());
+		register(ParachuteEntity.class, new ParachuteRenderer());
 		register(ZephyrSnowballEntity.class, new ZephyrSnowballRenderer());
 		register(EntityPhoenixArrow.class, new PhoenixArrowRenderer());
 		register(EntityLightningKnife.class, new LightningKnifeRenderer());
