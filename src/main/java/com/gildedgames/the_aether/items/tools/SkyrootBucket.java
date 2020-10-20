@@ -98,30 +98,22 @@ public class SkyrootBucket extends Item {
 	}
 
 	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
-	{
+	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+		if(world.isRemote) return false;
 		MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world, player, true);
+		if(world.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ) != Blocks.cauldron) return false;
 		int meta = stack.getItemDamage();
-
-		if (world.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ) == Blocks.cauldron && !world.isRemote) {
-			BlockCauldron cauldron = (BlockCauldron)world.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-
-			int waterLevel = BlockCauldron.func_150027_b(world.getBlockMetadata(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ));
-
-			if (SkyrootBucketType.getType(meta) == SkyrootBucketType.Water) {
-				if (waterLevel < 3) {
-					if (!player.capabilities.isCreativeMode) {
-						player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(AetherItems.skyroot_bucket, 1, SkyrootBucketType.Empty.meta));
-					}
-
-					cauldron.func_150024_a(world, movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ, 3);
+		BlockCauldron cauldron = (BlockCauldron)world.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
+		int waterLevel = BlockCauldron.func_150027_b(world.getBlockMetadata(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ));
+		if (SkyrootBucketType.getType(meta) == SkyrootBucketType.Water) {
+			if (waterLevel < 3) {
+				if (!player.capabilities.isCreativeMode) {
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(AetherItems.skyroot_bucket, 1, SkyrootBucketType.Empty.meta));
 				}
+				cauldron.func_150024_a(world, movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ, 3);
 			}
-
-			return true;
 		}
-
-		return false;
+		return true;
 	}
 
 	@Override
@@ -135,8 +127,8 @@ public class SkyrootBucket extends Item {
 			return heldItem;
 		}
 
-		boolean flag = SkyrootBucketType.getType(meta) == SkyrootBucketType.Empty;
-		MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world, player, flag);
+		boolean is_empty = SkyrootBucketType.getType(meta) == SkyrootBucketType.Empty;
+		MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world, player, is_empty);
 
 		if (movingobjectposition == null) return heldItem;
 
@@ -160,7 +152,7 @@ public class SkyrootBucket extends Item {
 
 			if (!world.canMineBlock(player, i, j, k)) return heldItem;
 
-			if (flag) {
+			if (is_empty) {
 				if (!player.canPlayerEdit(i, j, k, movingobjectposition.sideHit, heldItem)) {
 					return heldItem;
 				}
@@ -234,29 +226,29 @@ public class SkyrootBucket extends Item {
 	public boolean tryPlaceContainedLiquid(EntityPlayer player, World world, ItemStack stack, int x, int y, int z) {
 		if (SkyrootBucketType.getType(stack.getItemDamage()) != SkyrootBucketType.Water) {
 			return false;
+		}
+
+		Material material = world.getBlock(x, y, z).getMaterial();
+		boolean is_not_solid = !material.isSolid();
+
+		if (!world.isAirBlock(x, y, z) && !is_not_solid) {
+			return false;
 		} else {
-			Material material = world.getBlock(x, y, z).getMaterial();
-			boolean flag = !material.isSolid();
+			if (world.provider.isHellWorld) {
+				world.playSoundEffect((double) x, (double) y, (double) z, "random.fizz", 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
 
-			if (!world.isAirBlock(x, y, z) && !flag) {
-				return false;
+				for (int l = 0; l < 8; ++l) {
+					world.spawnParticle("largesmoke", (double) x + Math.random(), (double) y + Math.random(), (double) z + Math.random(), 0.0D, 0.0D, 0.0D);
+				}
 			} else {
-				if (world.provider.isHellWorld) {
-					world.playSoundEffect((double) x, (double) y, (double) z, "random.fizz", 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
-
-					for (int l = 0; l < 8; ++l) {
-						world.spawnParticle("largesmoke", (double) x + Math.random(), (double) y + Math.random(), (double) z + Math.random(), 0.0D, 0.0D, 0.0D);
-					}
-				} else {
-					if (!world.isRemote && flag && !material.isLiquid()) {
-						world.func_147480_a(x, y, z, true);
-					}
-
-					world.setBlock(x, y, z, Blocks.flowing_water, 0, 11);
+				if (!world.isRemote && is_not_solid && !material.isLiquid()) {
+					world.func_147480_a(x, y, z, true);
 				}
 
-				return true;
+				world.setBlock(x, y, z, Blocks.flowing_water, 0, 11);
 			}
+
+			return true;
 		}
 	}
 
