@@ -65,18 +65,20 @@ public class AetherEntityEvents {
 		if(entity.worldObj.isRemote) return;
 		if(entity instanceof EntityPlayer && entity.worldObj.provider instanceof WorldProviderSurface && entity.posY < 256) {
 			PlayerAether aplayer = (PlayerAether)AetherAPI.get((EntityPlayer)event.entity);
-			if(aplayer.riddenEntity != null) {
-				System.err.println(aplayer.riddenEntity);
-				System.err.println(aplayer.riddenEntity.worldObj);
-				System.err.println(aplayer.riddenEntity.dimension);
-				System.err.println(aplayer.riddenEntity.isEntityAlive());
-			}
-			if(aplayer.riddenEntity != null && aplayer.riddenEntity.worldObj.provider instanceof WorldProviderSurface) {
-				if(!entity.worldObj.loadedEntityList.contains(aplayer.riddenEntity)) {
-					entity.worldObj.spawnEntityInWorld(aplayer.riddenEntity);
+			if(aplayer.ridden_entity != null && aplayer.ridden_entity.worldObj.provider instanceof WorldProviderSurface) {
+				if(!entity.worldObj.loadedEntityList.contains(aplayer.ridden_entity)) {
+					entity.worldObj.spawnEntityInWorld(aplayer.ridden_entity);
 				}
-				entity.mountEntity(aplayer.riddenEntity);
-				aplayer.riddenEntity = null;
+				entity.mountEntity(aplayer.ridden_entity);
+				aplayer.ridden_entity = null;
+			}
+			if(aplayer.ridden_by_entity != null && aplayer.ridden_by_entity.worldObj.provider instanceof WorldProviderSurface) {
+				System.err.println(aplayer.ridden_by_entity);
+				if(!entity.worldObj.loadedEntityList.contains(aplayer.ridden_by_entity)) {
+					entity.worldObj.spawnEntityInWorld(aplayer.ridden_by_entity);
+				}
+				aplayer.ridden_by_entity.mountEntity(entity);
+				aplayer.ridden_by_entity = null;
 			}
 			return;
 		}
@@ -85,11 +87,16 @@ public class AetherEntityEvents {
 			MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 			int previous_world_id = entity.dimension;
 			int transfer_world_id = previous_world_id == AetherConfig.getAetherDimensionID() ? 0 : AetherConfig.getAetherDimensionID();
+			WorldServer transfer_world = server.worldServerForDimension(transfer_world_id);
+			Entity teleport_rider = null;
 			//System.err.printf("previous_world_id = %d, transfer_world_id = %d, entity = %s, entity.riddenByEntity = %s, entity.ridingEntity = %s\n", previous_world_id, transfer_world_id, entity, entity.riddenByEntity, entity.ridingEntity);
 			if(entity.riddenByEntity != null && entity.riddenByEntity.isRiding()) {
 				if (entity.riddenByEntity instanceof EntityPlayer) {
-					((PlayerAether)AetherAPI.get((EntityPlayer)entity.riddenByEntity)).riddenEntity = entity;
+					((PlayerAether)AetherAPI.get((EntityPlayer)entity.riddenByEntity)).ridden_entity = entity;
 					//entity.forceSpawn = true;
+				} else if(entity instanceof EntityPlayer) {
+					((PlayerAether)AetherAPI.get((EntityPlayer)entity)).ridden_by_entity = entity.riddenByEntity;
+					teleport_rider = entity.riddenByEntity;
 				}
 				entity.riddenByEntity.ridingEntity = null;
 				entity.riddenByEntity = null;
@@ -98,8 +105,12 @@ public class AetherEntityEvents {
 				entity.ridingEntity.riddenByEntity = null;
 				entity.ridingEntity = null;
 			}
+			if(teleport_rider != null) {
+				teleport_rider.timeUntilPortal = teleport_rider.getPortalCooldown();
+				teleport_entity(false, teleport_rider, transfer_world);
+			}
 			entity.timeUntilPortal = entity.getPortalCooldown();
-			teleport_entity(false, entity, server.worldServerForDimension(transfer_world_id));
+			teleport_entity(false, entity, transfer_world);
 		}
 	}
 
@@ -109,14 +120,14 @@ public class AetherEntityEvents {
 		if(!(event.entity instanceof EntityPlayerMP)) return;
 		if(!(event.world.provider instanceof WorldProviderSurface)) return;
 		PlayerAether aplayer = (PlayerAether)AetherAPI.get((EntityPlayer)event.entity);
-		if(aplayer.riddenEntity == null) return;
-		if(!event.world.loadedEntityList.contains(aplayer.riddenEntity)) {
-			aplayer.riddenEntity.forceSpawn = true;
-			boolean ok = event.world.spawnEntityInWorld(aplayer.riddenEntity);
+		if(aplayer.ridden_entity == null) return;
+		if(!event.world.loadedEntityList.contains(aplayer.ridden_entity)) {
+			aplayer.ridden_entity.forceSpawn = true;
+			boolean ok = event.world.spawnEntityInWorld(aplayer.ridden_entity);
 			System.err.println(ok);
 		}
-		event.entity.mountEntity(aplayer.riddenEntity);
-		aplayer.riddenEntity = null;
+		event.entity.mountEntity(aplayer.ridden_entity);
+		aplayer.ridden_entity = null;
 	}
 */
 

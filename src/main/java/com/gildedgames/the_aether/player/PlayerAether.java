@@ -87,7 +87,8 @@ public class PlayerAether implements IPlayerAether {
 
 	public float prevTimeInPortal;
 
-	public Entity riddenEntity;
+	public Entity ridden_entity;
+	public Entity ridden_by_entity;
 
 	private ChunkCoordinates bedLocation;
 
