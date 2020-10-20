@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.client.renders.entity;
 
-import com.gildedgames.the_aether.entities.projectile.darts.EntityDartBase;
+import com.gildedgames.the_aether.entities.projectile.darts.BaseDartEntity;
 import com.gildedgames.the_aether.entities.projectile.darts.PoisonDartEntity;
 import com.gildedgames.the_aether.entities.projectile.darts.EnchantedDartEntity;
 import com.gildedgames.the_aether.entities.projectile.PoisonNeedleEntity;
@@ -21,7 +21,7 @@ public class DartBaseRenderer extends Render {
 		this.shadowSize = 0F;
 	}
 
-	public void renderDart(EntityDartBase dart, double d, double d1, double d2, float f, float f1) {
+	public void renderDart(BaseDartEntity dart, double d, double d1, double d2, float f, float f1) {
 		if (dart.isInvisible() && dart.prevRotationYaw == 0F || dart.prevRotationPitch == 0F) {
 			return;
 		}
@@ -90,7 +90,7 @@ public class DartBaseRenderer extends Render {
 
 	@Override
 	public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {
-		this.renderDart((EntityDartBase) entity, d, d1, d2, f, f1);
+		this.renderDart((BaseDartEntity)entity, d, d1, d2, f, f1);
 	}
 
 	@Override

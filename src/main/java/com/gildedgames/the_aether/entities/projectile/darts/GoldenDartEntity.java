@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class GoldenDartEntity extends EntityDartBase {
+public class GoldenDartEntity extends BaseDartEntity {
 
 	public GoldenDartEntity(World world) {
 		super(world);

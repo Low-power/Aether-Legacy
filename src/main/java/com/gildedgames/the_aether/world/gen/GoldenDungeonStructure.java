@@ -9,6 +9,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructure;
 import net.minecraft.world.gen.structure.StructureStart;
+import net.minecraft.world.gen.structure.StructureComponent;
+import java.util.List;
 import java.util.Random;
 
 public class GoldenDungeonStructure extends MapGenStructure {
@@ -25,10 +27,8 @@ public class GoldenDungeonStructure extends MapGenStructure {
 	protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
 		RandomTracker randomTracker = new RandomTracker();
 
-		if (randomTracker.testRandom(this.rand,140) != 0)
-		{
-			if (randomTracker.testRandom(this.rand,170) != 0)
-			{
+		if (randomTracker.testRandom(this.rand,140) != 0) {
+			if (randomTracker.testRandom(this.rand,170) != 0) {
 				return false;
 			}
 		}
@@ -86,14 +86,10 @@ public class GoldenDungeonStructure extends MapGenStructure {
 			this.updateBoundingBox();
 		}
 
-		private void customOffset(Random random)
-		{
+		private void customOffset(Random random) {
 			int offset = random.nextInt(64);
 
-			for (Object object : this.components)
-			{
-				AetherStructure component = (AetherStructure) object;
-
+			for(StructureComponent component : (List<StructureComponent>)this.components) {
 				component.getBoundingBox().offset(0, offset, 0);
 			}
 		}

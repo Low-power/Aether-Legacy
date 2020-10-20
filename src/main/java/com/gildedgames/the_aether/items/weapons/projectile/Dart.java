@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.items.weapons.projectile;
 
 import com.gildedgames.the_aether.Aether;
-import com.gildedgames.the_aether.entities.projectile.darts.EntityDartBase;
+import com.gildedgames.the_aether.entities.projectile.darts.BaseDartEntity;
 import com.gildedgames.the_aether.entities.projectile.darts.EnchantedDartEntity;
 import com.gildedgames.the_aether.entities.projectile.darts.GoldenDartEntity;
 import com.gildedgames.the_aether.entities.projectile.darts.PoisonDartEntity;
@@ -42,7 +42,7 @@ public class Dart extends Item {
 			if (p_82482_2_.getItem() == AetherItems.dart && p_82482_2_.getItemDamage() == DartType.Poison.meta) {
 				return (new BehaviorProjectileDispense() {
 					protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_) {
-						EntityDartBase dart = new PoisonDartEntity(p_82499_1_);
+						BaseDartEntity dart = new PoisonDartEntity(p_82499_1_);
 
 						dart.canBePickedUp = 1;
 						dart.setPosition(p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
@@ -54,7 +54,7 @@ public class Dart extends Item {
 			} else if (p_82482_2_.getItem() == AetherItems.dart && p_82482_2_.getItemDamage() == DartType.Enchanted.meta) {
 				return (new BehaviorProjectileDispense() {
 					protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_) {
-						EntityDartBase dart = new EnchantedDartEntity(p_82499_1_);
+						BaseDartEntity dart = new EnchantedDartEntity(p_82499_1_);
 
 						dart.canBePickedUp = 1;
 						dart.setPosition(p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
@@ -67,7 +67,7 @@ public class Dart extends Item {
 
 			return (new BehaviorProjectileDispense() {
 				protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_) {
-					EntityDartBase dart = new GoldenDartEntity(p_82499_1_);
+					BaseDartEntity dart = new GoldenDartEntity(p_82499_1_);
 
 					dart.canBePickedUp = 1;
 					dart.setPosition(p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());

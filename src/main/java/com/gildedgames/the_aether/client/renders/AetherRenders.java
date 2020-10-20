@@ -59,7 +59,7 @@ import com.gildedgames.the_aether.entities.projectile.EntityLightningKnife;
 import com.gildedgames.the_aether.entities.projectile.EntityPhoenixArrow;
 import com.gildedgames.the_aether.entities.projectile.ZephyrSnowballEntity;
 import com.gildedgames.the_aether.entities.projectile.crystals.EntityCrystal;
-import com.gildedgames.the_aether.entities.projectile.darts.EntityDartBase;
+import com.gildedgames.the_aether.entities.projectile.darts.BaseDartEntity;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.tileentity.TreasureChestTileEntity;
 import net.minecraft.client.renderer.entity.Render;
@@ -80,7 +80,7 @@ public class AetherRenders {
 		register(EntityLightningKnife.class, new LightningKnifeRenderer());
 
 		/* Darts */
-		register(EntityDartBase.class, new DartBaseRenderer());
+		register(BaseDartEntity.class, new DartBaseRenderer());
 
 		/* Crystals */
 		register(EntityCrystal.class, new CrystalRenderer());

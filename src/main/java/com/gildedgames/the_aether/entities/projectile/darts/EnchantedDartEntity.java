@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class EnchantedDartEntity extends EntityDartBase {
+public class EnchantedDartEntity extends BaseDartEntity {
 
 	public EnchantedDartEntity(World worldIn) {
 		super(worldIn);

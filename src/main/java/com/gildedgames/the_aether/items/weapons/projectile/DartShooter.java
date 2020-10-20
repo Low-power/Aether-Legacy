@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.items.weapons.projectile;
 
 import com.gildedgames.the_aether.Aether;
-import com.gildedgames.the_aether.entities.projectile.darts.EntityDartBase;
+import com.gildedgames.the_aether.entities.projectile.darts.BaseDartEntity;
 import com.gildedgames.the_aether.entities.projectile.darts.EnchantedDartEntity;
 import com.gildedgames.the_aether.entities.projectile.darts.GoldenDartEntity;
 import com.gildedgames.the_aether.entities.projectile.darts.PoisonDartEntity;
@@ -120,7 +120,7 @@ public class DartShooter extends Item {
 		if (consume != -1) {
 			world.playSoundEffect(player.posX, player.posY, player.posZ, "aether_legacy:projectile.dart_shooter.shoot", 1F, 1F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-			EntityDartBase dart = null;
+			BaseDartEntity dart = null;
 
 			if (consume == 1) {
 				dart = new PoisonDartEntity(world, player, 1F);
