@@ -1,51 +1,34 @@
 package com.gildedgames.the_aether;
 
+import net.minecraftforge.common.config.Configuration;
 import java.io.File;
 import java.io.IOException;
 
-import net.minecraftforge.common.config.Configuration;
-
 public class AetherConfig {
-
 	public static Configuration config;
 
 	private static int max_life_shards;
-
 	private static boolean christmas_content, tallgrass;
-
 	private static int aether_biome_id, aether_dimension_id;
-
 	private static boolean disable_trivia, old_mobs;
-
 	private static boolean skyrootBucketOnly, valkyrie_cape, golden_feather;
-
 	private static boolean floating_block_collision;
-
 	private static int travel_dimension;
-
 	private static boolean menu_enabled, menu_button;
-
 	private static boolean legacy_altar_name;
-
 	private static int inebriation_id;
-
 	private static boolean sun_altar_multiplayer, repeat_sun_spirit_dialog;
-
 	private static boolean aether_start;
-
 	private static boolean disable_eternal_day;
 
 	public static void init(File location) {
-		File newFile = new File(location + "/aether" + "/AetherI.cfg");
-
+		File config_file = new File(location + "/aether" + "/AetherI.cfg");
 		try {
-			newFile.createNewFile();
+			config_file.createNewFile();
 		} catch (IOException e) {
-
+			e.printStackTrace();
 		}
-
-		config = new Configuration(newFile);
-
+		config = new Configuration(config_file);
 		config.load();
 
 		christmas_content = config.get("Aether World Generation", "Christmas Content", false).getBoolean(false);
@@ -124,23 +107,19 @@ public class AetherConfig {
 		return AetherConfig.skyrootBucketOnly;
 	}
 
-	public static boolean valkyrieCapeEnabled()
-	{
+	public static boolean valkyrieCapeEnabled() {
 		return AetherConfig.valkyrie_cape;
 	}
 
-	public static boolean goldenFeatherEnabled()
-	{
+	public static boolean goldenFeatherEnabled() {
 		return AetherConfig.golden_feather;
 	}
 
-	public static boolean menuEnabled()
-	{
+	public static boolean menuEnabled() {
 		return AetherConfig.menu_enabled;
 	}
 
-	public static boolean menuButtonEnabled()
-	{
+	public static boolean menuButtonEnabled() {
 		return AetherConfig.menu_button;
 	}
 
@@ -148,8 +127,7 @@ public class AetherConfig {
 		return AetherConfig.legacy_altar_name;
 	}
 
-	public static int getInebriationId()
-	{
+	public static int getInebriationId() {
 		return AetherConfig.inebriation_id;
 	}
 
@@ -161,13 +139,11 @@ public class AetherConfig {
 		return repeat_sun_spirit_dialog;
 	}
 
-	public static boolean shouldAetherStart()
-	{
+	public static boolean shouldAetherStart() {
 		return aether_start;
 	}
 
-	public static boolean eternalDayDisabled()
-	{
+	public static boolean eternalDayDisabled() {
 		return disable_eternal_day;
 	}
 }

@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.items.tools;
 
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.entities.effects.InebriationEffect;
-import com.gildedgames.the_aether.entities.effects.PotionInebriation;
+import com.gildedgames.the_aether.entities.effects.InebriationPotion;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.util.SkyrootBucketType;
 import com.gildedgames.the_aether.player.PlayerAether;
@@ -265,7 +265,7 @@ public class SkyrootBucket extends Item {
 		}
 
 		if (SkyrootBucketType.getType(meta) == SkyrootBucketType.Poison) {
-			player.addPotionEffect(new InebriationEffect(PotionInebriation.inebriation.id, 500, 0));
+			player.addPotionEffect(new InebriationEffect(InebriationPotion.inebriation.id, 500, 0));
 		} else if (SkyrootBucketType.getType(meta) == SkyrootBucketType.Remedy) {
 			PlayerAether aplayer = PlayerAether.get(player);
 			aplayer.setCured(200);

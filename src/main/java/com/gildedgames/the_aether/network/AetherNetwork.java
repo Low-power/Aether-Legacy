@@ -25,8 +25,8 @@ public class AetherNetwork {
 
 		INSTANCE.registerMessage(PacketAchievement.class, PacketAchievement.class, discriminant++, Side.CLIENT);
 
-		INSTANCE.registerMessage(PacketSendPoison.class, PacketSendPoison.class, discriminant++, Side.CLIENT);
-		INSTANCE.registerMessage(PacketSendPoisonTime.class, PacketSendPoisonTime.class, discriminant++, Side.CLIENT);
+		INSTANCE.registerMessage(PoisonPacket.class, PoisonPacket.class, discriminant++, Side.CLIENT);
+		INSTANCE.registerMessage(PoisonTimePacket.class, PoisonTimePacket.class, discriminant++, Side.CLIENT);
 
 		INSTANCE.registerMessage(InitiateValkyrieFightPacket.class, InitiateValkyrieFightPacket.class, discriminant++, Side.SERVER);
 

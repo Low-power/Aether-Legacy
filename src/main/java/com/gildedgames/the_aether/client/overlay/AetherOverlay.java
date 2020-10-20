@@ -55,16 +55,16 @@ public class AetherOverlay {
 			mc.renderEngine.bindTexture(TEXTURE_POISON_VIGNETTE);
 
 			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(0.0D, (double) height, -90.0D, 0.0D, 1.0D);
-			tessellator.addVertexWithUV((double) width, (double) height, -90.0D, 1.0D, 1.0D);
-			tessellator.addVertexWithUV((double) width, 0.0D, -90.0D, 1.0D, 0.0D);
-			tessellator.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
+			tessellator.addVertexWithUV(0D, (double)height, -90D, 0D, 1D);
+			tessellator.addVertexWithUV((double)width, (double)height, -90D, 1D, 1D);
+			tessellator.addVertexWithUV((double)width, 0D, -90D, 1D, 0D);
+			tessellator.addVertexWithUV(0D, 0D, -90D, 0D, 0D);
 			tessellator.draw();
 
 			GL11.glDepthMask(true);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glPopMatrix();
 		}
 	}
@@ -91,16 +91,16 @@ public class AetherOverlay {
 			mc.renderEngine.bindTexture(TEXTURE_CURE_VIGNETTE);
 
 			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(0.0D, (double) height, -90.0D, 0.0D, 1.0D);
-			tessellator.addVertexWithUV((double) width, (double) height, -90.0D, 1.0D, 1.0D);
-			tessellator.addVertexWithUV((double) width, 0.0D, -90.0D, 1.0D, 0.0D);
-			tessellator.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
+			tessellator.addVertexWithUV(0D, (double)height, -90D, 0D, 1D);
+			tessellator.addVertexWithUV((double)width, (double)height, -90D, 1D, 1D);
+			tessellator.addVertexWithUV((double)width, 0D, -90D, 1D, 0D);
+			tessellator.addVertexWithUV(0D, 0D, -90D, 0D, 0D);
 			tessellator.draw();
 
 			GL11.glDepthMask(true);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glPopMatrix();
 		}
 	}
@@ -116,7 +116,7 @@ public class AetherOverlay {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(false);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
 		mc.renderEngine.bindTexture(Gui.icons);
@@ -132,7 +132,7 @@ public class AetherOverlay {
 		GL11.glDepthMask(true);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glPopMatrix();
 	}
 
@@ -153,7 +153,7 @@ public class AetherOverlay {
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glDisable(GL11.GL_ALPHA_TEST);
 
 			mc.renderEngine.bindTexture(TEXTURE_COOLDOWN_BAR);
@@ -165,7 +165,7 @@ public class AetherOverlay {
 			GL11.glDepthMask(true);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 
 			GL11.glPopMatrix();
 		}
@@ -174,7 +174,7 @@ public class AetherOverlay {
 	public static void renderJumps(Minecraft mc) {
 		EntityPlayer player = mc.thePlayer;
 
-		if (player == null || player.ridingEntity == null || !(player.ridingEntity instanceof Moa)) {
+		if (player == null || !(player.ridingEntity instanceof Moa)) {
 			return;
 		}
 
@@ -188,7 +188,7 @@ public class AetherOverlay {
 
 		mc.renderEngine.bindTexture(TEXTURE_JUMPS);
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 
 		for (int jump = 0; jump < moa.getMaxJumps(); jump++) {
 			int yPos = 18;
@@ -201,13 +201,13 @@ public class AetherOverlay {
 			}
 		}
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 
 		GL11.glPopMatrix();
 	}
 
 	public static void renderAetherPortal(float timeInPortal, ScaledResolution scaledRes) {
-		if (timeInPortal < 1.0F) {
+		if (timeInPortal < 1F) {
 			timeInPortal = timeInPortal * timeInPortal;
 			timeInPortal = timeInPortal * timeInPortal;
 			timeInPortal = timeInPortal * 0.8F + 0.2F;
@@ -217,7 +217,7 @@ public class AetherOverlay {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(false);
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, timeInPortal);
+		GL11.glColor4f(1F, 1F, 1F, timeInPortal);
 		IIcon iicon = BlocksAether.aether_portal.getBlockTextureFromSide(1);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		float f = iicon.getMinU();
@@ -226,54 +226,43 @@ public class AetherOverlay {
 		float f3 = iicon.getMaxV();
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(0.0D, (double) scaledRes.getScaledHeight(), -90.0D, (double) f, (double) f3);
-		tessellator.addVertexWithUV((double) scaledRes.getScaledWidth(), (double) scaledRes.getScaledHeight(), -90.0D, (double) f2, (double) f3);
-		tessellator.addVertexWithUV((double) scaledRes.getScaledWidth(), 0.0D, -90.0D, (double) f2, (double) f1);
-		tessellator.addVertexWithUV(0.0D, 0.0D, -90.0D, (double) f, (double) f1);
+		tessellator.addVertexWithUV(0D, (double)scaledRes.getScaledHeight(), -90D, (double)f, (double)f3);
+		tessellator.addVertexWithUV((double)scaledRes.getScaledWidth(), (double)scaledRes.getScaledHeight(), -90D, (double)f2, (double)f3);
+		tessellator.addVertexWithUV((double)scaledRes.getScaledWidth(), 0D, -90D, (double)f2, (double)f1);
+		tessellator.addVertexWithUV(0D, 0D, -90D, (double)f, (double)f1);
 		tessellator.draw();
 		GL11.glDepthMask(true);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 	}
 
 	public static void renderBossHP(Minecraft mc) {
 		PlayerAether player = PlayerAether.get(mc.thePlayer);
-
 		IAetherBoss boss = (IAetherBoss) player.getFocusedBoss();
-
 		if (player.getFocusedBoss() != null) {
-			if (player.getFocusedBoss().getBossHealth() <= 0.0F) {
+			if (player.getFocusedBoss().getBossHealth() <= 0F) {
 				player.setFocusedBoss(null);
 				return;
 			}
 			//System.out.println(player.getFocusedBoss().getBossHealth());
 			String bossTitle = boss.getBossName();
 			ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-
 			int healthRemaining = (int) (boss.getBossHealth() / boss.getMaxBossHealth() * 256F);
 			int width = scaledresolution.getScaledWidth();
-
 			GL11.glPushMatrix();
-
 			mc.fontRenderer.drawStringWithShadow(bossTitle, width / 2 - (mc.fontRenderer.getStringWidth(bossTitle) / 2), 2, 0xffffffff);
-
 			mc.renderEngine.bindTexture(Aether.locate("textures/gui/boss_bar.png"));
-
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			drawTexturedModalRect(width / 2 - 128, 12, 0, 16, 256, 32);
-
 			drawTexturedModalRect(width / 2 - 128, 12, 0, 0, healthRemaining, 16);
-
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glPopMatrix();
 		}
 	}
 
 	public static void drawTexturedModalRect(float x, float y, float u, float v, float width, float height) {
-		float zLevel = -90.0F;
+		float zLevel = -90F;
 
 		float var7 = 0.00390625F;
 		float var8 = 0.00390625F;
@@ -287,11 +276,11 @@ public class AetherOverlay {
 	}
 
 	public static float getPoisonAlpha(float f) {
-		return (f * f) / 5.0F + 0.4F;
+		return (f * f) / 5F + 0.4F;
 	}
 
 	public static float getCureAlpha(float f) {
-		return (f * f) / 10.0F + 0.4F;
+		return (f * f) / 10F + 0.4F;
 	}
 
 }

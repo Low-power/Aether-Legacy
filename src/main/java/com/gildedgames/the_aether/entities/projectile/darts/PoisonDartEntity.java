@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.entities.projectile.darts;
 
 import com.gildedgames.the_aether.entities.effects.InebriationEffect;
-import com.gildedgames.the_aether.entities.effects.PotionInebriation;
+import com.gildedgames.the_aether.entities.effects.InebriationPotion;
 import com.gildedgames.the_aether.items.AetherItems;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -31,7 +31,7 @@ public class PoisonDartEntity extends BaseDartEntity {
 		if (!worldObj.isRemote) {
 			if (movingobjectposition.entityHit != null) {
 				if (movingobjectposition.entityHit instanceof EntityLivingBase) {
-					((EntityLivingBase)movingobjectposition.entityHit).addPotionEffect(new InebriationEffect(PotionInebriation.inebriation.id, 500, 0));
+					((EntityLivingBase)movingobjectposition.entityHit).addPotionEffect(new InebriationEffect(InebriationPotion.inebriation.id, 500, 0));
 				}
 			}
 		}
