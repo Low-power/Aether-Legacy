@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.entities.passive;
 
-import com.gildedgames.the_aether.entities.ai.SheepuffAIEatAetherGrass;
+import com.gildedgames.the_aether.entities.ai.SheepuffEatAetherGrassTask;
 import com.gildedgames.the_aether.items.AetherItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityAgeable;
@@ -20,13 +20,14 @@ import java.util.Random;
 
 public class Sheepuff extends AetherAnimal {
 
-	private SheepuffAIEatAetherGrass entityAIEatGrass = new SheepuffAIEatAetherGrass(this);
+	private SheepuffEatAetherGrassTask eat_grass_task;
 
 	private int sheepTimer, amountEaten;
 
 	public Sheepuff(World world) {
 		super(world);
 
+		this.eat_grass_task = new SheepuffEatAetherGrassTask(this);
 		this.amountEaten = 0;
 		this.setSize(0.9F, 1.3F);
 		this.setFleeceColor(getRandomFleeceColor(rand));
@@ -35,7 +36,7 @@ public class Sheepuff extends AetherAnimal {
 		this.tasks.addTask(3, new EntityAIMate(this, 1D));
 		this.tasks.addTask(3, new EntityAITempt(this, 1.25D, AetherItems.blueberry, false));
 		this.tasks.addTask(4, new EntityAIFollowParent(this, 1.25D));
-		this.tasks.addTask(5, this.entityAIEatGrass);
+		this.tasks.addTask(5, this.eat_grass_task);
 		this.tasks.addTask(6, new EntityAIWander(this, 1D));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
@@ -48,7 +49,7 @@ public class Sheepuff extends AetherAnimal {
 
 	@Override
 	protected void updateAITasks() {
-		this.sheepTimer = this.entityAIEatGrass.getEatingGrassTimer();
+		this.sheepTimer = this.eat_grass_task.getEatingGrassTimer();
 		super.updateAITasks();
 	}
 
@@ -72,9 +73,9 @@ public class Sheepuff extends AetherAnimal {
 	protected void entityInit() {
 		super.entityInit();
 
-		this.dataWatcher.addObject(16, (byte) 0);
-		this.dataWatcher.addObject(17, (byte) 0);
-		this.dataWatcher.addObject(18, (byte) 0);
+		this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
+		this.dataWatcher.addObject(17, Byte.valueOf((byte)0));
+		this.dataWatcher.addObject(18, Byte.valueOf((byte)0));
 	}
 
 	@Override
@@ -223,8 +224,8 @@ public class Sheepuff extends AetherAnimal {
 	}
 
 	public void setFleeceColor(int i) {
-		byte byte0 = this.dataWatcher.getWatchableObjectByte(16);
-		this.dataWatcher.updateObject(16, Byte.valueOf((byte) (byte0 & 240 | i & 15)));
+		byte value = this.dataWatcher.getWatchableObjectByte(16);
+		this.dataWatcher.updateObject(16, Byte.valueOf((byte)(value & 240 | i & 15)));
 	}
 
 	public boolean getSheared() {

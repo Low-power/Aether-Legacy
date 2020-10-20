@@ -19,40 +19,40 @@ public class SkyrootBedItem extends Item {
 	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
 	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
 	 */
-	public boolean onItemUse(ItemStack p_77648_1_, EntityPlayer p_77648_2_, World p_77648_3_, int p_77648_4_, int p_77648_5_, int p_77648_6_, int p_77648_7_, float p_77648_8_, float p_77648_9_, float p_77648_10_) {
-		if (p_77648_3_.isRemote) return true;
+	public boolean onItemUse(ItemStack item_stack, EntityPlayer player, World world, int x, int y, int z, int p_77648_7_, float p_77648_8_, float p_77648_9_, float p_77648_10_) {
+		if (world.isRemote) return true;
 		if (p_77648_7_ != 1) return false;
 
-		++p_77648_5_;
+		++y;
 		SkyrootBedBlock blockbed = (SkyrootBedBlock)BlocksAether.skyroot_bed;
-		int i1 = MathHelper.floor_double((double)(p_77648_2_.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		byte b0 = 0;
-		byte b1 = 0;
+		int i1 = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		byte x_offset = 0;
+		byte z_offset = 0;
 
 		switch(i1) {
 			case 0:
-				b1 = 1;
+				z_offset = 1;
 				break;
 			case 1:
-				b0 = -1;
+				x_offset = -1;
 				break;
 			case 2:
-				b1 = -1;
+				z_offset = -1;
 				break;
 			case 3:
-				b0 = 1;
+				x_offset = 1;
 				break;
 		}
 
-		if (p_77648_2_.canPlayerEdit(p_77648_4_, p_77648_5_, p_77648_6_, p_77648_7_, p_77648_1_) && p_77648_2_.canPlayerEdit(p_77648_4_ + b0, p_77648_5_, p_77648_6_ + b1, p_77648_7_, p_77648_1_)) {
-			if (p_77648_3_.isAirBlock(p_77648_4_, p_77648_5_, p_77648_6_) && p_77648_3_.isAirBlock(p_77648_4_ + b0, p_77648_5_, p_77648_6_ + b1) && World.doesBlockHaveSolidTopSurface(p_77648_3_, p_77648_4_, p_77648_5_ - 1, p_77648_6_) && World.doesBlockHaveSolidTopSurface(p_77648_3_, p_77648_4_ + b0, p_77648_5_ - 1, p_77648_6_ + b1)) {
-				p_77648_3_.setBlock(p_77648_4_, p_77648_5_, p_77648_6_, blockbed, i1, 3);
+		if (player.canPlayerEdit(x, y, z, p_77648_7_, item_stack) && player.canPlayerEdit(x + x_offset, y, z + z_offset, p_77648_7_, item_stack)) {
+			if (world.isAirBlock(x, y, z) && world.isAirBlock(x + x_offset, y, z + z_offset) && World.doesBlockHaveSolidTopSurface(world, x, y - 1, z) && World.doesBlockHaveSolidTopSurface(world, x + x_offset, y - 1, z + z_offset)) {
+				world.setBlock(x, y, z, blockbed, i1, 3);
 
-				if (p_77648_3_.getBlock(p_77648_4_, p_77648_5_, p_77648_6_) == blockbed) {
-					p_77648_3_.setBlock(p_77648_4_ + b0, p_77648_5_, p_77648_6_ + b1, blockbed, i1 + 8, 3);
+				if (world.getBlock(x, y, z) == blockbed) {
+					world.setBlock(x + x_offset, y, z + z_offset, blockbed, i1 + 8, 3);
 				}
 
-				--p_77648_1_.stackSize;
+				--item_stack.stackSize;
 				return true;
 			} else {
 				return false;

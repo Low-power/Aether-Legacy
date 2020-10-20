@@ -60,8 +60,7 @@ public class PlayerAetherEvents {
 			playerAether.setAccessoryInventory(original.getAccessoryInventory());
 		}
 
-		if (event.wasDeath)
-		{
+		if (event.wasDeath) {
 			playerAether.setBedLocation(original.getBedLocation());
 		}
 	}

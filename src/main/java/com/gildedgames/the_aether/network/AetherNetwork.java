@@ -40,9 +40,9 @@ public class AetherNetwork {
 
 		INSTANCE.registerMessage(PacketSendSneaking.class, PacketSendSneaking.class, discriminant++, Side.SERVER);
 
-		INSTANCE.registerMessage(PacketSendEternalDay.class, PacketSendEternalDay.class, discriminant++, Side.CLIENT);
-		INSTANCE.registerMessage(PacketSendShouldCycle.class, PacketSendShouldCycle.class, discriminant++, Side.CLIENT);
-		INSTANCE.registerMessage(PacketSendTime.class, PacketSendTime.class, discriminant++, Side.CLIENT);
+		INSTANCE.registerMessage(EternalDayPacket.class, EternalDayPacket.class, discriminant++, Side.CLIENT);
+		INSTANCE.registerMessage(ShouldCyclePacket.class, ShouldCyclePacket.class, discriminant++, Side.CLIENT);
+		INSTANCE.registerMessage(TimePacket.class, TimePacket.class, discriminant++, Side.CLIENT);
 
 		INSTANCE.registerMessage(PacketCapeChanged.class, PacketCapeChanged.class, discriminant++, Side.SERVER);
 		INSTANCE.registerMessage(PacketCapeChanged.class, PacketCapeChanged.class, discriminant++, Side.CLIENT);

@@ -7,7 +7,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class SheepuffAIEatAetherGrass extends EntityAIBase {
+public class SheepuffEatAetherGrassTask extends EntityAIBase {
 
 	private Sheepuff sheepuff;
 
@@ -15,7 +15,7 @@ public class SheepuffAIEatAetherGrass extends EntityAIBase {
 
 	int eatingGrassTimer;
 
-	public SheepuffAIEatAetherGrass(Sheepuff sheepuff) {
+	public SheepuffEatAetherGrassTask(Sheepuff sheepuff) {
 		this.sheepuff = sheepuff;
 		this.entityWorld = sheepuff.worldObj;
 		this.setMutexBits(7);

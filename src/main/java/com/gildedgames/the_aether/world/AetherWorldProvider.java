@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.world;
 
 import com.gildedgames.the_aether.AetherConfig;
 import com.gildedgames.the_aether.network.AetherNetwork;
-import com.gildedgames.the_aether.network.packets.PacketSendTime;
+import com.gildedgames.the_aether.network.packets.TimePacket;
 import com.gildedgames.the_aether.player.PlayerAether;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,38 +33,25 @@ public class AetherWorldProvider extends WorldProvider {
 	}
 
 	@Override
-	public float calculateCelestialAngle(long worldTime, float partialTicks)
-	{
-		if (!AetherConfig.eternalDayDisabled())
-		{
-			if (!this.worldObj.isRemote)
-			{
+	public float calculateCelestialAngle(long worldTime, float partialTicks) {
+		if (!AetherConfig.eternalDayDisabled()) {
+			if (!this.worldObj.isRemote) {
 				AetherData data = AetherData.getInstance(this.worldObj);
-
-				if (data.isEternalDay())
-				{
-					if (!data.isShouldCycleCatchup())
-					{
-						if (data.getAetherTime() != (worldTime % 24000L) && data.getAetherTime() != (worldTime + 1 % 24000L) && data.getAetherTime() != (worldTime - 1 % 24000L))
-						{
+				if (data.isEternalDay()) {
+					if (!data.isShouldCycleCatchup()) {
+						if (data.getAetherTime() != (worldTime % 24000L) && data.getAetherTime() != (worldTime + 1 % 24000L) && data.getAetherTime() != (worldTime - 1 % 24000L)) {
 							data.setAetherTime((data.getAetherTime() - 1) % 24000L);
-						}
-						else
-						{
+						} else {
 							data.setShouldCycleCatchup(true);
 						}
-					}
-					else
-					{
+					} else {
 						data.setAetherTime(worldTime);
 					}
 
 					this.aetherTime = data.getAetherTime();
-					AetherNetwork.sendToAll(new PacketSendTime(this.aetherTime));
+					AetherNetwork.sendToAll(new TimePacket(this.aetherTime));
 					data.setAetherTime(this.aetherTime);
-				}
-				else
-				{
+				} else {
 					data.setAetherTime(6000);
 				}
 			}
@@ -72,62 +59,49 @@ public class AetherWorldProvider extends WorldProvider {
 
 		int i = (int)(AetherConfig.eternalDayDisabled() ? worldTime : this.aetherTime % 24000L);
 
-		float f = ((float)i + partialTicks) / 24000.0F - 0.25F;
+		float f = ((float)i + partialTicks) / 24000F - 0.25F;
 
-		if (f < 0.0F)
-		{
-			++f;
-		}
+		if(f < 0F) f++;
+		else if(f > 1F) f--;
 
-		if (f > 1.0F)
-		{
-			--f;
-		}
-
-		float f1 = 1.0F - (float)((Math.cos((double)f * Math.PI) + 1.0D) / 2.0D);
-		f = f + (f1 - f) / 3.0F;
+		float f1 = 1F - (float)((Math.cos((double)f * Math.PI) + 1D) / 2D);
+		f = f + (f1 - f) / 3F;
 		return f;
 	}
 
-	public void setIsEternalDay(boolean set)
-	{
-		this.eternalDay = set;
+	public void setIsEternalDay(boolean value) {
+		this.eternalDay = value;
 	}
 
-	public boolean getIsEternalDay()
-	{
+	public boolean getIsEternalDay() {
 		return this.eternalDay;
 	}
 
-	public void setShouldCycleCatchup(boolean set)
-	{
-		this.shouldCycleCatchup = set;
+	public void setShouldCycleCatchup(boolean value) {
+		this.shouldCycleCatchup = value;
 	}
 
-	public boolean getShouldCycleCatchup()
-	{
+	public boolean getShouldCycleCatchup() {
 		return this.shouldCycleCatchup;
 	}
 
-	public void setAetherTime(long time)
-	{
+	public void setAetherTime(long time) {
 		this.aetherTime = time;
 	}
 
-	public long getAetherTime()
-	{
+	public long getAetherTime() {
 		return this.aetherTime;
 	}
 
 	@Override
 	public float[] calcSunriseSunsetColors(float f, float f1) {
 		float f2 = 0.4F;
-		float f3 = MathHelper.cos(f * 3.141593F * 2.0F) - 0.0F;
+		float f3 = MathHelper.cos(f * 3.141593F * 2F) - 0F;
 		float f4 = -0F;
 
 		if (f3 >= f4 - f2 && f3 <= f4 + f2) {
 			float f5 = (f3 - f4) / f2 * 0.5F + 0.5F;
-			float f6 = 1.0F - (1.0F - MathHelper.sin(f5 * 3.141593F)) * 0.99F;
+			float f6 = 1F - (1F - MathHelper.sin(f5 * 3.141593F)) * 0.99F;
 			f6 *= f6;
 			this.colorsSunriseSunset[0] = f5 * 0.3F + 0.1F;
 			this.colorsSunriseSunset[1] = f5 * f5 * 0.7F + 0.2F;
@@ -140,13 +114,12 @@ public class AetherWorldProvider extends WorldProvider {
 	}
 
 	@Override
-	public int getRespawnDimension(EntityPlayerMP player)
-	{
+	public int getRespawnDimension(EntityPlayerMP player) {
 		return PlayerAether.get(player).getBedLocation() == null ? 0 : AetherConfig.getAetherDimensionID();
 	}
 
 	@Override
-	public boolean canCoordinateBeSpawn(int i, int j) {
+	public boolean canCoordinateBeSpawn(int x, int z) {
 		return false;
 	}
 
@@ -172,13 +145,9 @@ public class AetherWorldProvider extends WorldProvider {
 	public Vec3 getFogColor(float f, float f1) {
 		int i = 0x9393BC;
 
-		float f2 = MathHelper.cos(f * 3.141593F * 2.0F) * 2.0F + 0.5F;
-		if (f2 < 0.0F) {
-			f2 = 0.0F;
-		}
-		if (f2 > 1.0F) {
-			f2 = 1.0F;
-		}
+		float f2 = MathHelper.cos(f * 3.141593F * 2F) * 2F + 0.5F;
+		if(f2 < 0F) f2 = 0F;
+		else if(f2 > 1F) f2 = 1F;
 		float f3 = (i >> 16 & 0xff) / 255F;
 		float f4 = (i >> 8 & 0xff) / 255F;
 		float f5 = (i & 0xff) / 255F;
@@ -211,7 +180,7 @@ public class AetherWorldProvider extends WorldProvider {
 
 	@Override
 	public double getHorizon() {
-		return 0.0;
+		return 0;
 	}
 
 	@Override
@@ -236,7 +205,6 @@ public class AetherWorldProvider extends WorldProvider {
 		return new IRenderHandler() {
 			@Override
 			public void render(float partialTicks, net.minecraft.client.multiplayer.WorldClient world, net.minecraft.client.Minecraft mc) {
-
 			}
 		};
 	}

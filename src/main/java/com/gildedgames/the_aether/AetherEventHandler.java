@@ -3,8 +3,8 @@ package com.gildedgames.the_aether;
 import com.gildedgames.the_aether.api.player.IPlayerAether;
 import com.gildedgames.the_aether.entities.passive.mountable.Aerbunny;
 import com.gildedgames.the_aether.network.AetherNetwork;
-import com.gildedgames.the_aether.network.packets.PacketSendEternalDay;
-import com.gildedgames.the_aether.network.packets.PacketSendShouldCycle;
+import com.gildedgames.the_aether.network.packets.EternalDayPacket;
+import com.gildedgames.the_aether.network.packets.ShouldCyclePacket;
 import com.gildedgames.the_aether.player.PlayerAether;
 import com.gildedgames.the_aether.world.AetherData;
 import com.gildedgames.the_aether.world.AetherWorldProvider;
@@ -305,10 +305,10 @@ public class AetherEventHandler {
 				AetherWorldProvider providerAether = (AetherWorldProvider)provider;
 
 				providerAether.setIsEternalDay(data.isEternalDay());
-				AetherNetwork.sendToAll(new PacketSendEternalDay(providerAether.getIsEternalDay()));
+				AetherNetwork.sendToAll(new EternalDayPacket(providerAether.getIsEternalDay()));
 
 				providerAether.setShouldCycleCatchup(data.isShouldCycleCatchup());
-				AetherNetwork.sendToAll(new PacketSendShouldCycle(providerAether.getShouldCycleCatchup()));
+				AetherNetwork.sendToAll(new ShouldCyclePacket(providerAether.getShouldCycleCatchup()));
 			}
 		}
 

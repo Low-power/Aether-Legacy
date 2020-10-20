@@ -17,7 +17,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 public class SkyrootBedBlock extends BlockBed {
@@ -36,84 +36,77 @@ public class SkyrootBedBlock extends BlockBed {
 	}
 
 	@Override
-	public boolean onBlockActivated(World p_149727_1_, int p_149727_2_, int p_149727_3_, int p_149727_4_, EntityPlayer p_149727_5_, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-		if (p_149727_1_.isRemote) return true;
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+		if (world.isRemote) return true;
 
-		int i1 = p_149727_1_.getBlockMetadata(p_149727_2_, p_149727_3_, p_149727_4_);
-		if (!isBlockHeadOfBed(i1)) {
-			int j1 = getDirection(i1);
-			p_149727_2_ += field_149981_a[j1][0];
-			p_149727_4_ += field_149981_a[j1][1];
+		int metadata = world.getBlockMetadata(x, y, z);
+		if (!isBlockHeadOfBed(metadata)) {
+			int j1 = getDirection(metadata);
+			x += field_149981_a[j1][0];
+			z += field_149981_a[j1][1];
 
-			if (p_149727_1_.getBlock(p_149727_2_, p_149727_3_, p_149727_4_) != this) {
+			if (world.getBlock(x, y, z) != this) {
 				return true;
 			}
 
-			i1 = p_149727_1_.getBlockMetadata(p_149727_2_, p_149727_3_, p_149727_4_);
+			metadata = world.getBlockMetadata(x, y, z);
 		}
 
-		if (p_149727_5_.dimension == AetherConfig.getAetherDimensionID() || p_149727_5_.dimension == 0) {
-			if (func_149976_c(i1)) {
-				EntityPlayer player1 = null;
-				Iterator iterator = p_149727_1_.playerEntities.iterator();
-
-				while (iterator.hasNext()) {
-					EntityPlayer player2 = (EntityPlayer)iterator.next();
-
-					if (player2.isPlayerSleeping()) {
-						ChunkCoordinates chunkcoordinates = player2.playerLocation;
-
-						if (chunkcoordinates.posX == p_149727_2_ && chunkcoordinates.posY == p_149727_3_ && chunkcoordinates.posZ == p_149727_4_) {
-							player1 = player2;
-						}
+		if (player.dimension == AetherConfig.getAetherDimensionID() || player.dimension == 0) {
+			if (func_149976_c(metadata)) {
+				EntityPlayer sleeping_player = null;
+				for(EntityPlayer p : (List<EntityPlayer>)world.playerEntities) {
+					if(!p.isPlayerSleeping()) continue;
+					ChunkCoordinates chunk_coordinates = p.playerLocation;
+					if(chunk_coordinates.posX == x && chunk_coordinates.posY == y && chunk_coordinates.posZ == z) {
+						sleeping_player = p;
+						break;
 					}
 				}
-
-				if (player1 != null) {
-					p_149727_5_.addChatComponentMessage(new ChatComponentTranslation("tile.bed.occupied", new Object[0]));
+				if(sleeping_player != null) {
+					player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.occupied", new Object[0]));
 					return true;
 				}
-
-				func_149979_a(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, false);
+				func_149979_a(world, x, y, z, false);
 			}
 
-			EntityPlayer.EnumStatus status = p_149727_5_.sleepInBedAt(p_149727_2_, p_149727_3_, p_149727_4_);
+			EntityPlayer.EnumStatus status = player.sleepInBedAt(x, y, z);
 			switch(status) {
 				case OK:
-					func_149979_a(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, true);
+					func_149979_a(world, x, y, z, true);
 					break;
 				case NOT_POSSIBLE_NOW:
-					p_149727_5_.addChatComponentMessage(new ChatComponentTranslation("tile.bed.noSleep", new Object[0]));
+					player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.noSleep", new Object[0]));
 
-					if (p_149727_5_.dimension == AetherConfig.getAetherDimensionID()) {
-						p_149727_5_.addChatMessage(new ChatComponentTranslation("gui.skyroot_bed.respawn_point"));
-						p_149727_5_.setSpawnChunk(new ChunkCoordinates(p_149727_2_, p_149727_3_, p_149727_4_), false, AetherConfig.getAetherDimensionID());
-						PlayerAether.get(p_149727_5_).setBedLocation(new ChunkCoordinates(p_149727_2_, p_149727_3_, p_149727_4_));
+					if (player.dimension == AetherConfig.getAetherDimensionID()) {
+						player.addChatMessage(new ChatComponentTranslation("gui.skyroot_bed.respawn_point"));
+						player.setSpawnChunk(new ChunkCoordinates(x, y, z), false, AetherConfig.getAetherDimensionID());
+						PlayerAether.get(player).setBedLocation(new ChunkCoordinates(x, y, z));
 					}
 					break;
 				case NOT_SAFE:
-					p_149727_5_.addChatComponentMessage(new ChatComponentTranslation("tile.bed.notSafe", new Object[0]));
+					player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.notSafe", new Object[0]));
 					break;
 
 			}
 			return true;
 		} else {
-			double d2 = (double)p_149727_2_ + 0.5D;
-			double d0 = (double)p_149727_3_ + 0.5D;
-			double d1 = (double)p_149727_4_ + 0.5D;
-			p_149727_1_.setBlockToAir(p_149727_2_, p_149727_3_, p_149727_4_);
-			int k1 = getDirection(i1);
-			p_149727_2_ += field_149981_a[k1][0];
-			p_149727_4_ += field_149981_a[k1][1];
+			double px = (double)x + 0.5D;
+			double py = (double)y + 0.5D;
+			double pz = (double)z + 0.5D;
+			world.setBlockToAir(x, y, z);
+			int k1 = getDirection(metadata);
+			x += field_149981_a[k1][0];
+			z += field_149981_a[k1][1];
 
-			if (p_149727_1_.getBlock(p_149727_2_, p_149727_3_, p_149727_4_) == this) {
-				p_149727_1_.setBlockToAir(p_149727_2_, p_149727_3_, p_149727_4_);
-				d2 = (d2 + (double)p_149727_2_ + 0.5D) / 2D;
-				d0 = (d0 + (double)p_149727_3_ + 0.5D) / 2D;
-				d1 = (d1 + (double)p_149727_4_ + 0.5D) / 2D;
+			if (world.getBlock(x, y, z) == this) {
+				world.setBlockToAir(x, y, z);
+				px = (px + (double)x + 0.5D) / 2D;
+				py = (py + (double)y + 0.5D) / 2D;
+				pz = (pz + (double)z + 0.5D) / 2D;
 			}
 
-			p_149727_1_.newExplosion((Entity)null, (double)((float)p_149727_2_ + 0.5F), (double)((float)p_149727_3_ + 0.5F), (double)((float)p_149727_4_ + 0.5F), 5F, true, true);
+			world.newExplosion((Entity)null, (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), 5F, true, true);
 			return true;
 		}
 	}
@@ -133,10 +126,10 @@ public class SkyrootBedBlock extends BlockBed {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister p_149651_1_) {
-		this.field_149983_N = new IIcon[] {p_149651_1_.registerIcon(this.getTextureName() + "_feet_top"), p_149651_1_.registerIcon(this.getTextureName() + "_head_top")};
-		this.field_149980_b = new IIcon[] {p_149651_1_.registerIcon(this.getTextureName() + "_feet_end"), p_149651_1_.registerIcon(this.getTextureName() + "_head_end")};
-		this.field_149982_M = new IIcon[] {p_149651_1_.registerIcon(this.getTextureName() + "_feet_side"), p_149651_1_.registerIcon(this.getTextureName() + "_head_side")};
+	public void registerBlockIcons(IIconRegister register) {
+		this.field_149983_N = new IIcon[] { register.registerIcon(this.getTextureName() + "_feet_top"), register.registerIcon(this.getTextureName() + "_head_top") };
+		this.field_149980_b = new IIcon[] { register.registerIcon(this.getTextureName() + "_feet_end"), register.registerIcon(this.getTextureName() + "_head_end") };
+		this.field_149982_M = new IIcon[] { register.registerIcon(this.getTextureName() + "_feet_side"), register.registerIcon(this.getTextureName() + "_head_side") };
 	}
 
 	private void func_149978_e() {
