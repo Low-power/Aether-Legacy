@@ -5,7 +5,6 @@ import com.gildedgames.the_aether.inventory.AccessoriesInventory;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
 import com.gildedgames.the_aether.registry.achievements.AetherAchievement;
-import com.gildedgames.the_aether.entities.util.EntityHook;
 import com.gildedgames.the_aether.network.AetherNetwork;
 import com.gildedgames.the_aether.network.packets.AccessoryPacket;
 import com.gildedgames.the_aether.network.packets.PacketAchievement;
@@ -16,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
-import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -31,15 +29,6 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
 public class PlayerAetherEvents {
-
-	@SubscribeEvent
-	public void onPlayerAetherConstructing(EntityConstructing event) {
-		if (event.entity instanceof EntityPlayer) {
-			event.entity.registerExtendedProperties("aether_legacy:player_aether", new PlayerAether());
-		} else if (event.entity instanceof EntityLivingBase) {
-			event.entity.registerExtendedProperties("aether_legacy:entity_hook", new EntityHook());
-		}
-	}
 
 	@SubscribeEvent
 	public void onPlayerAetherLoggedIn(PlayerLoggedInEvent event) {
@@ -106,16 +95,6 @@ public class PlayerAetherEvents {
 	public void onPlayerAetherDrops(LivingDropsEvent event) {
 		if (event.entityLiving instanceof EntityPlayer && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory")) {
 			PlayerAether.get((EntityPlayer) event.entityLiving).getAccessoryInventory().dropAccessories();
-		}
-	}
-
-	@SubscribeEvent
-	public void onPlayerAetherUpdate(LivingUpdateEvent event) {
-		if (event.entityLiving instanceof EntityPlayer) {
-			PlayerAether.get((EntityPlayer) event.entityLiving).onUpdate();
-			;
-		} else if (event.entityLiving instanceof EntityLivingBase) {
-			((EntityHook) event.entityLiving.getExtendedProperties("aether_legacy:entity_hook")).onUpdate();
 		}
 	}
 

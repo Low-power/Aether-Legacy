@@ -2,6 +2,7 @@ package com.gildedgames.the_aether.events;
 
 import com.gildedgames.the_aether.AetherConfig;
 import com.gildedgames.the_aether.api.AetherAPI;
+import com.gildedgames.the_aether.entities.util.EntityHook;
 import com.gildedgames.the_aether.player.PlayerAether;
 import com.gildedgames.the_aether.world.AetherWorldProvider;
 import com.gildedgames.the_aether.world.TeleporterAether;
@@ -22,6 +23,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldProviderSurface;	// OverworldWorldProvider
 import net.minecraftforge.event.entity.living.LivingEvent;
 //import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import java.util.Collection;
 
 public class AetherEntityEvents {
@@ -53,13 +55,13 @@ public class AetherEntityEvents {
 	@SubscribeEvent
 	public void on_living_entity_update(LivingEvent.LivingUpdateEvent event) {
 		EntityLivingBase entity = event.entityLiving;
-/* TODO
+
 		if(entity instanceof EntityPlayer) {
 			PlayerAether.get((EntityPlayer)entity).onUpdate();
 		} else {
 			((EntityHook)entity.getExtendedProperties("aether_legacy:entity_hook")).onUpdate();
 		}
-*/
+
 		if(entity.worldObj.isRemote) return;
 		if(entity instanceof EntityPlayer && entity.worldObj.provider instanceof WorldProviderSurface && entity.posY < 256) {
 			PlayerAether aplayer = (PlayerAether)AetherAPI.get((EntityPlayer)event.entity);
@@ -117,4 +119,13 @@ public class AetherEntityEvents {
 		aplayer.riddenEntity = null;
 	}
 */
+
+	@SubscribeEvent
+	public void on_entity_constructing(EntityEvent.EntityConstructing event) {
+		if (event.entity instanceof EntityPlayer) {
+			event.entity.registerExtendedProperties("aether_legacy:player_aether", new PlayerAether());
+		} else if (event.entity instanceof EntityLivingBase) {
+			event.entity.registerExtendedProperties("aether_legacy:entity_hook", new EntityHook());
+		}
+	}
 }
