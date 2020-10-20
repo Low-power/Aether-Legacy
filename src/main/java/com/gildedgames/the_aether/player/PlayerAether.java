@@ -188,18 +188,13 @@ public class PlayerAether implements IPlayerAether {
 
 		this.getEntity().worldObj.theProfiler.startSection("portal");
 
+/*
 		if (this.getEntity().dimension == AetherConfig.getAetherDimensionID()) {
 			if (this.getEntity().posY < -2) {
 				this.teleportPlayer(false);
-
-				if (this.riddenEntity != null)
-				{
-					this.getEntity().mountEntity(this.riddenEntity);
-					this.riddenEntity = null;
-				}
 			}
 		}
-
+*/
 		if (this.inPortal) {
 			if (this.getEntity().timeUntilPortal <= 0) {
 				int limit = this.getEntity().getMaxInPortalTime();
