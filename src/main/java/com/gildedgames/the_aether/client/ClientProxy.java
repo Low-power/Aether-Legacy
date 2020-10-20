@@ -5,7 +5,7 @@ import com.gildedgames.the_aether.CommonProxy;
 import com.gildedgames.the_aether.client.audio.AetherMusicHandler;
 import com.gildedgames.the_aether.client.gui.AetherLoadingScreen;
 import com.gildedgames.the_aether.client.gui.GuiAetherInGame;
-import com.gildedgames.the_aether.client.gui.GuiSunAltar;
+import com.gildedgames.the_aether.client.gui.SunAltarGui;
 import com.gildedgames.the_aether.client.renders.AetherEntityRenderer;
 import com.gildedgames.the_aether.client.renders.AetherRenders;
 import com.gildedgames.the_aether.compatibility.client.AetherClientCompatibility;
@@ -44,15 +44,14 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void sendMessage(EntityPlayer player, String text) {
-		if (this.getPlayer() == player)
-		{
+		if (this.getPlayer() == player) {
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(text));
 		}
 	}
 
 	@Override
 	public void openSunAltar() {
-		FMLClientHandler.instance().getClient().displayGuiScreen(new GuiSunAltar());
+		FMLClientHandler.instance().getClient().displayGuiScreen(new SunAltarGui());
 	}
 
 	@Override

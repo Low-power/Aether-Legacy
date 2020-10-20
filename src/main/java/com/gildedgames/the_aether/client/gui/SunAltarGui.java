@@ -1,22 +1,19 @@
 package com.gildedgames.the_aether.client.gui;
 
+import com.gildedgames.the_aether.client.gui.button.SunAltarSlider;
 import com.gildedgames.the_aether.Aether;
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
 
-import com.gildedgames.the_aether.client.gui.button.GuiSunAltarSlider;
-
-public class GuiSunAltar extends GuiScreen {
+public class SunAltarGui extends GuiScreen {
 
 	private static final ResourceLocation TEXTURE = Aether.locate("textures/gui/sun_altar.png");
 
 	private World world;
 
-	public GuiSunAltar() {
-
+	public SunAltarGui() {
 	}
 
 	@SuppressWarnings("unchecked")
@@ -25,8 +22,7 @@ public class GuiSunAltar extends GuiScreen {
 		super.initGui();
 
 		this.world = this.mc.theWorld;
-
-		this.buttonList.add(new GuiSunAltarSlider(this.world, this.width / 2 - 75, this.height / 2, "Select Time"));
+		this.buttonList.add(new SunAltarSlider(this.world, this.width / 2 - 75, this.height / 2, "Select Time"));
 	}
 
 	@Override
@@ -51,10 +47,8 @@ public class GuiSunAltar extends GuiScreen {
 		return false;
 	}
 
-	protected void keyTyped(char p_73869_1_, int p_73869_2_)
-	{
-		if (p_73869_2_ == 1 || p_73869_2_ == this.mc.gameSettings.keyBindInventory.getKeyCode())
-		{
+	protected void keyTyped(char c, int key_code) {
+		if (key_code == 1 || key_code == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
 			this.mc.thePlayer.closeScreen();
 		}
 	}

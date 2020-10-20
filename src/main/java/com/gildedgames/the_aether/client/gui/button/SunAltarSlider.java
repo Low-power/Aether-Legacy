@@ -1,15 +1,13 @@
 package com.gildedgames.the_aether.client.gui.button;
 
+import com.gildedgames.the_aether.network.AetherNetwork;
+import com.gildedgames.the_aether.network.packets.PacketSetTime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.world.World;
-
 import org.lwjgl.opengl.GL11;
 
-import com.gildedgames.the_aether.network.AetherNetwork;
-import com.gildedgames.the_aether.network.packets.PacketSetTime;
-
-public class GuiSunAltarSlider extends GuiButton {
+public class SunAltarSlider extends GuiButton {
 
 	public float sliderValue;
 
@@ -17,8 +15,8 @@ public class GuiSunAltarSlider extends GuiButton {
 
 	private World world;
 
-	public GuiSunAltarSlider(World world, int par2, int par3, String par5Str) {
-		super(1, par2, par3, 150, 20, par5Str);
+	public SunAltarSlider(World world, int x, int y, String text) {
+		super(1, x, y, 150, 20, text);
 
 		this.world = world;
 	}
@@ -36,49 +34,34 @@ public class GuiSunAltarSlider extends GuiButton {
 		if (this.visible) {
 			if (this.dragging) {
 				this.sliderValue = (float) (mouseX - (this.xPosition + 4)) / (float) (this.width - 8);
-
 				long shouldTime = (long) (24000L * sliderValue);
 				long worldTime = world.getWorldInfo().getWorldTime();
 				long remainder = worldTime % 24000L;
 				long add = shouldTime > remainder ? shouldTime - remainder : shouldTime + 24000 - remainder;
-
 				world.getWorldInfo().setWorldTime(worldTime + add);
-				if (this.sliderValue < 0.0F) {
-					this.sliderValue = 0.0F;
-				}
-
-				if (this.sliderValue > 1.0F) {
-					this.sliderValue = 1.0F;
-				}
-
+				if (this.sliderValue < 0F) this.sliderValue = 0F;
+				else if (this.sliderValue > 1F) this.sliderValue = 1F;
 			}
 
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			this.drawTexturedModalRect(this.xPosition + (int) (this.sliderValue * (float) (this.width - 8)), this.yPosition, 0, 66, 4, 20);
 			this.drawTexturedModalRect(this.xPosition + (int) (this.sliderValue * (float) (this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
 		}
 	}
 
 	@Override
-	public void drawButton(Minecraft par1Minecraft, int mouseX, int mouseY) {
-		this.sliderValue = (this.world.getWorldInfo().getWorldTime() % 24000) / 24000.0F;
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		this.sliderValue = (this.world.getWorldInfo().getWorldTime() % 24000) / 24000F;
 
-		super.drawButton(par1Minecraft, mouseX, mouseY);
+		super.drawButton(mc, mouseX, mouseY);
 	}
 
 	@Override
-	public boolean mousePressed(Minecraft par1Minecraft, int par2, int par3) {
-		if (super.mousePressed(par1Minecraft, par2, par3)) {
-			this.sliderValue = (float) (par2 - (this.xPosition + 4)) / (float) (this.width - 8);
-
-			if (this.sliderValue < 0.0F) {
-				this.sliderValue = 0.0F;
-			}
-
-			if (this.sliderValue > 1.0F) {
-				this.sliderValue = 1.0F;
-			}
-
+	public boolean mousePressed(Minecraft mc, int x, int y) {
+		if (super.mousePressed(mc, x, y)) {
+			this.sliderValue = (float)(x - (this.xPosition + 4)) / (float) (this.width - 8);
+			if (this.sliderValue < 0F) this.sliderValue = 0F;
+			else if (this.sliderValue > 1F) this.sliderValue = 1F;
 			this.dragging = true;
 			return true;
 		} else {

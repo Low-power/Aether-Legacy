@@ -37,7 +37,7 @@ import com.gildedgames.the_aether.blocks.dungeon.TreasureChest;
 import com.gildedgames.the_aether.blocks.natural.Aercloud;
 import com.gildedgames.the_aether.blocks.natural.BlockAetherDirt;
 import com.gildedgames.the_aether.blocks.natural.BlockAetherFlower;
-import com.gildedgames.the_aether.blocks.natural.BlockAetherGrass;
+import com.gildedgames.the_aether.blocks.natural.AetherGrass;
 import com.gildedgames.the_aether.blocks.natural.AetherLeaves;
 import com.gildedgames.the_aether.blocks.natural.AetherLog;
 import com.gildedgames.the_aether.blocks.natural.AetherOre;
@@ -115,7 +115,7 @@ public class BlocksAether {
 	public static Block skyroot_bed;
 
 	public static void initialization() {
-		aether_grass = registerMeta("aether_grass", new BlockAetherGrass());
+		aether_grass = registerMeta("aether_grass", new AetherGrass());
 		enchanted_aether_grass = registerRarity("enchanted_aether_grass", new BlockEnchantedAetherGrass(), EnumRarity.rare);
 		aether_dirt = registerMeta("aether_dirt", new BlockAetherDirt());
 		holystone = registerMeta("holystone", new BlockHolystone());
