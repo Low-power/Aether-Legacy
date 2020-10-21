@@ -1,15 +1,15 @@
 package com.gildedgames.the_aether.items.tools;
 
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.items.util.EnumAetherToolType;
+import com.gildedgames.the_aether.items.util.AetherToolType;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
-public class ZaniteTool extends ItemAetherTool {
+public class ZaniteTool extends AetherTool {
 
 	public float[] level = new float[]{2F, 4F, 6F, 8F, 12F};
 
-	public ZaniteTool(float damage, EnumAetherToolType toolType) {
+	public ZaniteTool(float damage, AetherToolType toolType) {
 		super(damage, ToolMaterial.IRON, toolType);
 	}
 
@@ -20,7 +20,7 @@ public class ZaniteTool extends ItemAetherTool {
 
 	@Override
 	public float getDigSpeed(ItemStack stack, Block block, int meta) {
-		return this.calculateIncrease(stack, this.toolType.getStrVsBlock(stack, block));
+		return this.calculateIncrease(stack, this.tool_type.getStrVsBlock(stack, block));
 	}
 
 	private float calculateIncrease(ItemStack tool, float original) {

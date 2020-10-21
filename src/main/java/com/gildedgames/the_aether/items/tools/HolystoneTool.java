@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.items.tools;
 
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.items.util.EnumAetherToolType;
+import com.gildedgames.the_aether.items.util.AetherToolType;
 import com.gildedgames.the_aether.blocks.BlocksAether;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,9 +10,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class HolystoneTool extends ItemAetherTool {
+public class HolystoneTool extends AetherTool {
 
-	public HolystoneTool(float damage, EnumAetherToolType toolType) {
+	public HolystoneTool(float damage, AetherToolType toolType) {
 		super(damage, ToolMaterial.STONE, toolType);
 	}
 

@@ -1,13 +1,13 @@
 package com.gildedgames.the_aether.items.tools;
 
-import com.gildedgames.the_aether.items.util.EnumAetherToolType;
+import com.gildedgames.the_aether.items.util.AetherToolType;
 import com.gildedgames.the_aether.blocks.BlocksAether;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class SkyrootTool extends ItemAetherTool {
+public class SkyrootTool extends AetherTool {
 
-	public SkyrootTool(float damage, EnumAetherToolType toolType) {
+	public SkyrootTool(float damage, AetherToolType toolType) {
 		super(damage, ToolMaterial.WOOD, toolType);
 	}
 

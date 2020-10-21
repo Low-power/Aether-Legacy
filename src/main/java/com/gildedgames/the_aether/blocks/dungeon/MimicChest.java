@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.blocks.dungeon;
 
-import com.gildedgames.the_aether.entities.hostile.EntityMimic;
+import com.gildedgames.the_aether.entities.hostile.Mimic;
 import com.gildedgames.the_aether.tileentity.TileEntityChestMimic;
 import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,31 +10,31 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-public class BlockMimicChest extends BlockChest {
+public class MimicChest extends BlockChest {
 
-	public BlockMimicChest() {
+	public MimicChest() {
 		super(13);
 
-		this.setHardness(2.0F);
+		this.setHardness(2F);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEntityChestMimic();
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, int x, int y, int z, EntityPlayer playerIn, int side, float hitX, float hitY, float hitZ) {
-		this.spawnMimic(worldIn, playerIn, x, y, z);
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		this.spawnMimic(world, player, x, y, z);
 
-		worldIn.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "random.chestopen", 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+		world.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "random.chestopen", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 
 		return true;
 	}
 
 	@Override
-	public void harvestBlock(World worldIn, EntityPlayer player, int x, int y, int z, int meta) {
-		this.spawnMimic(worldIn, player, x, y, z);
+	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
+		this.spawnMimic(world, player, x, y, z);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class BlockMimicChest extends BlockChest {
 
 	private void spawnMimic(World world, EntityPlayer player, int x, int y, int z) {
 		if (!world.isRemote) {
-			EntityMimic mimic = new EntityMimic(world);
+			Mimic mimic = new Mimic(world);
 			if (!player.capabilities.isCreativeMode) {
 				mimic.setAttackTarget(player);
 			}

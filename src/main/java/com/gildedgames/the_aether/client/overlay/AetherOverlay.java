@@ -245,7 +245,6 @@ public class AetherOverlay {
 				player.setFocusedBoss(null);
 				return;
 			}
-			//System.out.println(player.getFocusedBoss().getBossHealth());
 			String bossTitle = boss.getBossName();
 			ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 			int healthRemaining = (int) (boss.getBossHealth() / boss.getMaxBossHealth() * 256F);

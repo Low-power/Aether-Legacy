@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.client.models.entities;
 
-import com.gildedgames.the_aether.entities.hostile.EntityMimic;
+import com.gildedgames.the_aether.entities.hostile.Mimic;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -31,18 +31,18 @@ public class MimicModel extends ModelBase {
 	}
 
 	@Override
-	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
-		EntityMimic mimic = (EntityMimic) entityIn;
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entity) {
+		Mimic mimic = (Mimic)entity;
 		this.boxLid.rotateAngleX = 3.14159265F - mimic.mouth;
 		this.rightLeg.rotateAngleX = mimic.legs;
 		this.leftLeg.rotateAngleX = -mimic.legs;
 	}
 
-	public void renderHead(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, EntityMimic mimic) {
+	public void renderHead(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, Mimic mimic) {
 		this.box.render(scale);
 	}
 
-	public void renderLegs(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, EntityMimic mimic) {
+	public void renderLegs(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, Mimic mimic) {
 		boxLid.render(scale);
 		leftLeg.render(scale);
 		rightLeg.render(scale);

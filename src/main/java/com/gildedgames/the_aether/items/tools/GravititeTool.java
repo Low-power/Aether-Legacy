@@ -1,7 +1,8 @@
 package com.gildedgames.the_aether.items.tools;
 
 import com.gildedgames.the_aether.entities.block.EntityFloatingBlock;
-import com.gildedgames.the_aether.items.util.EnumAetherToolType;
+import com.gildedgames.the_aether.items.util.AetherToolType;
+import com.gildedgames.the_aether.blocks.BlocksAether;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -9,11 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
+public class GravititeTool extends AetherTool {
 
-public class ItemGravititeTool extends ItemAetherTool {
-
-	public ItemGravititeTool(float damage, EnumAetherToolType toolType) {
+	public GravititeTool(float damage, AetherToolType toolType) {
 		super(damage, ToolMaterial.EMERALD, toolType);
 	}
 

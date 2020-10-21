@@ -3,7 +3,7 @@ package com.gildedgames.the_aether.blocks.natural;
 import com.gildedgames.the_aether.blocks.BlocksAether;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.tools.*;
-import com.gildedgames.the_aether.items.util.EnumAetherToolType;
+import com.gildedgames.the_aether.items.util.AetherToolType;
 import net.minecraft.block.BlockLog;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.enchantment.Enchantment;
@@ -33,9 +33,10 @@ public class AetherLog extends BlockLog {
 		player.addExhaustion(0.025F);
 		ItemStack stack = player.getCurrentEquippedItem();
 		if(stack != null) {
+			int silk_touch_level = 0;
 			ArrayList<ItemStack> silk_touched_items = null;
 			if(canSilkHarvest(world, player, x, y, z, meta)) {
-				int silk_touch_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack);
+				silk_touch_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack);
 				if(silk_touch_level > 0) {
 					ItemStack silk_touched_item_stack = this.createStackedBlock(meta);
 					silk_touched_items = new ArrayList<ItemStack>();
@@ -46,15 +47,16 @@ public class AetherLog extends BlockLog {
 				}
 			}
 			Item item = stack.getItem();
-			if((item instanceof ItemAetherTool && ((ItemAetherTool)item).toolType == EnumAetherToolType.AXE) || item == Items.diamond_axe) {
+			if((item instanceof AetherTool && ((AetherTool)item).tool_type == AetherToolType.AXE) || item == Items.diamond_axe) {
 				boolean should_double_drop = meta == 0 && item instanceof SkyrootTool;
 				int fortune_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);
 				if(silk_touched_items != null) {
 					for(ItemStack is : silk_touched_items) dropBlockAsItem(world, x, y, z, is);
+					if(silk_touch_level < 2) return;
 					if(!should_double_drop) return;
 					should_double_drop = false;
 					fortune_level = 0;
-				} else if (item instanceof ZaniteTool || item instanceof ItemGravititeTool || item instanceof ValkyrieTool || item == Items.diamond_axe) {
+				} else if (item instanceof ZaniteTool || item instanceof GravititeTool || item instanceof ValkyrieTool || item == Items.diamond_axe) {
 					if (this == BlocksAether.golden_oak_log) {
 						dropBlockAsItem(world, x, y, z, new ItemStack(AetherItems.golden_amber, 1 + world.rand.nextInt(2)));
 					}

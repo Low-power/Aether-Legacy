@@ -44,7 +44,7 @@ import com.gildedgames.the_aether.entities.bosses.slider.Slider;
 import com.gildedgames.the_aether.entities.bosses.sun_spirit.SunSpirit;
 import com.gildedgames.the_aether.entities.hostile.AechorPlant;
 import com.gildedgames.the_aether.entities.hostile.Cockatrice;
-import com.gildedgames.the_aether.entities.hostile.EntityMimic;
+import com.gildedgames.the_aether.entities.hostile.Mimic;
 import com.gildedgames.the_aether.entities.hostile.EntitySentry;
 import com.gildedgames.the_aether.entities.hostile.EntityWhirlwind;
 import com.gildedgames.the_aether.entities.hostile.EntityZephyr;
@@ -91,7 +91,7 @@ public class AetherRenders {
 		register(SunSpirit.class, new SunSpiritRenderer());
 
 		/* Hostile */
-		register(EntityMimic.class, new MimicRenderer());
+		register(Mimic.class, new MimicRenderer());
 		register(EntitySentry.class, new SentryRenderer());
 		register(AechorPlant.class, new AechorPlantRenderer());
 		register(EntityFireMinion.class, new FireMinionRenderer());

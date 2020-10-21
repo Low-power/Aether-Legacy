@@ -73,7 +73,6 @@ public class AetherEntityEvents {
 				aplayer.ridden_entity = null;
 			}
 			if(aplayer.ridden_by_entity != null && aplayer.ridden_by_entity.worldObj.provider instanceof WorldProviderSurface) {
-				System.err.println(aplayer.ridden_by_entity);
 				if(!entity.worldObj.loadedEntityList.contains(aplayer.ridden_by_entity)) {
 					entity.worldObj.spawnEntityInWorld(aplayer.ridden_by_entity);
 				}
@@ -89,7 +88,6 @@ public class AetherEntityEvents {
 			int transfer_world_id = previous_world_id == AetherConfig.getAetherDimensionID() ? 0 : AetherConfig.getAetherDimensionID();
 			WorldServer transfer_world = server.worldServerForDimension(transfer_world_id);
 			Entity teleport_rider = null;
-			//System.err.printf("previous_world_id = %d, transfer_world_id = %d, entity = %s, entity.riddenByEntity = %s, entity.ridingEntity = %s\n", previous_world_id, transfer_world_id, entity, entity.riddenByEntity, entity.ridingEntity);
 			if(entity.riddenByEntity != null && entity.riddenByEntity.isRiding()) {
 				if (entity.riddenByEntity instanceof EntityPlayer) {
 					((PlayerAether)AetherAPI.get((EntityPlayer)entity.riddenByEntity)).ridden_entity = entity;

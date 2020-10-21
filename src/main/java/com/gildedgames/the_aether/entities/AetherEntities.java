@@ -18,7 +18,7 @@ import com.gildedgames.the_aether.entities.bosses.slider.Slider;
 import com.gildedgames.the_aether.entities.bosses.sun_spirit.SunSpirit;
 import com.gildedgames.the_aether.entities.hostile.AechorPlant;
 import com.gildedgames.the_aether.entities.hostile.Cockatrice;
-import com.gildedgames.the_aether.entities.hostile.EntityMimic;
+import com.gildedgames.the_aether.entities.hostile.Mimic;
 import com.gildedgames.the_aether.entities.hostile.EntitySentry;
 import com.gildedgames.the_aether.entities.hostile.EntityWhirlwind;
 import com.gildedgames.the_aether.entities.hostile.EntityZephyr;
@@ -67,7 +67,7 @@ public class AetherEntities {
 		register(EntitySentry.class, "sentry", 8, 0x838c9a, 0x2561ba);
 		register(EntityZephyr.class, "zephyr", 9, 0xdfdfdf, 0x99cfe8);
 		register(AechorPlant.class, "aechor_plant", 10, 0x076178, 0x4bc69e);
-		register(EntityMimic.class, "mimic", 11, 0xb18132, 0x605a4e);
+		register(Mimic.class, "mimic", 11, 0xb18132, 0x605a4e);
 
 		register(Slider.class, "slider", 12, 80, 3, true);
 		register(ValkyrieQueen.class, "valkyrie_queen", 13, 80, 3, true);

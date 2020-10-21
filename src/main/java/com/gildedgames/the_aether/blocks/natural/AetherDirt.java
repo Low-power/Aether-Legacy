@@ -1,28 +1,25 @@
 package com.gildedgames.the_aether.blocks.natural;
 
 import com.gildedgames.the_aether.items.util.DoubleDropHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class BlockQuicksoil extends Block {
+public class AetherDirt extends Block {
 
-	public BlockQuicksoil() {
-		super(Material.sand);
+	public AetherDirt() {
+		super(Material.ground);
 
-		this.slipperiness = 1.1F;
-
-		this.setHardness(0.5F);
-		this.setStepSound(soundTypeSand);
+		this.setHardness(0.2F);
 		this.setHarvestLevel("shovel", 0);
-		this.setBlockTextureName("aether_legacy:quicksoil");
+		this.setStepSound(soundTypeGravel);
+		this.setBlockTextureName("aether_legacy:aether_dirt");
 	}
 
 	@Override
-	public void harvestBlock(World worldIn, EntityPlayer player, int x, int y, int z, int meta) {
-		DoubleDropHelper.dropBlock(player, x, y, z, this, meta);
+	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
+		DoubleDropHelper.drop_block(player, x, y, z, this, meta, null);
 	}
 
 	@Override

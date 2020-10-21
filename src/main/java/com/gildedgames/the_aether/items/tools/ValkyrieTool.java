@@ -1,13 +1,13 @@
 package com.gildedgames.the_aether.items.tools;
 
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.items.util.EnumAetherToolType;
+import com.gildedgames.the_aether.items.util.AetherToolType;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 
-public class ValkyrieTool extends ItemAetherTool {
+public class ValkyrieTool extends AetherTool {
 
-	public ValkyrieTool(float damage, EnumAetherToolType toolType) {
+	public ValkyrieTool(float damage, AetherToolType toolType) {
 		super(damage, ToolMaterial.EMERALD, toolType);
 	}
 

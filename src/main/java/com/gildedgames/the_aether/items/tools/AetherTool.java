@@ -1,49 +1,47 @@
 package com.gildedgames.the_aether.items.tools;
 
-import java.util.Random;
-import java.util.Set;
-
-import com.gildedgames.the_aether.items.util.EnumAetherToolType;
+import com.gildedgames.the_aether.items.util.AetherToolType;
 import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
-
 import com.google.common.collect.Multimap;
+import java.util.Random;
+import java.util.Set;
 
-public abstract class ItemAetherTool extends ItemTool {
+public abstract class AetherTool extends ItemTool {
 
 	private float attackDamage;
 
-	private String toolClass;
+	private String tool_type_name;
 
 	public Random random = new Random();
 
-	public EnumAetherToolType toolType;
+	public AetherToolType tool_type;
 
-	public ItemAetherTool(float damage, ToolMaterial toolMaterial, EnumAetherToolType toolType) {
-		super(damage, toolMaterial, toolType.getToolBlockSet());
+	public AetherTool(float damage, ToolMaterial toolMaterial, AetherToolType tool_type) {
+		super(damage, toolMaterial, tool_type.getToolBlockSet());
 
-		this.toolType = toolType;
+		this.tool_type = tool_type;
 
-		if (toolType == EnumAetherToolType.PICKAXE) {
-			this.toolClass = "pickaxe";
-		} else if (toolType == EnumAetherToolType.AXE) {
-			this.toolClass = "axe";
-		} else if (toolType == EnumAetherToolType.SHOVEL) {
-			this.toolClass = "shovel";
+		if (tool_type == AetherToolType.PICKAXE) {
+			this.tool_type_name = "pickaxe";
+		} else if (tool_type == AetherToolType.AXE) {
+			this.tool_type_name = "axe";
+		} else if (tool_type == AetherToolType.SHOVEL) {
+			this.tool_type_name = "shovel";
 		}
 
 		this.setCreativeTab(AetherCreativeTabs.tools);
 	}
 
 	@Override
-	public int getHarvestLevel(ItemStack stack, String toolClass) {
-		int level = super.getHarvestLevel(stack, toolClass);
+	public int getHarvestLevel(ItemStack stack, String tool_type_name) {
+		int level = super.getHarvestLevel(stack, tool_type_name);
 
-		if (level == -1 && toolClass != null && toolClass.equals(this.toolClass)) {
+		if (level == -1 && tool_type_name != null && tool_type_name.equals(this.tool_type_name)) {
 			return this.toolMaterial.getHarvestLevel();
 		}
 
@@ -52,7 +50,7 @@ public abstract class ItemAetherTool extends ItemTool {
 
 	@Override
 	public boolean canHarvestBlock(Block block, ItemStack stack) {
-		return this.toolType.canHarvestBlock(this.toolMaterial, block);
+		return this.tool_type.canHarvestBlock(this.toolMaterial, block);
 	}
 
 	@Override
@@ -62,12 +60,12 @@ public abstract class ItemAetherTool extends ItemTool {
 				return this.efficiencyOnProperMaterial;
 		}
 
-		return this.toolType.getStrVsBlock(stack, block) == 4.0F ? this.efficiencyOnProperMaterial : 1.0F;
+		return this.tool_type.getStrVsBlock(stack, block) == 4.0F ? this.efficiencyOnProperMaterial : 1.0F;
 	}
 
 	@Override
 	public Set<String> getToolClasses(ItemStack stack) {
-		return toolClass != null ? com.google.common.collect.ImmutableSet.of(toolClass) : super.getToolClasses(stack);
+		return tool_type_name != null ? com.google.common.collect.ImmutableSet.of(tool_type_name) : super.getToolClasses(stack);
 	}
 
 	@Override

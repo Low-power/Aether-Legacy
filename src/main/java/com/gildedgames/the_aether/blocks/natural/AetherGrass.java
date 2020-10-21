@@ -63,7 +63,7 @@ public class AetherGrass extends Block implements IGrowable {
 
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
-		DoubleDropHelper.dropBlock(player, x, y, z, this, meta);
+		DoubleDropHelper.drop_block(player, x, y, z, this, meta, null);
 	}
 
 	@Override

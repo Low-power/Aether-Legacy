@@ -14,7 +14,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import java.util.ArrayList;
 
 public class DoubleDropHelper {
-	private static void drop_block_as_item(World world, int x, int y, int z, ItemStack item_stack) {
+	private static void drop_item(World world, int x, int y, int z, ItemStack item_stack) {
 		if(world.isRemote || !world.getGameRules().getGameRuleBooleanValue("doTileDrops")) return;
 		// do not drop items while restoring blockstates, prevents item dupe
 		if(world.restoringBlockSnapshots) return;
@@ -28,7 +28,7 @@ public class DoubleDropHelper {
 		world.spawnEntityInWorld(item_entity);
 	}
 
-	public static void dropBlock(EntityPlayer player, int x, int y, int z, Block block, int meta) {
+	public static void drop_block(EntityPlayer player, int x, int y, int z, Block block, int meta, AetherToolType applicable_tool_type) {
 		player.addStat(StatList.mineBlockStatArray[Block.getIdFromBlock(block)], 1);
 		player.addExhaustion(0.025F);
 
@@ -37,23 +37,25 @@ public class DoubleDropHelper {
 		boolean should_double_drop = false;
 		if(meta == 0 && stack != null && stack.getItem() instanceof SkyrootTool) {
 			SkyrootTool skyroot_tool = (SkyrootTool)stack.getItem();
-			should_double_drop = skyroot_tool.getDigSpeed(stack, block, 0) == skyroot_tool.getEffectiveSpeed();
+			should_double_drop = applicable_tool_type == null ?
+				(skyroot_tool.getDigSpeed(stack, block, 0) == skyroot_tool.getEffectiveSpeed()) :
+				(skyroot_tool.tool_type == applicable_tool_type);
 		}
 
 		int fortune_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);
 		if (block.canSilkHarvest(player.worldObj, player, x, y, z, meta)) {
 			int silk_touch_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack);
 			if(silk_touch_level > 0) {
-				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-				ItemStack itemstack = createStackedBlock(meta, block);
-
-				items.add(itemstack);
-
+				Item item = Item.getItemFromBlock(block);
+				ItemStack silk_touched_item_stack = new ItemStack(item, 1, item != null && item.getHasSubtypes() ? meta : 0);
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>(1);
+				items.add(silk_touched_item_stack);
 				ForgeEventFactory.fireBlockHarvesting(items, player.worldObj, block, x, y, z, meta, 0, 1f, true, player);
 				for (ItemStack is : items) {
-					drop_block_as_item(player.worldObj, x, y, z, is);
+					drop_item(player.worldObj, x, y, z, is);
 				}
 
+				if(silk_touch_level < 2) return;
 				if(!should_double_drop) return;
 				should_double_drop = false;
 				fortune_level = 0;
@@ -65,10 +67,5 @@ public class DoubleDropHelper {
 
 		}
 		block.dropBlockAsItem(player.worldObj, x, y, z, meta, fortune_level);
-	}
-
-	protected static ItemStack createStackedBlock(int data, Block block) {
-		Item item = Item.getItemFromBlock(block);
-		return new ItemStack(item, 1, item != null && item.getHasSubtypes() ? data : 0);
 	}
 }
