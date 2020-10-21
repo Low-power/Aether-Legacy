@@ -1,7 +1,5 @@
 package com.gildedgames.the_aether.blocks.natural;
 
-import java.util.List;
-
 import com.gildedgames.the_aether.items.block.IColoredBlock;
 import com.gildedgames.the_aether.items.block.INamedBlock;
 import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
@@ -16,9 +14,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Facing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
 
 public class Aercloud extends Block implements IColoredBlock, INamedBlock {
 

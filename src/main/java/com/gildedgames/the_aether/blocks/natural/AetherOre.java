@@ -3,7 +3,7 @@ package com.gildedgames.the_aether.blocks.natural;
 import com.gildedgames.the_aether.blocks.BlocksAether;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.tools.ItemAetherTool;
-import com.gildedgames.the_aether.items.tools.ItemSkyrootTool;
+import com.gildedgames.the_aether.items.tools.SkyrootTool;
 import com.gildedgames.the_aether.items.util.EnumAetherToolType;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -42,7 +42,7 @@ public class AetherOre extends Block {
 			return;
 		}
 
-		if (stack != null && stack.getItem() instanceof ItemSkyrootTool && ((ItemAetherTool) stack.getItem()).toolType == EnumAetherToolType.PICKAXE) {
+		if (stack != null && stack.getItem() instanceof SkyrootTool && ((ItemAetherTool) stack.getItem()).toolType == EnumAetherToolType.PICKAXE) {
 			for (int i = 0; i < 2; ++i) {
 				this.dropBlockAsItem(world, x, y, z, meta, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
 			}

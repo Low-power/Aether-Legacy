@@ -22,7 +22,7 @@ import com.gildedgames.the_aether.items.tools.AetherParachute;
 import com.gildedgames.the_aether.items.tools.ItemGravititeTool;
 import com.gildedgames.the_aether.items.tools.HolystoneTool;
 import com.gildedgames.the_aether.items.tools.SkyrootBucket;
-import com.gildedgames.the_aether.items.tools.ItemSkyrootTool;
+import com.gildedgames.the_aether.items.tools.SkyrootTool;
 import com.gildedgames.the_aether.items.tools.ValkyrieTool;
 import com.gildedgames.the_aether.items.tools.ZaniteTool;
 import com.gildedgames.the_aether.items.util.EnumAetherToolType;
@@ -125,9 +125,9 @@ public class AetherItems {
 		aechor_petal = register("aechor_petal", new ItemAether(AetherCreativeTabs.material).setTextureName(Aether.find("misc/aechor_petal")));
 		swet_ball = register("swet_ball", new ItemSwettyBall(AetherCreativeTabs.material).setTextureName(Aether.find("misc/swet_ball")));
 
-		skyroot_pickaxe = register("skyroot_pickaxe", new ItemSkyrootTool(2F, EnumAetherToolType.PICKAXE).setTextureName(Aether.find("tools/skyroot_pickaxe")));
-		skyroot_axe = register("skyroot_axe", new ItemSkyrootTool(3F, EnumAetherToolType.AXE).setTextureName(Aether.find("tools/skyroot_axe")));
-		skyroot_shovel = register("skyroot_shovel", new ItemSkyrootTool(1F, EnumAetherToolType.SHOVEL).setTextureName(Aether.find("tools/skyroot_shovel")));
+		skyroot_pickaxe = register("skyroot_pickaxe", new SkyrootTool(2F, EnumAetherToolType.PICKAXE).setTextureName(Aether.find("tools/skyroot_pickaxe")));
+		skyroot_axe = register("skyroot_axe", new SkyrootTool(3F, EnumAetherToolType.AXE).setTextureName(Aether.find("tools/skyroot_axe")));
+		skyroot_shovel = register("skyroot_shovel", new SkyrootTool(1F, EnumAetherToolType.SHOVEL).setTextureName(Aether.find("tools/skyroot_shovel")));
 
 		holystone_pickaxe = register("holystone_pickaxe", new HolystoneTool(2F, EnumAetherToolType.PICKAXE).setTextureName(Aether.find("tools/holystone_pickaxe")));
 		holystone_axe = register("holystone_axe", new HolystoneTool(3F, EnumAetherToolType.AXE).setTextureName(Aether.find("tools/holystone_axe")));

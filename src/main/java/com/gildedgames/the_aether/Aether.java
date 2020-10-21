@@ -20,7 +20,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = Aether.MOD_ID, version = "1.1.1-rivoreo-r3")
+@Mod(modid = Aether.MOD_ID, version = "1.1.1-rivoreo-r4")
 public class Aether {
 
 	public static final String MOD_ID = "aether_legacy";

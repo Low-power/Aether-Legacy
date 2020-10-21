@@ -1,5 +1,6 @@
 package com.gildedgames.the_aether.items.util;
 
+import com.gildedgames.the_aether.items.tools.SkyrootTool;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -8,83 +9,66 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
-
-import com.gildedgames.the_aether.items.tools.ItemSkyrootTool;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
-
 import java.util.ArrayList;
 
 public class DoubleDropHelper {
+	private static void drop_block_as_item(World world, int x, int y, int z, ItemStack item_stack) {
+		if(world.isRemote || !world.getGameRules().getGameRuleBooleanValue("doTileDrops")) return;
+		// do not drop items while restoring blockstates, prevents item dupe
+		if(world.restoringBlockSnapshots) return;
+
+		float f = 0.7F;
+		double x_offset = (double)(world.rand.nextFloat() * f) + (double)(1F - f) * 0.5D;
+		double y_offset = (double)(world.rand.nextFloat() * f) + (double)(1F - f) * 0.5D;
+		double z_offset = (double)(world.rand.nextFloat() * f) + (double)(1F - f) * 0.5D;
+		EntityItem item_entity = new EntityItem(world, (double)x + x_offset, (double)y + y_offset, (double)z + z_offset, item_stack);
+		item_entity.delayBeforeCanPickup = 10;
+		world.spawnEntityInWorld(item_entity);
+	}
 
 	public static void dropBlock(EntityPlayer player, int x, int y, int z, Block block, int meta) {
 		player.addStat(StatList.mineBlockStatArray[Block.getIdFromBlock(block)], 1);
 		player.addExhaustion(0.025F);
 
-		int size = meta == 0 ? 2 : 1;
 		ItemStack stack = player.inventory.getCurrentItem();
-		boolean flag = true;
-
-		if (stack == null || !(stack.getItem() instanceof ItemSkyrootTool)) {
-			flag = false;
+		//boolean should_double_drop = stack != null && stack.getItem() instanceof SkyrootTool;
+		boolean should_double_drop = false;
+		if(meta == 0 && stack != null && stack.getItem() instanceof SkyrootTool) {
+			SkyrootTool skyroot_tool = (SkyrootTool)stack.getItem();
+			should_double_drop = skyroot_tool.getDigSpeed(stack, block, 0) == skyroot_tool.getEffectiveSpeed();
 		}
 
-		if (block.canSilkHarvest(player.worldObj, player, x, y, z, meta) && EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack) > 0) {
-			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-			ItemStack itemstack = createStackedBlock(meta, block);
+		int fortune_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);
+		if (block.canSilkHarvest(player.worldObj, player, x, y, z, meta)) {
+			int silk_touch_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack);
+			if(silk_touch_level > 0) {
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				ItemStack itemstack = createStackedBlock(meta, block);
 
-			items.add(itemstack);
+				items.add(itemstack);
 
-			ForgeEventFactory.fireBlockHarvesting(items, player.worldObj, block, x, y, z, meta, 0, 1.0f, true, player);
-			for (ItemStack is : items)
-			{
-				dropBlockAsItem(player.worldObj, x, y, z, is);
+				ForgeEventFactory.fireBlockHarvesting(items, player.worldObj, block, x, y, z, meta, 0, 1f, true, player);
+				for (ItemStack is : items) {
+					drop_block_as_item(player.worldObj, x, y, z, is);
+				}
+
+				if(!should_double_drop) return;
+				should_double_drop = false;
+				fortune_level = 0;
 			}
-
-			return;
 		}
 
-		if (!flag) {
-			block.dropBlockAsItem(player.worldObj, x, y, z, meta, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
+		if(should_double_drop) {
+			block.dropBlockAsItem(player.worldObj, x, y, z, meta, fortune_level);
 
-			return;
 		}
-
-		ItemSkyrootTool skyrootTool = (ItemSkyrootTool) stack.getItem();
-
-		if (skyrootTool.getDigSpeed(stack, block, meta) == skyrootTool.getEffectiveSpeed()) {
-			for (int i = 0; i < size; ++i) {
-				block.dropBlockAsItem(player.worldObj, x, y, z, meta, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
-			}
-		} else {
-			block.dropBlockAsItem(player.worldObj, x, y, z, meta, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
-		}
+		block.dropBlockAsItem(player.worldObj, x, y, z, meta, fortune_level);
 	}
 
-	protected static ItemStack createStackedBlock(int p_149644_1_, Block block)
-	{
-		int j = 0;
+	protected static ItemStack createStackedBlock(int data, Block block) {
 		Item item = Item.getItemFromBlock(block);
-
-		if (item != null && item.getHasSubtypes())
-		{
-			j = p_149644_1_;
-		}
-
-		return new ItemStack(item, 1, j);
-	}
-
-	protected static void dropBlockAsItem(World p_149642_1_, int p_149642_2_, int p_149642_3_, int p_149642_4_, ItemStack p_149642_5_)
-	{
-		if (!p_149642_1_.isRemote && p_149642_1_.getGameRules().getGameRuleBooleanValue("doTileDrops") && !p_149642_1_.restoringBlockSnapshots) // do not drop items while restoring blockstates, prevents item dupe
-		{
-			float f = 0.7F;
-			double d0 = (double)(p_149642_1_.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-			double d1 = (double)(p_149642_1_.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-			double d2 = (double)(p_149642_1_.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-			EntityItem entityitem = new EntityItem(p_149642_1_, (double)p_149642_2_ + d0, (double)p_149642_3_ + d1, (double)p_149642_4_ + d2, p_149642_5_);
-			entityitem.delayBeforeCanPickup = 10;
-			p_149642_1_.spawnEntityInWorld(entityitem);
-		}
+		return new ItemStack(item, 1, item != null && item.getHasSubtypes() ? data : 0);
 	}
 }

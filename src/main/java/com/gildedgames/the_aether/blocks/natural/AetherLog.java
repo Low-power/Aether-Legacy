@@ -4,7 +4,6 @@ import com.gildedgames.the_aether.blocks.BlocksAether;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.tools.*;
 import com.gildedgames.the_aether.items.util.EnumAetherToolType;
-import com.gildedgames.the_aether.items.tools.*;
 import net.minecraft.block.BlockLog;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.enchantment.Enchantment;
@@ -32,43 +31,47 @@ public class AetherLog extends BlockLog {
 	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
 		player.addStat(StatList.mineBlockStatArray[getIdFromBlock(this)], 1);
 		player.addExhaustion(0.025F);
-
-		int size = meta == 0 ? 2 : 1;
-
 		ItemStack stack = player.getCurrentEquippedItem();
-
-
-		if (this.canSilkHarvest(world, player, x, y, z, meta) && EnchantmentHelper.getSilkTouchModifier(player)) {
-			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-			ItemStack itemstack = this.createStackedBlock(meta);
-
-			if (itemstack != null) {
-				items.add(itemstack);
-			}
-
-			ForgeEventFactory.fireBlockHarvesting(items, world, this, x, y, z, meta, 0, 1.0f, true, player);
-			for (ItemStack is : items) {
-				this.dropBlockAsItem(world, x, y, z, is);
-			}
-		} else {
-			if (stack != null && ((stack.getItem() instanceof ItemAetherTool && ((ItemAetherTool) stack.getItem()).toolType == EnumAetherToolType.AXE) || stack.getItem() == Items.diamond_axe)) {
-				if (stack.getItem() instanceof ZaniteTool || stack.getItem() instanceof ItemGravititeTool || stack.getItem() instanceof ValkyrieTool || stack.getItem() == Items.diamond_axe) {
-					if (this == BlocksAether.golden_oak_log) {
-						this.dropBlockAsItem(world, x, y, z, new ItemStack(AetherItems.golden_amber, 1 + world.rand.nextInt(2)));
+		if(stack != null) {
+			ArrayList<ItemStack> silk_touched_items = null;
+			if(canSilkHarvest(world, player, x, y, z, meta)) {
+				int silk_touch_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack);
+				if(silk_touch_level > 0) {
+					ItemStack silk_touched_item_stack = this.createStackedBlock(meta);
+					silk_touched_items = new ArrayList<ItemStack>();
+					if (silk_touched_item_stack != null) {
+						silk_touched_items.add(silk_touched_item_stack);
 					}
-
-					this.dropBlockAsItem(player.worldObj, x, y, z, meta, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
-				} else if (stack.getItem() instanceof ItemSkyrootTool) {
-					for (int i = 0; i < size; ++i) {
-						this.dropBlockAsItem(player.worldObj, x, y, z, meta, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
-					}
-				} else {
-					this.dropBlockAsItem(player.worldObj, x, y, z, meta, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
+					ForgeEventFactory.fireBlockHarvesting(silk_touched_items, world, this, x, y, z, meta, 0, 1.0f, true, player);
 				}
-			} else {
-				super.harvestBlock(world, player, x, y, z, meta);
+			}
+			Item item = stack.getItem();
+			if((item instanceof ItemAetherTool && ((ItemAetherTool)item).toolType == EnumAetherToolType.AXE) || item == Items.diamond_axe) {
+				boolean should_double_drop = meta == 0 && item instanceof SkyrootTool;
+				int fortune_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);
+				if(silk_touched_items != null) {
+					for(ItemStack is : silk_touched_items) dropBlockAsItem(world, x, y, z, is);
+					if(!should_double_drop) return;
+					should_double_drop = false;
+					fortune_level = 0;
+				} else if (item instanceof ZaniteTool || item instanceof ItemGravititeTool || item instanceof ValkyrieTool || item == Items.diamond_axe) {
+					if (this == BlocksAether.golden_oak_log) {
+						dropBlockAsItem(world, x, y, z, new ItemStack(AetherItems.golden_amber, 1 + world.rand.nextInt(2)));
+					}
+					//should_double_drop = false;	// Not needed
+				}
+				dropBlockAsItem(player.worldObj, x, y, z, meta, fortune_level);
+				if(should_double_drop) {
+					dropBlockAsItem(player.worldObj, x, y, z, meta, fortune_level);
+				}
+				return;
+			}
+			if(silk_touched_items != null) {
+				for(ItemStack is : silk_touched_items) dropBlockAsItem(world, x, y, z, is);
+				return;
 			}
 		}
+		super.harvestBlock(world, player, x, y, z, meta);
 	}
 
 	@Override
