@@ -422,9 +422,9 @@ public class AetherMainMenu extends GuiMainMenu {
 			button.drawButton(this.mc, x, y);
 			if(button.getClass() == AetherMainMenuButton.class) {
 				if(is_hovering_aether_menu_button((AetherMainMenuButton)button, x, y)) {
-					if(button.xPosition < 45) button.xPosition += 4;
+					if(button.xPosition < 45) button.xPosition += 2;
 				} else {
-					if(button.xPosition > 30) button.xPosition -= 4;
+					if(button.xPosition > 30) button.xPosition -= 2;
 				}
 			}
 		}
