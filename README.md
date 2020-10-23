@@ -26,11 +26,6 @@ If you're running into bugs or other problems, feel free to open an issue on our
 
 Make sure to keep your issue's description clear and concise. Your issue's title should also be easy to digest, giving our developers and reporters a good idea of what's wrong without including too many details. Failure to follow any of the above may result in your issue being closed.
 
-## :wrench: Contribute to the project
-Looking to contribute to the project? We ask that you read over our [Contributor's Guide](https://gitea.gildedgames.com/GildedGames/The-Aether/src/branch/1.7.10/CONTRIBUTING.md) for more details and our Contributor License Agreement (CLA) before getting started.
-
-Not sure what to help with? Take a look at our issue tracker for some ideas! [Here's a quick link](https://gitea.gildedgames.com/GildedGames/The-Aether/issues?label_name%5B%5D=Contributions+Welcome) which shows all the currently open issues that we'd love some help on.
-
 ## :scroll: License information
 If you're wanting to create a gameplay video/review, extension or addon, parody, or any other fan work of your own for the Aether, go for it! We love seeing the content our community creates, and we hope to make it as welcoming as possible for everyone. We ask however that if you are using code or assets from The Aether project that you adhere to the licenses below, and that you please don't advertise using our brand. If you're interested in sponsoring The Aether project or Gilded Games or wish to otherwise use our brand, please [contact us](mailto:support@gildedgames.com).
 
