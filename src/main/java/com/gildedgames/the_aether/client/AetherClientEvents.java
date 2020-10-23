@@ -7,7 +7,7 @@ import com.gildedgames.the_aether.client.gui.button.GuiCapeButton;
 import com.gildedgames.the_aether.client.gui.button.GuiCustomizationScreenButton;
 import com.gildedgames.the_aether.client.gui.button.*;
 import com.gildedgames.the_aether.client.gui.menu.AetherMainMenu;
-import com.gildedgames.the_aether.client.gui.menu.GuiMenuToggleButton;
+import com.gildedgames.the_aether.client.gui.menu.MenuToggleButton;
 import com.gildedgames.the_aether.network.packets.PacketCapeChanged;
 import com.gildedgames.the_aether.network.packets.PacketExtendedAttack;
 import com.gildedgames.the_aether.player.perks.AetherRankings;
@@ -89,8 +89,7 @@ public class AetherClientEvents {
 		}
 	}
 
-	private void handleExtendedReach(Minecraft mc)
-	{
+	private void handleExtendedReach(Minecraft mc) {
 		EntityPlayer player = mc.thePlayer;
 
 		if (player != null) {
@@ -101,19 +100,17 @@ public class AetherClientEvents {
 					if (stack != null) {
 						if (isValkyrieItem(stack.getItem())) {
 							Vec3 playerVision = player.getLookVec();
-							AxisAlignedBB reachDistance = player.boundingBox.expand(10.0D, 10.0D, 10.0D);
+							AxisAlignedBB reachDistance = player.boundingBox.expand(10D, 10D, 10D);
 
 							List<Entity> locatedEntities = player.worldObj.getEntitiesWithinAABB(Entity.class, reachDistance);
 
 							Entity found = null;
-							double foundLen = 0.0D;
+							double foundLen = 0D;
 
-							for (Object o : locatedEntities) {
-								if (o == player) {
+							for (Entity ent : locatedEntities) {
+								if (ent == player) {
 									continue;
 								}
-
-								Entity ent = (Entity) o;
 
 								if (!ent.canBeCollidedWith() && !(ent instanceof EntityDragon)) {
 									continue;
@@ -122,7 +119,7 @@ public class AetherClientEvents {
 								Vec3 vec = Vec3.createVectorHelper(ent.posX - player.posX, ent.boundingBox.minY + ent.height / 2f - player.posY - player.getEyeHeight(), ent.posZ - player.posZ);
 								double len = vec.lengthVector();
 
-								if (len > 8.0F) {
+								if (len > 8F) {
 									continue;
 								}
 
@@ -151,29 +148,22 @@ public class AetherClientEvents {
 		}
 	}
 
-	public boolean isValkyrieItem(Item stackID)
-	{
-		return stackID == AetherItems.valkyrie_shovel || stackID == AetherItems.valkyrie_axe || stackID == AetherItems.valkyrie_pickaxe || stackID == AetherItems.valkyrie_lance;
+	public boolean isValkyrieItem(Item id) {
+		return id == AetherItems.valkyrie_shovel || id == AetherItems.valkyrie_axe || id == AetherItems.valkyrie_pickaxe || id == AetherItems.valkyrie_lance;
 	}
 
 	@SubscribeEvent
-	public void onOpenGui(GuiOpenEvent event)
-	{
+	public void onOpenGui(GuiOpenEvent event) {
 		Minecraft mc = FMLClientHandler.instance().getClient();
 
-		if (mc.thePlayer != null && event.gui instanceof GuiDownloadTerrain)
-		{
+		if (mc.thePlayer != null && event.gui instanceof GuiDownloadTerrain) {
 			GuiEnterAether enterAether = new GuiEnterAether(true);
 			GuiEnterAether exitAether = new GuiEnterAether(false);
 
-			if (mc.thePlayer.dimension == AetherConfig.getAetherDimensionID())
-			{
+			if (mc.thePlayer.dimension == AetherConfig.getAetherDimensionID()) {
 				event.gui = enterAether;
 				wasInAether = true;
-			}
-
-			else if (wasInAether)
-			{
+			} else if (wasInAether) {
 				event.gui = exitAether;
 				wasInAether = false;
 			}
@@ -249,17 +239,17 @@ public class AetherClientEvents {
 
 		if (item == AetherItems.phoenix_bow) {
 			int i = player.getItemInUseDuration();
-			float f1 = (float) i / 20.0F;
+			float f1 = (float) i / 20F;
 
-			if (f1 > 1.0F) {
-				f1 = 1.0F;
+			if (f1 > 1F) {
+				f1 = 1F;
 			} else {
 				f1 = f1 * f1;
 			}
 
 			float original = event.fov;
 
-			original *= 1.0F - f1 * 0.15F;
+			original *= 1F - f1 * 0.15F;
 
 			event.newfov = original;
 		}
@@ -267,7 +257,7 @@ public class AetherClientEvents {
 
 	private static final GuiAccessoryButton ACCESSORY_BUTTON = new GuiAccessoryButton(0, 0);
 
-	private static final GuiMenuToggleButton MAIN_MENU_BUTTON = new GuiMenuToggleButton(0, 0);
+	private static final MenuToggleButton MAIN_MENU_BUTTON = new MenuToggleButton(0, 0);
 
 	private static int previousSelectedTabIndex = -1;
 
@@ -293,31 +283,25 @@ public class AetherClientEvents {
 			}
 		}
 
-		if (AetherConfig.config.get("Misc", "Enables the Aether Menu toggle button", false).getBoolean() && event.gui instanceof GuiMainMenu)
-		{
-			event.buttonList.add(MAIN_MENU_BUTTON.setPosition(event.gui.width - 24, 4));
+		if(event.gui instanceof GuiMainMenu) {
+			if(AetherConfig.is_menu_toggle_button_enabled()) {
+				event.buttonList.add(MAIN_MENU_BUTTON.setPosition(event.gui.width - 24, 4));
+			}
+			if(!(event.gui instanceof AetherMainMenu) && AetherConfig.is_aether_menu_enabled()) {
+				Minecraft.getMinecraft().displayGuiScreen(new AetherMainMenu());
+			}
 		}
 
-		if (AetherConfig.config.get("Misc", "Enables the Aether Menu", false).getBoolean() && event.gui.getClass() == GuiMainMenu.class)
-		{
-			Minecraft.getMinecraft().displayGuiScreen(new AetherMainMenu());
-		}
-
-		if (event.gui.getClass() == GuiOptions.class)
-		{
-			if (Minecraft.getMinecraft().thePlayer != null)
-			{
-				if (AetherRankings.isRankedPlayer(Minecraft.getMinecraft().thePlayer.getUniqueID()))
-				{
+		if(event.gui instanceof GuiOptions) {
+			if (Minecraft.getMinecraft().thePlayer != null) {
+				if (AetherRankings.isRankedPlayer(Minecraft.getMinecraft().thePlayer.getUniqueID())) {
 					event.buttonList.add(new GuiCustomizationScreenButton(545, event.gui.width / 2 - 155, event.gui.height / 6 + 48 - 6, 150, 20, I18n.format("gui.options.perk_customization")));
 				}
 			}
 		}
 
-		if (event.gui.getClass() == ScreenChatOptions.class)
-		{
-			if (Minecraft.getMinecraft().thePlayer != null)
-			{
+		if(event.gui instanceof ScreenChatOptions) {
+			if (Minecraft.getMinecraft().thePlayer != null) {
 				int i = 13;
 				event.buttonList.add(new GuiCapeButton(event.gui.width / 2 - 155 + i % 2 * 160, event.gui.height / 6 + 24 * (i >> 1)));
 			}
@@ -347,10 +331,8 @@ public class AetherClientEvents {
 	}
 
 	@SubscribeEvent
-	public void onDrawGui(GuiScreenEvent.DrawScreenEvent.Pre event)
-	{
-		if (!AetherConfig.config.get("Misc", "Enables the Aether Menu", false).getBoolean() && event.gui.getClass() == AetherMainMenu.class)
-		{
+	public void on_draw_gui(GuiScreenEvent.DrawScreenEvent.Pre event) {
+		if(event.gui instanceof AetherMainMenu && !AetherConfig.is_aether_menu_enabled()) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiMainMenu());
 		}
 	}
@@ -363,13 +345,9 @@ public class AetherClientEvents {
 			AetherNetwork.sendToServer(new PacketOpenContainer(AetherGuiHandler.accessories));
 		}
 
-		if (event.button.getClass() == GuiCustomizationScreenButton.class)
-		{
+		if(event.button instanceof GuiCustomizationScreenButton) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiCustomizationScreen(event.gui));
-		}
-
-		if (event.button.getClass() == GuiCapeButton.class)
-		{
+		} else if(event.button instanceof GuiCapeButton) {
 			PlayerAether player = PlayerAether.get(Minecraft.getMinecraft().thePlayer);
 
 			boolean enableCape = !player.shouldRenderCape;
@@ -410,8 +388,7 @@ public class AetherClientEvents {
 		if (event.entity instanceof EntityPlayer) {
 			PlayerAether playerAether = PlayerAether.get((EntityPlayer) event.entity);
 
-			if (event.renderer instanceof RenderPlayer)
-			{
+			if (event.renderer instanceof RenderPlayer) {
 				PlayerAetherRenderer.instance().renderAccessories(playerAether, (RenderPlayer) event.renderer, event.x, event.y, event.z, PlayerAetherRenderer.instance().getPartialTicks());
 			}
 		}

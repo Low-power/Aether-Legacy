@@ -1,6 +1,7 @@
 package com.gildedgames.the_aether;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,7 +15,7 @@ public class AetherConfig {
 	private static boolean skyrootBucketOnly, valkyrie_cape, golden_feather;
 	private static boolean floating_block_collision;
 	private static int travel_dimension;
-	private static boolean menu_enabled, menu_button;
+	private static Property menu_enabled, menu_button_enabled;
 	private static boolean legacy_altar_name;
 	private static int inebriation_id;
 	private static boolean sun_altar_multiplayer, repeat_sun_spirit_dialog;
@@ -51,8 +52,8 @@ public class AetherConfig {
 
 		max_life_shards = config.get("Gameplay", "Max Life Shards", 10).getInt(10);
 
-		menu_enabled = config.get("Misc", "Enables the Aether Menu", false).getBoolean(false);
-		menu_button = config.get("Misc", "Enables the Aether Menu toggle button", true).getBoolean(true);
+		menu_enabled = config.get("Misc", "Enables the Aether Menu", false);
+		menu_button_enabled = config.get("Misc", "Enables the Aether Menu toggle button", true);
 
 		legacy_altar_name = config.get("Misc", "Changes whether the Altar should be named Enchanter or not.", false).getBoolean(false);
 
@@ -115,13 +116,25 @@ public class AetherConfig {
 		return AetherConfig.golden_feather;
 	}
 
-	public static boolean menuEnabled() {
-		return AetherConfig.menu_enabled;
+	public static boolean is_aether_menu_enabled() {
+		return menu_enabled.getBoolean();
 	}
 
-	public static boolean menuButtonEnabled() {
-		return AetherConfig.menu_button;
+	public static void set_aether_menu_enabled(boolean value) {
+		menu_enabled.set(value);
+		config.save();
 	}
+
+	public static boolean is_menu_toggle_button_enabled() {
+		return menu_button_enabled.getBoolean();
+	}
+
+/*
+	public static void set_menu_toggle_button_enabled(boolean value) {
+		menu_button_enabled.set(value);
+		config.save();
+	}
+*/
 
 	public static boolean legacyAltarName() {
 		return AetherConfig.legacy_altar_name;

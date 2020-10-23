@@ -1,5 +1,6 @@
 package com.gildedgames.the_aether.client.audio;
 
+import com.gildedgames.the_aether.client.audio.music.AetherMusicTicker;
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.AetherConfig;
 import net.minecraft.client.Minecraft;
@@ -11,9 +12,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenWorking;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
-
-import com.gildedgames.the_aether.client.audio.music.AetherMusicTicker;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -41,25 +39,19 @@ public class AetherMusicHandler {
 			}
 		}
 
-		if (!(mc.getSoundHandler().isSoundPlaying(musicTicker.getRecord())))
-		{
+		if (!(mc.getSoundHandler().isSoundPlaying(musicTicker.getRecord()))) {
 			musicTicker.trackRecord(null);
 		}
 
-		if (AetherConfig.config.get("Misc", "Enables the Aether Menu", false).getBoolean() && Minecraft.getMinecraft().theWorld == null && !(screen instanceof GuiScreenWorking))
-		{
-			if (!musicTicker.playingMenuMusic())
-			{
+		if(!(screen instanceof GuiScreenWorking) && AetherConfig.is_aether_menu_enabled() && Minecraft.getMinecraft().theWorld == null) {
+			if (!musicTicker.playingMenuMusic()) {
 				musicTicker.playMenuMusic();
 			}
 
-			if (musicTicker.playingMinecraftMusic())
-			{
+			if (musicTicker.playingMinecraftMusic()) {
 				musicTicker.stopMinecraftMusic();
 			}
-		}
-		else
-		{
+		} else {
 			musicTicker.stopMenuMusic();
 		}
 	}
@@ -83,12 +75,10 @@ public class AetherMusicHandler {
 					return;
 				}
 			}
-			if (sound.getPositionedSoundLocation().toString().equals("minecraft:music.menu"))
-			{
+			if (sound.getPositionedSoundLocation().toString().equals("minecraft:music.menu")) {
 				musicTicker.trackMinecraftMusic(sound);
 
-				if (AetherConfig.config.get("Misc", "Enables the Aether Menu", false).getBoolean() && Minecraft.getMinecraft().theWorld == null && !(screen instanceof GuiScreenWorking))
-				{
+				if(!(screen instanceof GuiScreenWorking) && AetherConfig.is_aether_menu_enabled() && Minecraft.getMinecraft().theWorld == null) {
 					event.result = null;
 				}
 			}
