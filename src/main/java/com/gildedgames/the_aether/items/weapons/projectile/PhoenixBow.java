@@ -97,86 +97,70 @@ public class PhoenixBow extends ItemBow {
 	}
 
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityPlayer entityLiving, int timeLeft) {
-		if (entityLiving instanceof EntityPlayer) {
-			EntityPlayer entityplayer = (EntityPlayer) entityLiving;
-			boolean flag = entityplayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0;
-			ItemStack itemstack = this.findAmmo(entityplayer);
+	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int time_left) {
+		boolean infinity_arrow = player.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0;
+		ItemStack arrow_item_stack = findAmmo(player);
 
-			int i = this.getMaxItemUseDuration(stack) - timeLeft;
-			ArrowLooseEvent event = new ArrowLooseEvent(entityplayer, stack, i);
-			MinecraftForge.EVENT_BUS.post(event);
+		int charge = this.getMaxItemUseDuration(stack) - time_left;
+		ArrowLooseEvent event = new ArrowLooseEvent(player, stack, charge);
+		MinecraftForge.EVENT_BUS.post(event);
+		if (event.isCanceled()) return;
+		charge = event.charge;
+		if(charge < 0) return;
 
-			if (event.isCanceled()) {
-				return;
+		if (arrow_item_stack != null || infinity_arrow) {
+			if (arrow_item_stack == null) {
+				arrow_item_stack = new ItemStack(Items.arrow);
 			}
 
-			i = event.charge;
-			if (i < 0) return;
+			float f = getArrowVelocity(charge);
 
-			if (itemstack != null || flag) {
-				if (itemstack == null) {
-					itemstack = new ItemStack(Items.arrow);
-				}
+			if ((double)f >= 0.1D) {
+				if (!world.isRemote) {
+					EntityPhoenixArrow arrow_entity = createArrow(world, f * 2F, arrow_item_stack, player);
 
-				float f = getArrowVelocity(i);
-
-				if ((double) f >= 0.1D) {
-					boolean flag1 = entityplayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0;
-
-					if (!worldIn.isRemote) {
-						EntityPhoenixArrow entityarrow = this.createArrow(worldIn, f * 2F, itemstack, entityplayer);
-
-						if (f == 1F) {
-							entityarrow.setIsCritical(true);
-						}
-
-						int j = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, stack);
-
-						if (j > 0) {
-							entityarrow.setDamage(entityarrow.getDamage() + (double) j * 0.5D + 0.5D);
-						}
-
-						int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, stack);
-
-						if (k > 0) {
-							entityarrow.setKnockbackStrength(k);
-						}
-
-						int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, stack);
-
-						if (l > 0)
-						{
-							entityarrow.setFire(1200);
-						}
-
-						stack.damageItem(1, entityplayer);
-
-						if (flag1) {
-							entityarrow.canBePickedUp = 2;
-						}
-
-						worldIn.spawnEntityInWorld(entityarrow);
+					if (f == 1F) {
+						arrow_entity.setIsCritical(true);
 					}
 
-					worldIn.playSoundAtEntity(entityLiving, "random.bow", 1F, 1F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+					int power_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, stack);
+					if(power_level > 0) {
+						arrow_entity.setDamage(arrow_entity.getDamage() + (double)power_level * 0.5D + 0.5D);
+					}
 
-					if (!flag1) {
-						--itemstack.stackSize;
+					int punch_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, stack);
+					if(punch_level > 0) {
+						arrow_entity.setKnockbackStrength(punch_level);
+					}
 
-						if (itemstack.stackSize == 0) {
-							entityplayer.inventory.consumeInventoryItem(itemstack.getItem());
-						}
+					int flame_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, stack);
+					if(flame_level > 0) {
+						arrow_entity.setFire(1200);
+					}
+
+					stack.damageItem(1, player);
+
+					if (infinity_arrow) {
+						arrow_entity.canBePickedUp = 2;
+					}
+
+					world.spawnEntityInWorld(arrow_entity);
+				}
+
+				world.playSoundAtEntity(player, "random.bow", 1F, 1F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+
+				if (!infinity_arrow) {
+					if (--arrow_item_stack.stackSize == 0) {
+						player.inventory.consumeInventoryItem(arrow_item_stack.getItem());
 					}
 				}
 			}
 		}
 	}
 
-	public EntityPhoenixArrow createArrow(World worldIn, float distance, ItemStack stack, EntityLivingBase shooter) {
-		EntityPhoenixArrow entityPhoenixArrow = new EntityPhoenixArrow(worldIn, shooter, distance);
-
-		return entityPhoenixArrow;
+	public EntityPhoenixArrow createArrow(World world, float distance, ItemStack stack, EntityLivingBase shooter) {
+		EntityPhoenixArrow arrow_entity = new EntityPhoenixArrow(world, shooter, distance);
+		return arrow_entity;
 	}
 
 	public static float getArrowVelocity(int charge) {
@@ -201,17 +185,17 @@ public class PhoenixBow extends ItemBow {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack heldItem, World worldIn, EntityPlayer playerIn) {
-		boolean flag = this.findAmmo(playerIn) != null;
+	public ItemStack onItemRightClick(ItemStack heldItem, World world, EntityPlayer player) {
+		boolean have_arrow = findAmmo(player) != null;
 
-		ArrowNockEvent event = new ArrowNockEvent(playerIn, heldItem);
+		ArrowNockEvent event = new ArrowNockEvent(player, heldItem);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.isCanceled()) {
 			return event.result;
 		}
 
-		if (playerIn.capabilities.isCreativeMode || flag) {
-			playerIn.setItemInUse(heldItem, this.getMaxItemUseDuration(heldItem));
+		if (player.capabilities.isCreativeMode || have_arrow) {
+			player.setItemInUse(heldItem, this.getMaxItemUseDuration(heldItem));
 		}
 
 		return heldItem;

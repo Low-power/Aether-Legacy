@@ -91,56 +91,55 @@ public class AetherClientEvents {
 
 	private void handleExtendedReach(Minecraft mc) {
 		EntityPlayer player = mc.thePlayer;
+		if(player == null) return;
 
-		if (player != null) {
-			if (Mouse.getEventButton() == 0) {
-				if (Mouse.getEventButtonState()) {
-					ItemStack stack = player.getHeldItem();
+		if (Mouse.getEventButton() == 0) {
+			if (Mouse.getEventButtonState()) {
+				ItemStack stack = player.getHeldItem();
 
-					if (stack != null) {
-						if (isValkyrieItem(stack.getItem())) {
-							Vec3 playerVision = player.getLookVec();
-							AxisAlignedBB reachDistance = player.boundingBox.expand(10D, 10D, 10D);
+				if (stack != null) {
+					if (isValkyrieItem(stack.getItem())) {
+						Vec3 playerVision = player.getLookVec();
+						AxisAlignedBB reachDistance = player.boundingBox.expand(10D, 10D, 10D);
 
-							List<Entity> locatedEntities = player.worldObj.getEntitiesWithinAABB(Entity.class, reachDistance);
+						List<Entity> locatedEntities = player.worldObj.getEntitiesWithinAABB(Entity.class, reachDistance);
 
-							Entity found = null;
-							double foundLen = 0D;
+						Entity found = null;
+						double foundLen = 0D;
 
-							for (Entity ent : locatedEntities) {
-								if (ent == player) {
-									continue;
-								}
-
-								if (!ent.canBeCollidedWith() && !(ent instanceof EntityDragon)) {
-									continue;
-								}
-
-								Vec3 vec = Vec3.createVectorHelper(ent.posX - player.posX, ent.boundingBox.minY + ent.height / 2f - player.posY - player.getEyeHeight(), ent.posZ - player.posZ);
-								double len = vec.lengthVector();
-
-								if (len > 8F) {
-									continue;
-								}
-
-								vec = vec.normalize();
-								double dot = playerVision.dotProduct(vec);
-
-								if (dot < 1.0 - 0.125 / len || !player.canEntityBeSeen(ent)) {
-									continue;
-								}
-
-								if (foundLen == 0.0 || len < foundLen) {
-									found = ent;
-									foundLen = len;
-								}
+						for (Entity ent : locatedEntities) {
+							if (ent == player) {
+								continue;
 							}
 
-							if (found != null && player.ridingEntity != found) {
-								stack.damageItem(1, player);
-
-								AetherNetwork.sendToServer(new PacketExtendedAttack(found.getEntityId()));
+							if (!ent.canBeCollidedWith() && !(ent instanceof EntityDragon)) {
+								continue;
 							}
+
+							Vec3 vec = Vec3.createVectorHelper(ent.posX - player.posX, ent.boundingBox.minY + ent.height / 2f - player.posY - player.getEyeHeight(), ent.posZ - player.posZ);
+							double len = vec.lengthVector();
+
+							if (len > 8F) {
+								continue;
+							}
+
+							vec = vec.normalize();
+							double dot = playerVision.dotProduct(vec);
+
+							if (dot < 1D - 0.125 / len || !player.canEntityBeSeen(ent)) {
+								continue;
+							}
+
+							if (foundLen == 0D || len < foundLen) {
+								found = ent;
+								foundLen = len;
+							}
+						}
+
+						if (found != null && player.ridingEntity != found) {
+							stack.damageItem(1, player);
+
+							AetherNetwork.sendToServer(new PacketExtendedAttack(found.getEntityId()));
 						}
 					}
 				}
@@ -230,13 +229,11 @@ public class AetherClientEvents {
 	@SubscribeEvent
 	public void onBowPulled(FOVUpdateEvent event) {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-
-		if (player == null || (player != null && player.getCurrentEquippedItem() == null)) {
+		if (player == null || player.getCurrentEquippedItem() == null) {
 			return;
 		}
 
 		Item item = player.getCurrentEquippedItem().getItem();
-
 		if (item == AetherItems.phoenix_bow) {
 			int i = player.getItemInUseDuration();
 			float f1 = (float) i / 20F;
