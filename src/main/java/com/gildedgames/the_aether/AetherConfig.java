@@ -13,7 +13,6 @@ public class AetherConfig {
 	private static int aether_biome_id, aether_dimension_id;
 	private static boolean disable_trivia, old_mobs;
 	private static boolean skyrootBucketOnly, valkyrie_cape, golden_feather;
-	private static boolean floating_block_collision;
 	private static int travel_dimension;
 	private static Property menu_enabled, menu_button_enabled;
 	private static boolean legacy_altar_name;
@@ -42,7 +41,6 @@ public class AetherConfig {
 		valkyrie_cape = config.get("Misc", "Enables the Valkyrie Cape in dungeon loot", true).getBoolean(true);
 		golden_feather = config.get("Misc", "Enables the Golden Feather in dungeon loot", false).getBoolean(false);
 		travel_dimension = config.get("Misc", "Dimension below aether", 0).getInt(0);
-		floating_block_collision = config.get("Misc", "Floating block collision", true).getBoolean(true);
 
 		disable_trivia = config.get("Trivia", "Disable random trivia", false).getBoolean(false);
 
@@ -82,10 +80,6 @@ public class AetherConfig {
 
 	public static int getTravelDimensionID() {
 		return AetherConfig.travel_dimension;
-	}
-
-	public static boolean shouldFloatWithBlock() {
-		return AetherConfig.floating_block_collision;
 	}
 
 	public static boolean triviaDisabled() {
