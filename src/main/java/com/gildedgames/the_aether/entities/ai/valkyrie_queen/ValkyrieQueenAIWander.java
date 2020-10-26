@@ -5,17 +5,17 @@ import net.minecraft.entity.ai.EntityAIWander;
 
 public class ValkyrieQueenAIWander extends EntityAIWander {
 
-    private ValkyrieQueen theQueen;
+    private ValkyrieQueen queen;
 
-    public ValkyrieQueenAIWander(ValkyrieQueen creatureIn, double speedIn) {
-        super(creatureIn, speedIn);
+    public ValkyrieQueenAIWander(ValkyrieQueen queen, double speed) {
+        super(queen, speed);
 
-        this.theQueen = creatureIn;
+        this.queen = queen;
     }
 
     @Override
     public boolean shouldExecute() {
-        return super.shouldExecute() && this.theQueen.isBossReady();
+        return super.shouldExecute() && queen.isBossReady();
     }
 
 }

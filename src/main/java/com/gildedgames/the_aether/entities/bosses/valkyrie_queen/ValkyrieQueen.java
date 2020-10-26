@@ -101,8 +101,9 @@ public class ValkyrieQueen extends EntityBossMob implements IAetherBoss {
 	}
 
 	@Override
-	protected boolean isMovementBlocked() {
-		return !this.isBossReady();
+	public void moveEntityWithHeading(float slide, float forward) {
+		if(isBossReady()) super.moveEntityWithHeading(slide, forward);
+		else if(worldObj.isRemote) onGround = true;
 	}
 
 	@Override
@@ -205,7 +206,7 @@ public class ValkyrieQueen extends EntityBossMob implements IAetherBoss {
 		super.updateEntityActionState();
 
 		if (!this.isBossReady()) {
-			this.motionY *= .5f;
+			this.motionY *= 0.5f;
 			this.moveStrafing = this.moveForward = 0;
 		} else {
 			if (this.getEntityToAttack() != null) {
