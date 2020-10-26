@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class AetherConfig {
-	public static Configuration config;
+	private static Configuration config;
 
 	private static int max_life_shards;
 	private static boolean christmas_content, tallgrass;
