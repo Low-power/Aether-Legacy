@@ -168,7 +168,7 @@ public class AetherConfig {
 
 		cat = config.getCategory("miscellaneous");
 		skyroot_bucket_only = get_property(cat, "SkyrootBucketOnly", false, "Only Skyroot buckets can be used to active Aether portal");
-		travel_world = get_property(cat, "WorldBelowAether", "Overworld", "The world name that entities will be teleported to if they fail out of the Aether");
+		travel_world = get_property(cat, "WorldBelowAether", "Overworld", "The world name that entities will be teleported from the Aether to, when using an Aether portal or falling out of the Aether");
 		use_legacy_mobs_visuals = get_property(cat, "UseLegacyMobsVisuals", false, null);
 		legacy_altar_name = get_property(cat, "UseLegacyAlterName", true, "The block will be called 'Enchanter' instead if disabled");
 
