@@ -20,7 +20,7 @@ import com.gildedgames.the_aether.player.abilities.ArmorAbility;
 import com.gildedgames.the_aether.player.abilities.AbilityFlight;
 import com.gildedgames.the_aether.player.abilities.RepulsionAbility;
 import com.gildedgames.the_aether.player.perks.util.DonatorMoaSkin;
-import com.gildedgames.the_aether.world.TeleporterAether;
+import com.gildedgames.the_aether.events.AetherEntityEvents;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,13 +33,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Direction;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -190,13 +188,6 @@ public class PlayerAether implements IPlayerAether {
 
 		this.getEntity().worldObj.theProfiler.startSection("portal");
 
-/*
-		if (this.getEntity().dimension == AetherConfig.getAetherDimensionID()) {
-			if (this.getEntity().posY < -2) {
-				this.teleportPlayer(false);
-			}
-		}
-*/
 		if (this.inPortal) {
 			if (this.getEntity().timeUntilPortal <= 0) {
 				int limit = this.getEntity().getMaxInPortalTime();
@@ -207,8 +198,8 @@ public class PlayerAether implements IPlayerAether {
 						this.getEntity().timeUntilPortal = this.getEntity().getPortalCooldown();
 
 						if (!this.getEntity().worldObj.isRemote) {
-							this.teleportPlayer(true);
-							this.getEntity().triggerAchievement(AetherAchievements.enter_aether);
+							AetherEntityEvents.teleport_entity(true, getEntity());
+							getEntity().triggerAchievement(AetherAchievements.enter_aether);
 						}
 					} else {
 						this.portalCounter++;
@@ -274,7 +265,7 @@ public class PlayerAether implements IPlayerAether {
 			}
 		}
 
-		if (!player.worldObj.isRemote && this.bedLocation != null && player.dimension == AetherConfig.getAetherDimensionID() && player.worldObj.getBlock(this.bedLocation.posX, this.bedLocation.posY, this.bedLocation.posZ) != BlocksAether.skyroot_bed) {
+		if (!player.worldObj.isRemote && this.bedLocation != null && player.dimension == AetherConfig.get_aether_world_id() && player.worldObj.getBlock(this.bedLocation.posX, this.bedLocation.posY, this.bedLocation.posZ) != BlocksAether.skyroot_bed) {
 			setBedLocation(null);
 		}
 	}
@@ -347,30 +338,6 @@ public class PlayerAether implements IPlayerAether {
 		}
 
 		return false;
-	}
-
-	/*
-	 * The teleporter which sends the player to the Aether/Overworld
-	 */
-	private void teleportPlayer(boolean shouldSpawnPortal) {
-		if (this.getEntity() instanceof EntityPlayerMP) {
-			int previousDimension = this.getEntity().dimension;
-			int transferDimension = previousDimension == AetherConfig.getAetherDimensionID() ? AetherConfig.getTravelDimensionID() : AetherConfig.getAetherDimensionID();
-			MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-			TeleporterAether teleporter = new TeleporterAether(shouldSpawnPortal, server.worldServerForDimension(transferDimension));
-
-			if (this.getEntity().ridingEntity != null) {
-				this.getEntity().ridingEntity.mountEntity(null);
-			}
-
-			if (this.getEntity().riddenByEntity != null) {
-				this.getEntity().riddenByEntity.mountEntity(null);
-			}
-
-			if (server != null && server.getConfigurationManager() != null) {
-				server.getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) this.getEntity(), transferDimension, teleporter);	
-			}
-		}
 	}
 
 	@Override

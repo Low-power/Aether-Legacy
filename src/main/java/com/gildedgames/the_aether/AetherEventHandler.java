@@ -63,7 +63,7 @@ public class AetherEventHandler {
 	public void checkBlockBannedEvent(PlayerInteractEvent event) {
 		if(event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) return;
 		EntityPlayer player = event.entityPlayer;
-		if (player.dimension == AetherConfig.getAetherDimensionID()) {
+		if (player.dimension == AetherConfig.get_aether_world_id()) {
 			ItemStack currentStack = player.getCurrentEquippedItem();
 			if (currentStack != null) {
 				if (currentStack.getItem() == Items.flint_and_steel || currentStack.getItem() == Item.getItemFromBlock(Blocks.torch) || currentStack.getItem() == Items.fire_charge) {
@@ -140,10 +140,9 @@ public class AetherEventHandler {
 
 		boolean isWater = (!AetherConfig.activateOnlyWithSkyroot() && stack.getItem() == Items.water_bucket) || (stack.getItem() == AetherItems.skyroot_bucket && stack.getItemDamage() == 1);
 		boolean isLava = stack.getItem() == Items.lava_bucket;
+		boolean is_valid_world = player.worldObj.provider.getDimensionName().equals(AetherConfig.get_travel_world_name()) || player.dimension == AetherConfig.get_aether_world_id();
 
-		boolean validDimension = (player.dimension == AetherConfig.getTravelDimensionID() || player.dimension == AetherConfig.getAetherDimensionID());
-
-		if (target != null && target.typeOfHit == MovingObjectType.BLOCK && validDimension) {
+		if(target != null && target.typeOfHit == MovingObjectType.BLOCK && is_valid_world) {
 			int i = target.blockX;
 			int j = target.blockY;
 			int k = target.blockZ;
@@ -182,7 +181,7 @@ public class AetherEventHandler {
 				}
 			}
 
-			if (isLava && player.dimension == AetherConfig.getAetherDimensionID()) {
+			if (isLava && player.dimension == AetherConfig.get_aether_world_id()) {
 				if (player.capabilities.isCreativeMode && player.isSneaking()) {
 					return;
 				}
@@ -327,7 +326,7 @@ public class AetherEventHandler {
 	public void onPlayerSleepInBed(PlayerWakeUpEvent event) {
 		final World world = event.entityPlayer.worldObj;
 
-		if (!world.isRemote && event.entityPlayer.dimension == AetherConfig.getAetherDimensionID()) {
+		if (!world.isRemote && event.entityPlayer.dimension == AetherConfig.get_aether_world_id()) {
 			final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 
 			final WorldServer server_world = server.worldServerForDimension(0);
@@ -359,7 +358,7 @@ public class AetherEventHandler {
 
 			server_world.getWorldInfo().setWorldTime(i - i % 24000L);
 
-			PlayerAether.get(event.entityPlayer).setBedLocation(event.entityPlayer.getBedLocation(AetherConfig.getAetherDimensionID()));
+			PlayerAether.get(event.entityPlayer).setBedLocation(event.entityPlayer.getBedLocation(AetherConfig.get_aether_world_id()));
 		}
 	}
 }

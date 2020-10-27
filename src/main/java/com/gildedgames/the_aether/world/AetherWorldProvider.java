@@ -115,7 +115,7 @@ public class AetherWorldProvider extends WorldProvider {
 
 	@Override
 	public int getRespawnDimension(EntityPlayerMP player) {
-		return PlayerAether.get(player).getBedLocation() == null ? 0 : AetherConfig.getAetherDimensionID();
+		return PlayerAether.get(player).getBedLocation() == null ? 0 : AetherConfig.get_aether_world_id();
 	}
 
 	@Override

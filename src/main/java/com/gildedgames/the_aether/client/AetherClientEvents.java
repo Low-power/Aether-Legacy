@@ -159,7 +159,7 @@ public class AetherClientEvents {
 			GuiEnterAether enterAether = new GuiEnterAether(true);
 			GuiEnterAether exitAether = new GuiEnterAether(false);
 
-			if (mc.thePlayer.dimension == AetherConfig.getAetherDimensionID()) {
+			if (mc.thePlayer.dimension == AetherConfig.get_aether_world_id()) {
 				event.gui = enterAether;
 				wasInAether = true;
 			} else if (wasInAether) {

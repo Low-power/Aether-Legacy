@@ -17,18 +17,17 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
+import net.minecraft.world.WorldProvider;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.world.WorldProvider;
 
-public class BlockSunAltar extends Block {
+public class SunAltar extends Block {
 
 	@SideOnly(Side.CLIENT)
 	private IIcon blockIconTop;
 
-	public BlockSunAltar() {
+	public SunAltar() {
 		super(Material.rock);
 
 		this.setHardness(2.5F);
@@ -62,55 +61,32 @@ public class BlockSunAltar extends Block {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-
-		if (player.dimension == AetherConfig.getAetherDimensionID())
-		{
-			if (world.provider instanceof AetherWorldProvider)
-			{
-				AetherWorldProvider provider = (AetherWorldProvider) world.provider;
-
+		if (player.dimension == AetherConfig.get_aether_world_id()) {
+			if (world.provider instanceof AetherWorldProvider) {
+				AetherWorldProvider provider = (AetherWorldProvider)world.provider;
 				MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-
-				if (provider.getIsEternalDay() && provider.getShouldCycleCatchup())
-				{
-					if (server != null && ((server.isDedicatedServer() && (server.getConfigurationManager().func_152596_g(player.getGameProfile()) || AetherConfig.sunAltarMultiplayer()) || !server.isDedicatedServer())))
-					{
+				if (provider.getIsEternalDay() && provider.getShouldCycleCatchup()) {
+					if (server != null && ((server.isDedicatedServer() && (server.getConfigurationManager().func_152596_g(player.getGameProfile()) || AetherConfig.sunAltarMultiplayer()) || !server.isDedicatedServer()))) {
 						Aether.proxy.openSunAltar();
-					}
-					else if (world.isRemote)
-					{
-						if (player instanceof EntityPlayerSP && (player.canCommandSenderUseCommand(2, "") || AetherConfig.sunAltarMultiplayer()))
-						{
+					} else if (world.isRemote) {
+						if (player instanceof EntityPlayerSP && (player.canCommandSenderUseCommand(2, "") || AetherConfig.sunAltarMultiplayer())) {
 							Aether.proxy.openSunAltar();
-						}
-						else
-						{
+						} else {
 							player.addChatComponentMessage(new ChatComponentText(I18n.format("gui.sun_altar.permission")));
 						}
 					}
-				}
-				else if (!provider.getIsEternalDay())
-				{
-					if (world.isRemote)
-					{
+				} else if (!provider.getIsEternalDay()) {
+					if (world.isRemote) {
 						player.addChatComponentMessage(new ChatComponentText(I18n.format("gui.sun_altar.eternal_day")));
 					}
-				}
-				else if (!provider.getShouldCycleCatchup())
-				{
-					if (world.isRemote)
-					{
+				} else if (!provider.getShouldCycleCatchup()) {
+					if (world.isRemote) {
 						player.addChatComponentMessage(new ChatComponentText(I18n.format("gui.sun_altar.cycle_catchup")));
 					}
 				}
 			}
-		}
-		else
-		{
-			if (world.isRemote)
-			{
-				player.addChatComponentMessage(new ChatComponentText(I18n.format("gui.sun_altar.message")));
-			}
+		} else if(world.isRemote) {
+			player.addChatComponentMessage(new ChatComponentText(I18n.format("gui.sun_altar.message")));
 		}
 
 		return true;

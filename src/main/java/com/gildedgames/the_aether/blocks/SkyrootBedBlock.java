@@ -52,7 +52,7 @@ public class SkyrootBedBlock extends BlockBed {
 			metadata = world.getBlockMetadata(x, y, z);
 		}
 
-		if (player.dimension == AetherConfig.getAetherDimensionID() || player.dimension == 0) {
+		if (player.dimension == AetherConfig.get_aether_world_id() || player.dimension == 0) {
 			if (func_149976_c(metadata)) {
 				EntityPlayer sleeping_player = null;
 				for(EntityPlayer p : (List<EntityPlayer>)world.playerEntities) {
@@ -78,9 +78,9 @@ public class SkyrootBedBlock extends BlockBed {
 				case NOT_POSSIBLE_NOW:
 					player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.noSleep", new Object[0]));
 
-					if (player.dimension == AetherConfig.getAetherDimensionID()) {
+					if (player.dimension == AetherConfig.get_aether_world_id()) {
 						player.addChatMessage(new ChatComponentTranslation("gui.skyroot_bed.respawn_point"));
-						player.setSpawnChunk(new ChunkCoordinates(x, y, z), false, AetherConfig.getAetherDimensionID());
+						player.setSpawnChunk(new ChunkCoordinates(x, y, z), false, AetherConfig.get_aether_world_id());
 						PlayerAether.get(player).setBedLocation(new ChunkCoordinates(x, y, z));
 					}
 					break;

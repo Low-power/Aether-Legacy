@@ -5,29 +5,81 @@ import com.gildedgames.the_aether.api.AetherAPI;
 import com.gildedgames.the_aether.entities.util.EntityHook;
 import com.gildedgames.the_aether.player.PlayerAether;
 import com.gildedgames.the_aether.world.AetherWorldProvider;
-import com.gildedgames.the_aether.world.TeleporterAether;
+import com.gildedgames.the_aether.world.AetherTeleporter;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.entity.EntityTracker;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.WorldProviderSurface;	// OverworldWorldProvider
+import net.minecraft.world.WorldProvider;
 import net.minecraftforge.event.entity.living.LivingEvent;
-//import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.common.DimensionManager;
+import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class AetherEntityEvents {
-	private static void teleport_entity(boolean shouldSpawnPortal, Entity entity, WorldServer new_world) {
+	private static Hashtable<Integer, WorldServer> worlds;
+	private static Hashtable<Integer, Class<? extends WorldProvider>> world_providers;
+
+	private static WorldServer get_world_by_name(String name) {
+		if(worlds == null) try {
+			Field worlds_field = DimensionManager.class.getDeclaredField("worlds");
+			if(worlds_field.getType() == Hashtable.class) {
+				worlds_field.setAccessible(true);
+				worlds = (Hashtable<Integer, WorldServer>)worlds_field.get(null);
+			}
+		} catch(ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+		if(worlds != null) for(WorldServer world : worlds.values()) {
+			if(world.provider.getDimensionName().equals(name)) return world;
+		}
+
+		if(world_providers == null) try {
+			Field providers_field = DimensionManager.class.getDeclaredField("providers");
+			if(providers_field.getType() == Hashtable.class) {
+				providers_field.setAccessible(true);
+				world_providers = (Hashtable<Integer, Class<? extends WorldProvider>>)providers_field.get(null);
+			}
+		} catch(ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+		if(world_providers != null) try {
+			for(Map.Entry<Integer, Class<? extends WorldProvider>> entry : world_providers.entrySet()) try {
+				WorldProvider provider = entry.getValue().newInstance();
+				if(provider.getDimensionName().equals(name)) {
+					int provider_id = entry.getKey().intValue();
+					int world_id = provider_id;	// XXX: Assuming they are same
+					if(worlds == null) {
+						WorldServer world = DimensionManager.getWorld(world_id);
+						if(world != null) return world;
+					}
+					DimensionManager.initDimension(world_id);
+					return DimensionManager.getWorld(world_id);
+				}
+			} catch(IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		} catch(InstantiationException e) {
+			//e.printStackTrace();
+			throw new RuntimeException("Failed to create instance of world provider", e);
+		}
+
+		System.err.println("Failed to get world by name " + name);
+		return null;
+	}
+
+	private static void teleport_entity(boolean should_spawn_portal, Entity entity, WorldServer new_world) {
 		WorldServer previous_world = (WorldServer)entity.worldObj;
 		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 
@@ -36,7 +88,8 @@ public class AetherEntityEvents {
 		entity.isDead = false;
 
 		ServerConfigurationManager server_config = server.getConfigurationManager();
-		server_config.transferEntityToWorld(entity, previous_world.provider.dimensionId, previous_world, new_world, new TeleporterAether(shouldSpawnPortal, new_world));
+		AetherTeleporter teleporter = new AetherTeleporter(should_spawn_portal, new_world);
+		server_config.transferEntityToWorld(entity, previous_world.provider.dimensionId, previous_world, new_world, teleporter);
 		if(entity instanceof EntityPlayerMP) {
 			EntityPlayerMP player = (EntityPlayerMP)entity;
 			player.playerNetServerHandler.sendPacket(new S07PacketRespawn(new_world.provider.dimensionId, new_world.difficultySetting, new_world.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
@@ -52,6 +105,43 @@ public class AetherEntityEvents {
 		}
 	}
 
+	public static void teleport_entity(boolean should_spawn_portal, Entity entity) {
+		WorldServer transfer_world;
+		if(entity.worldObj.provider instanceof AetherWorldProvider) {
+			transfer_world = get_world_by_name(AetherConfig.get_travel_world_name());
+			if(transfer_world == null) transfer_world = DimensionManager.getWorld(0);
+		} else {
+			int aether_world_id = AetherConfig.get_aether_world_id();
+			transfer_world = DimensionManager.getWorld(aether_world_id);
+			if(transfer_world == null) {
+				DimensionManager.initDimension(aether_world_id);
+				transfer_world = DimensionManager.getWorld(aether_world_id);
+			}
+		}
+		Entity teleport_rider = null;
+		if(entity.riddenByEntity != null && entity.riddenByEntity.isRiding()) {
+			if (entity.riddenByEntity instanceof EntityPlayer) {
+				((PlayerAether)AetherAPI.get((EntityPlayer)entity.riddenByEntity)).ridden_entity = entity;
+				//entity.forceSpawn = true;
+			} else if(entity instanceof EntityPlayer) {
+				((PlayerAether)AetherAPI.get((EntityPlayer)entity)).ridden_by_entity = entity.riddenByEntity;
+				teleport_rider = entity.riddenByEntity;
+			}
+			entity.riddenByEntity.ridingEntity = null;
+			entity.riddenByEntity = null;
+		}
+		if(entity.ridingEntity != null && entity.ridingEntity.riddenByEntity != null) {
+			entity.ridingEntity.riddenByEntity = null;
+			entity.ridingEntity = null;
+		}
+		if(teleport_rider != null) {
+			teleport_rider.timeUntilPortal = teleport_rider.getPortalCooldown();
+			teleport_entity(should_spawn_portal, teleport_rider, transfer_world);
+		}
+		entity.timeUntilPortal = entity.getPortalCooldown();
+		teleport_entity(should_spawn_portal, entity, transfer_world);
+	}
+
 	@SubscribeEvent
 	public void on_living_entity_update(LivingEvent.LivingUpdateEvent event) {
 		EntityLivingBase entity = event.entityLiving;
@@ -63,71 +153,32 @@ public class AetherEntityEvents {
 		}
 
 		if(entity.worldObj.isRemote) return;
-		if(entity instanceof EntityPlayer && entity.worldObj.provider instanceof WorldProviderSurface && entity.posY < 256) {
-			PlayerAether aplayer = (PlayerAether)AetherAPI.get((EntityPlayer)event.entity);
-			if(aplayer.ridden_entity != null && aplayer.ridden_entity.worldObj.provider instanceof WorldProviderSurface) {
-				if(!entity.worldObj.loadedEntityList.contains(aplayer.ridden_entity)) {
-					entity.worldObj.spawnEntityInWorld(aplayer.ridden_entity);
+		if(entity instanceof EntityPlayer && entity.posY < 256) {
+			String travel_world_name = AetherConfig.get_travel_world_name();
+			if(entity.worldObj.provider.getDimensionName().equals(travel_world_name)) {
+				PlayerAether aplayer = (PlayerAether)AetherAPI.get((EntityPlayer)event.entity);
+				if(aplayer.ridden_entity != null && aplayer.ridden_entity.worldObj.provider.getDimensionName().equals(travel_world_name)) {
+					if(!entity.worldObj.loadedEntityList.contains(aplayer.ridden_entity)) {
+						entity.worldObj.spawnEntityInWorld(aplayer.ridden_entity);
+					}
+					entity.mountEntity(aplayer.ridden_entity);
+					aplayer.ridden_entity = null;
 				}
-				entity.mountEntity(aplayer.ridden_entity);
-				aplayer.ridden_entity = null;
-			}
-			if(aplayer.ridden_by_entity != null && aplayer.ridden_by_entity.worldObj.provider instanceof WorldProviderSurface) {
-				if(!entity.worldObj.loadedEntityList.contains(aplayer.ridden_by_entity)) {
-					entity.worldObj.spawnEntityInWorld(aplayer.ridden_by_entity);
+				if(aplayer.ridden_by_entity != null && aplayer.ridden_by_entity.worldObj.provider.getDimensionName().equals(travel_world_name)) {
+					if(!entity.worldObj.loadedEntityList.contains(aplayer.ridden_by_entity)) {
+						entity.worldObj.spawnEntityInWorld(aplayer.ridden_by_entity);
+					}
+					aplayer.ridden_by_entity.mountEntity(entity);
+					aplayer.ridden_by_entity = null;
 				}
-				aplayer.ridden_by_entity.mountEntity(entity);
-				aplayer.ridden_by_entity = null;
+				return;
 			}
-			return;
 		}
 		if(!(entity.worldObj.provider instanceof AetherWorldProvider)) return;
 		if(entity.posY < 0) {
-			MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-			int previous_world_id = entity.dimension;
-			int transfer_world_id = previous_world_id == AetherConfig.getAetherDimensionID() ? 0 : AetherConfig.getAetherDimensionID();
-			WorldServer transfer_world = server.worldServerForDimension(transfer_world_id);
-			Entity teleport_rider = null;
-			if(entity.riddenByEntity != null && entity.riddenByEntity.isRiding()) {
-				if (entity.riddenByEntity instanceof EntityPlayer) {
-					((PlayerAether)AetherAPI.get((EntityPlayer)entity.riddenByEntity)).ridden_entity = entity;
-					//entity.forceSpawn = true;
-				} else if(entity instanceof EntityPlayer) {
-					((PlayerAether)AetherAPI.get((EntityPlayer)entity)).ridden_by_entity = entity.riddenByEntity;
-					teleport_rider = entity.riddenByEntity;
-				}
-				entity.riddenByEntity.ridingEntity = null;
-				entity.riddenByEntity = null;
-			}
-			if(entity.ridingEntity != null && entity.ridingEntity.riddenByEntity != null) {
-				entity.ridingEntity.riddenByEntity = null;
-				entity.ridingEntity = null;
-			}
-			if(teleport_rider != null) {
-				teleport_rider.timeUntilPortal = teleport_rider.getPortalCooldown();
-				teleport_entity(false, teleport_rider, transfer_world);
-			}
-			entity.timeUntilPortal = entity.getPortalCooldown();
-			teleport_entity(false, entity, transfer_world);
+			teleport_entity(false, entity);
 		}
 	}
-
-/*
-	@SubscribeEvent
-	public void on_entity_join_world(EntityJoinWorldEvent event) {
-		if(!(event.entity instanceof EntityPlayerMP)) return;
-		if(!(event.world.provider instanceof WorldProviderSurface)) return;
-		PlayerAether aplayer = (PlayerAether)AetherAPI.get((EntityPlayer)event.entity);
-		if(aplayer.ridden_entity == null) return;
-		if(!event.world.loadedEntityList.contains(aplayer.ridden_entity)) {
-			aplayer.ridden_entity.forceSpawn = true;
-			boolean ok = event.world.spawnEntityInWorld(aplayer.ridden_entity);
-			System.err.println(ok);
-		}
-		event.entity.mountEntity(aplayer.ridden_entity);
-		aplayer.ridden_entity = null;
-	}
-*/
 
 	@SubscribeEvent
 	public void on_entity_constructing(EntityEvent.EntityConstructing event) {

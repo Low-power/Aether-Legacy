@@ -16,7 +16,7 @@ import net.minecraft.init.Blocks;
 import com.gildedgames.the_aether.blocks.container.BlockEnchanter;
 import com.gildedgames.the_aether.blocks.container.BlockFreezer;
 import com.gildedgames.the_aether.blocks.container.Incubator;
-import com.gildedgames.the_aether.blocks.container.BlockSunAltar;
+import com.gildedgames.the_aether.blocks.container.SunAltar;
 import com.gildedgames.the_aether.blocks.decorative.BlockAerogel;
 import com.gildedgames.the_aether.blocks.decorative.BlockAetherFence;
 import com.gildedgames.the_aether.blocks.decorative.BlockAetherFenceGate;
@@ -151,7 +151,7 @@ public class BlocksAether {
 		enchanter = registerEnchanter("enchanter", new BlockEnchanter());
 		freezer = registerMeta("freezer", new BlockFreezer());
 		incubator = registerMeta("incubator", new Incubator());
-		sun_altar = register("sun_altar", new BlockSunAltar());
+		sun_altar = register("sun_altar", new SunAltar());
 		chest_mimic = register("chest_mimic", new MimicChest());
 		treasure_chest = register("treasure_chest", new TreasureChest());
 		aether_portal = register("aether_portal", new BlockAetherPortal()).setCreativeTab(null);

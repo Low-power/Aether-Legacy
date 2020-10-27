@@ -68,7 +68,7 @@ public class AetherMusicHandler {
 		SoundCategory category = event.category;
 
 		if (category == SoundCategory.MUSIC) {
-			if (this.mc.thePlayer != null && this.mc.thePlayer.dimension == AetherConfig.getAetherDimensionID()) {
+			if (this.mc.thePlayer != null && this.mc.thePlayer.dimension == AetherConfig.get_aether_world_id()) {
 				if (!sound.getPositionedSoundLocation().toString().contains("aether_legacy") && (this.musicTicker.playingMusic() || !this.musicTicker.playingMusic())) {
 					event.result = null;
 

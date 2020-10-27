@@ -1,7 +1,5 @@
 package com.gildedgames.the_aether.client.audio.music;
 
-import java.util.Random;
-
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.AetherConfig;
 import net.minecraft.client.Minecraft;
@@ -11,134 +9,127 @@ import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Random;
 
 @SideOnly(Side.CLIENT)
 public class AetherMusicTicker implements IUpdatePlayerListBox {
 
 	private final Random rand = new Random();
 	private final Minecraft mc;
-	private ISound currentMusic, currentRecord, menuMusic, minecraftMusic;
+	private ISound current_music, current_record, menu_music, game_music;
 	private int timeUntilNextMusic = 100;
 
-	public AetherMusicTicker(Minecraft mcIn) {
-		this.mc = mcIn;
+	public AetherMusicTicker(Minecraft mc) {
+		this.mc = mc;
 	}
 
 	public void update() {
 		TrackType tracktype = this.getRandomTrack();
 
 		if (this.mc.thePlayer != null) {
-			if (this.mc.gameSettings.getSoundLevel(SoundCategory.MUSIC) == 0.0F) {
-				if (this.currentMusic != null) {
+			if (this.mc.gameSettings.getSoundLevel(SoundCategory.MUSIC) == 0F) {
+				if (this.current_music != null) {
 					this.stopMusic();
-					this.currentMusic = null;
+					this.current_music = null;
 				}
 
 				return;
 			}
 
-			if (this.mc.thePlayer.dimension != AetherConfig.getAetherDimensionID()) {
-				this.stopMusic();
-			} else if (this.mc.thePlayer.dimension == AetherConfig.getAetherDimensionID()) {
-				if (this.currentMusic != null) {
-					if (!this.mc.getSoundHandler().isSoundPlaying(this.currentMusic)) {
-						this.currentMusic = null;
+			if (this.mc.thePlayer.dimension == AetherConfig.get_aether_world_id()) {
+				if (this.current_music != null) {
+					if (!this.mc.getSoundHandler().isSoundPlaying(this.current_music)) {
+						this.current_music = null;
 						this.timeUntilNextMusic = Math.min(MathHelper.getRandomIntegerInRange(this.rand, tracktype.getMinDelay(), tracktype.getMaxDelay()), this.timeUntilNextMusic);
 					}
 				}
 
 				this.timeUntilNextMusic = Math.min(this.timeUntilNextMusic, tracktype.getMaxDelay());
 
-				if (this.currentMusic == null && this.timeUntilNextMusic-- <= 0) {
+				if (this.current_music == null && this.timeUntilNextMusic-- <= 0) {
 					this.playMusic(tracktype);
 				}
+			} else {
+				this.stopMusic();
 			}
 		}
 
-		if (!this.mc.getSoundHandler().isSoundPlaying(this.menuMusic)) {
-			this.menuMusic = null;
+		if (!this.mc.getSoundHandler().isSoundPlaying(this.menu_music)) {
+			this.menu_music = null;
 		}
 	}
 
 	public boolean playingMusic() {
-		return this.currentMusic != null;
+		return this.current_music != null;
 	}
 
-	public boolean playingRecord()
-	{
-		return this.currentRecord != null;
+	public boolean playingRecord() {
+		return this.current_record != null;
 	}
 
-	public boolean playingMenuMusic()
-	{
-		return this.menuMusic != null;
+	public boolean playingMenuMusic() {
+		return this.menu_music != null;
 	}
 
-	public boolean playingMinecraftMusic()
-	{
-		return this.minecraftMusic != null;
+	public boolean playingMinecraftMusic() {
+		return this.game_music != null;
 	}
 
-	public ISound getRecord()
-	{
-		return this.currentRecord;
+	public ISound getRecord() {
+		return this.current_record;
 	}
 
 	public AetherMusicTicker.TrackType getRandomTrack() {
-		int num = this.rand.nextInt(4);
-
-		return num == 0 ? TrackType.TRACK_ONE : num == 1 ? TrackType.TRACK_TWO : num == 2 ? TrackType.TRACK_THREE : TrackType.TRACK_FOUR;
+		switch(this.rand.nextInt(4)) {
+			case 0:
+				return TrackType.TRACK_ONE;
+			case 1:
+				return TrackType.TRACK_TWO;
+			case 2:
+				return TrackType.TRACK_THREE;
+			default:
+				return TrackType.TRACK_FOUR;
+		}
 	}
 
-	public void playMusic(TrackType requestedMusicType) {
-		this.currentMusic = PositionedSoundRecord.func_147673_a(requestedMusicType.getMusicLocation());
-		this.mc.getSoundHandler().playSound(this.currentMusic);
+	public void playMusic(TrackType type) {
+		this.current_music = PositionedSoundRecord.func_147673_a(type.getMusicLocation());
+		this.mc.getSoundHandler().playSound(this.current_music);
 		this.timeUntilNextMusic = Integer.MAX_VALUE;
 	}
 
-	public void trackRecord(ISound record)
-	{
-		this.currentRecord = record;
+	public void trackRecord(ISound record) {
+		this.current_record = record;
 	}
 
-	public void trackMinecraftMusic(ISound record)
-	{
-		this.minecraftMusic = record;
+	public void trackMinecraftMusic(ISound record) {
+		this.game_music = record;
 	}
 
-	public void playMenuMusic()
-	{
-		this.menuMusic = PositionedSoundRecord.func_147673_a(TrackType.TRACK_MENU.getMusicLocation());
-		this.mc.getSoundHandler().playSound(this.menuMusic);
+	public void playMenuMusic() {
+		this.menu_music = PositionedSoundRecord.func_147673_a(TrackType.TRACK_MENU.getMusicLocation());
+		this.mc.getSoundHandler().playSound(this.menu_music);
 	}
 
 	public void stopMusic() {
-		if (this.currentMusic != null) {
-			this.mc.getSoundHandler().stopSound(this.currentMusic);
-			this.currentMusic = null;
-			this.timeUntilNextMusic = 0;
-		}
+		if(this.current_music == null) return;
+		this.mc.getSoundHandler().stopSound(this.current_music);
+		this.current_music = null;
+		this.timeUntilNextMusic = 0;
 	}
 
-	public void stopMenuMusic()
-	{
-		if (this.menuMusic != null)
-		{
-			this.mc.getSoundHandler().stopSound(this.menuMusic);
-			this.menuMusic = null;
-		}
+	public void stopMenuMusic() {
+		if(this.menu_music == null) return;
+		this.mc.getSoundHandler().stopSound(this.menu_music);
+		this.menu_music = null;
 	}
 
-	public void stopMinecraftMusic()
-	{
-		if (this.minecraftMusic != null)
-		{
-			this.mc.getSoundHandler().stopSound(this.minecraftMusic);
-			this.minecraftMusic = null;
-		}
+	public void stopMinecraftMusic() {
+		if(this.game_music == null) return;
+		this.mc.getSoundHandler().stopSound(this.game_music);
+		this.game_music = null;
 	}
 
 	@SideOnly(Side.CLIENT)
