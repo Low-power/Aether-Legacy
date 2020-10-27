@@ -7,6 +7,7 @@ import com.gildedgames.the_aether.world.gen.GoldenDungeonStructure;
 import com.gildedgames.the_aether.world.gen.MapGenLargeColdAercloud;
 import com.gildedgames.the_aether.world.gen.MapGenQuicksoil;
 import com.gildedgames.the_aether.world.gen.SilverDungeonStructure;
+import com.gildedgames.the_aether.AetherConfig;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -81,6 +83,7 @@ public class AetherChunkProvider implements IChunkProvider {
 		this.noisegen7 = new NoiseGeneratorOctaves(this.rand, 16);
 
 		check_old_save_directory();
+		check_cauldron_save_directory_bug();
 	}
 
 	public void setBlocksInChunk(int x, int z, Block[] blocks) {
@@ -399,6 +402,63 @@ public class AetherChunkProvider implements IChunkProvider {
 			e.printStackTrace();
 		} catch(IOException e) {
 			log.log(Level.WARN, String.format("Failed to create symbolic link '%s'", old_aether_save_dir_path), e);
+		}
+	}
+
+	private void check_cauldron_save_directory_bug() {
+		try {
+			getClass().getClassLoader().loadClass("net.minecraftforge.cauldron.CauldronUtils");
+		} catch(ClassNotFoundException e) {
+			return;
+		}
+		Logger log = LogManager.getLogger();
+		File save_dir;
+		try {
+			save_dir = world.getSaveHandler().getWorldDirectory().getCanonicalFile();
+		} catch(IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		File cauldron_erroneous_save_dir = null;
+		String cauldron_erroneous_save_dir_name = "DIM" + String.valueOf(AetherConfig.get_aether_world_id());
+		if(save_dir.getName().equals(cauldron_erroneous_save_dir_name)) {
+			cauldron_erroneous_save_dir = save_dir;
+			save_dir = save_dir.getParentFile();
+			log.warn(String.format("Cauldron bug detected: the current world save path is '%s', which didn't match the configuration from AetherWorldProvider!", cauldron_erroneous_save_dir.toString()));
+		} else {
+			cauldron_erroneous_save_dir = new File(save_dir, cauldron_erroneous_save_dir_name);
+			if(!cauldron_erroneous_save_dir.isDirectory()) return;
+			log.warn(String.format("Cauldron bug detected: found erroneous save directory '%s' which shouldn't exist!", cauldron_erroneous_save_dir.toString()));
+		}
+
+		Path cauldron_erroneous_save_dir_path = cauldron_erroneous_save_dir.toPath();
+		if(Files.isSymbolicLink(cauldron_erroneous_save_dir_path)) return;
+
+		// Try to remove this directory in case it is empty
+		cauldron_erroneous_save_dir.delete();
+
+		File aether_save_dir = new File(save_dir, "AETHER");
+		Path aether_save_dir_path = aether_save_dir.toPath();
+		if(Files.isDirectory(cauldron_erroneous_save_dir_path, LinkOption.NOFOLLOW_LINKS)) try {
+			Files.move(cauldron_erroneous_save_dir_path, aether_save_dir_path, StandardCopyOption.REPLACE_EXISTING);
+		} catch(DirectoryNotEmptyException e) {
+			throw new RuntimeException(String.format("Failed to rename '%s', target save directory '%s' exists and it is not empty; please manually remove one, or merge the two", cauldron_erroneous_save_dir_path, aether_save_dir_path), e);
+		} catch(IOException e) {
+			throw new RuntimeException(String.format("Failed to move '%s' to '%s'", cauldron_erroneous_save_dir_path, aether_save_dir_path), e);
+		} else if(!Files.isDirectory(aether_save_dir_path)) try {
+			Files.createDirectory(aether_save_dir_path);
+		} catch(IOException e) {
+			throw new RuntimeException(String.format("Failed to create Aether save directory '%s'", aether_save_dir_path), e);
+		}
+		try {
+			Files.createSymbolicLink(cauldron_erroneous_save_dir_path, aether_save_dir_path.getFileName());
+		} catch(Exception e) {
+			log.log(Level.WARN, String.format("Failed to create symbolic link '%s'", cauldron_erroneous_save_dir_path), e);
+			try {
+				Files.createFile(cauldron_erroneous_save_dir_path);
+			} catch(IOException ee) {
+				throw new RuntimeException(String.format("Failed to create either a symbolic link or a regular file with path '%s'", cauldron_erroneous_save_dir_path), ee);
+			}
 		}
 	}
 }
