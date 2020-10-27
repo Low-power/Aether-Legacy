@@ -133,69 +133,67 @@ public class AetherEventHandler {
 
 	@SubscribeEvent
 	public void onFillBucket(FillBucketEvent event) {
-		World worldObj = event.world;
 		MovingObjectPosition target = event.target;
-		ItemStack stack = event.current;
+		if(target == null || target.typeOfHit != MovingObjectType.BLOCK) return;
+
+		World world = event.world;
+		if(!(world.provider instanceof AetherWorldProvider) && !world.provider.getDimensionName().equalsIgnoreCase(AetherConfig.get_travel_world_name())) {
+			return;
+		}
+
+		int x = target.blockX;
+		int y = target.blockY;
+		int z = target.blockZ;
+		switch(target.sideHit) {
+			case 0:
+				y--;
+				break;
+			case 1:
+				y++;
+				break;
+			case 2:
+				z--;
+				break;
+			case 3:
+				z++;
+				break;
+			case 4:
+				x--;
+				break;
+		}
+
 		EntityPlayer player = event.entityPlayer;
+		ItemStack stack = event.current;
+		Item item = stack.getItem();
 
-		boolean isWater = (!AetherConfig.activateOnlyWithSkyroot() && stack.getItem() == Items.water_bucket) || (stack.getItem() == AetherItems.skyroot_bucket && stack.getItemDamage() == 1);
-		boolean isLava = stack.getItem() == Items.lava_bucket;
-		boolean is_valid_world = player.worldObj.provider.getDimensionName().equals(AetherConfig.get_travel_world_name()) || player.dimension == AetherConfig.get_aether_world_id();
-
-		if(target != null && target.typeOfHit == MovingObjectType.BLOCK && is_valid_world) {
-			int i = target.blockX;
-			int j = target.blockY;
-			int k = target.blockZ;
-
-			switch(target.sideHit) {
-				case 0:
-					j--;
-					break;
-				case 1:
-					j++;
-					break;
-				case 2:
-					k--;
-					break;
-				case 3:
-					k++;
-					break;
-				case 4:
-					i--;
-					break;
-			}
-
-			if (isWater) {
-				if (((BlockAetherPortal) BlocksAether.aether_portal).trySpawnPortal(worldObj, i, j, k)) {
-					if (!player.capabilities.isCreativeMode) {
-						if (stack.getItem() == AetherItems.skyroot_bucket && stack.getItemDamage() == 1) {
-							event.result = new ItemStack(AetherItems.skyroot_bucket);
-						}
-
-						if (stack.getItem() == Items.water_bucket) {
-							event.result = new ItemStack(Items.bucket);
-						}
-					}
-
-					event.setResult(Event.Result.ALLOW);
-				}
-			}
-
-			if (isLava && player.dimension == AetherConfig.get_aether_world_id()) {
-				if (player.capabilities.isCreativeMode && player.isSneaking()) {
-					return;
-				}
-
-				if (worldObj.isAirBlock(i, j, k)) {
-					worldObj.setBlock(i, j, k, BlocksAether.aerogel);
-
-					if (!player.capabilities.isCreativeMode) {
+		if((!AetherConfig.activateOnlyWithSkyroot() && item == Items.water_bucket) || (item == AetherItems.skyroot_bucket && stack.getItemDamage() == 1)) {
+			// Water
+			if (((BlockAetherPortal)BlocksAether.aether_portal).trySpawnPortal(world, x, y, z)) {
+				if (!player.capabilities.isCreativeMode) {
+					if(item == AetherItems.skyroot_bucket && stack.getItemDamage() == 1) {
+						event.result = new ItemStack(AetherItems.skyroot_bucket);
+					} else if(item == Items.water_bucket) {
 						event.result = new ItemStack(Items.bucket);
 					}
 				}
 
 				event.setResult(Event.Result.ALLOW);
 			}
+		} else if(item == Items.lava_bucket && world.provider instanceof AetherWorldProvider) {
+			// Lava
+			if (player.capabilities.isCreativeMode && player.isSneaking()) {
+				return;
+			}
+
+			if (world.isAirBlock(x, y, z)) {
+				world.setBlock(x, y, z, BlocksAether.aerogel);
+
+				if (!player.capabilities.isCreativeMode) {
+					event.result = new ItemStack(Items.bucket);
+				}
+			}
+
+			event.setResult(Event.Result.ALLOW);
 		}
 	}
 

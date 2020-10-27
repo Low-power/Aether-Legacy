@@ -42,7 +42,7 @@ public class AetherEntityEvents {
 			e.printStackTrace();
 		}
 		if(worlds != null) for(WorldServer world : worlds.values()) {
-			if(world.provider.getDimensionName().equals(name)) return world;
+			if(world.provider.getDimensionName().equalsIgnoreCase(name)) return world;
 		}
 
 		if(world_providers == null) try {
@@ -57,7 +57,7 @@ public class AetherEntityEvents {
 		if(world_providers != null) try {
 			for(Map.Entry<Integer, Class<? extends WorldProvider>> entry : world_providers.entrySet()) try {
 				WorldProvider provider = entry.getValue().newInstance();
-				if(provider.getDimensionName().equals(name)) {
+				if(provider.getDimensionName().equalsIgnoreCase(name)) {
 					int provider_id = entry.getKey().intValue();
 					int world_id = provider_id;	// XXX: Assuming they are same
 					if(worlds == null) {
