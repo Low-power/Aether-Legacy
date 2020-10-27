@@ -453,12 +453,7 @@ public class AetherChunkProvider implements IChunkProvider {
 		try {
 			Files.createSymbolicLink(cauldron_erroneous_save_dir_path, aether_save_dir_path.getFileName());
 		} catch(Exception e) {
-			log.log(Level.WARN, String.format("Failed to create symbolic link '%s'", cauldron_erroneous_save_dir_path), e);
-			try {
-				Files.createFile(cauldron_erroneous_save_dir_path);
-			} catch(IOException ee) {
-				throw new RuntimeException(String.format("Failed to create either a symbolic link or a regular file with path '%s'", cauldron_erroneous_save_dir_path), ee);
-			}
+			throw new RuntimeException(String.format("Failed to create a symbolic link with path '%s'", cauldron_erroneous_save_dir_path), e);
 		}
 	}
 }
