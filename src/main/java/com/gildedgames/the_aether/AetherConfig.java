@@ -148,13 +148,11 @@ public class AetherConfig {
 		if(prop.getString() == null) prop.set(prop.getDefault());
 	}
 
-	public static void init(File location) {
-		File config_file = new File(location + "/aether" + "/AetherI.cfg");
-		try {
-			config_file.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public static void init(File game_config_dir) {
+		File config_dir = new File(game_config_dir, "aether");
+		config_dir.mkdir();
+		File config_file = new File(config_dir, "AetherI.cfg");
+		boolean should_try_migrate = config_file.exists();
 		config = new Configuration(config_file);
 
 		ConfigCategory cat = config.getCategory("generation");
@@ -186,7 +184,7 @@ public class AetherConfig {
 		repeat_sun_spirit_dialog = get_property(cat, "RepeatSunSpiritDialog", true, "The Sun Spirit's dialogue will show only once per player if disabled");
 		disable_eternal_day = get_property(cat, "DisableEternalDay", false, "Disables eternal day making time cycle in the Aether without having to kill the Sun Spirit. This is mainly intended for use in modpacks.");
 
-		migrate_old_configuration(config_file);
+		if(should_try_migrate) migrate_old_configuration(config_file);
 
 		set_to_default_if_null(christmas_content);
 		set_to_default_if_null(tallgrass);
