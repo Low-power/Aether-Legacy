@@ -12,7 +12,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -64,17 +63,8 @@ public class SunAltar extends Block {
 		if (player.dimension == AetherConfig.get_aether_world_id()) {
 			if (world.provider instanceof AetherWorldProvider) {
 				AetherWorldProvider provider = (AetherWorldProvider)world.provider;
-				MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 				if (provider.getIsEternalDay() && provider.getShouldCycleCatchup()) {
-					if (server != null && ((server.isDedicatedServer() && (server.getConfigurationManager().func_152596_g(player.getGameProfile()) || AetherConfig.sunAltarMultiplayer()) || !server.isDedicatedServer()))) {
-						Aether.proxy.openSunAltar();
-					} else if (world.isRemote) {
-						if (player instanceof EntityPlayerSP && (player.canCommandSenderUseCommand(2, "") || AetherConfig.sunAltarMultiplayer())) {
-							Aether.proxy.openSunAltar();
-						} else {
-							player.addChatComponentMessage(new ChatComponentText(I18n.format("gui.sun_altar.permission")));
-						}
-					}
+					Aether.proxy.openSunAltar();
 				} else if (!provider.getIsEternalDay()) {
 					if (world.isRemote) {
 						player.addChatComponentMessage(new ChatComponentText(I18n.format("gui.sun_altar.eternal_day")));

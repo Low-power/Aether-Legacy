@@ -2,7 +2,6 @@ package com.gildedgames.the_aether.network;
 
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.network.packets.*;
-import com.gildedgames.the_aether.network.packets.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -36,7 +35,7 @@ public class AetherNetwork {
 		INSTANCE.registerMessage(PacketPerkChanged.class, PacketPerkChanged.class, discriminant++, Side.SERVER);
 		INSTANCE.registerMessage(PacketPerkChanged.class, PacketPerkChanged.class, discriminant++, Side.CLIENT);
 
-		INSTANCE.registerMessage(PacketSetTime.class, PacketSetTime.class, discriminant++, Side.SERVER);
+		INSTANCE.registerMessage(SetTimePacket.class, SetTimePacket.class, discriminant++, Side.SERVER);
 
 		INSTANCE.registerMessage(PacketSendSneaking.class, PacketSendSneaking.class, discriminant++, Side.SERVER);
 

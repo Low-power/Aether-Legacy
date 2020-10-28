@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.client.gui.button;
 
 import com.gildedgames.the_aether.network.AetherNetwork;
-import com.gildedgames.the_aether.network.packets.PacketSetTime;
+import com.gildedgames.the_aether.network.packets.SetTimePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.world.World;
@@ -73,7 +73,7 @@ public class SunAltarSlider extends GuiButton {
 	public void mouseReleased(int mouseX, int mouseY) {
 		this.dragging = false;
 
-		AetherNetwork.sendToServer(new PacketSetTime(this.sliderValue, Minecraft.getMinecraft().thePlayer.dimension));
+		AetherNetwork.sendToServer(new SetTimePacket(this.sliderValue, Minecraft.getMinecraft().thePlayer));
 	}
 
 }
