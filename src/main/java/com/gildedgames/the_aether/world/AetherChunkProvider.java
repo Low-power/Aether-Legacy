@@ -82,8 +82,9 @@ public class AetherChunkProvider implements IChunkProvider {
 		this.scalenoisegen1 = new NoiseGeneratorOctaves(this.rand, 10);
 		this.noisegen7 = new NoiseGeneratorOctaves(this.rand, 16);
 
-		check_old_save_directory();
-		check_cauldron_save_directory_bug();
+		if(!check_cauldron_save_directory_bug()) {
+			check_old_save_directory();
+		}
 	}
 
 	public void setBlocksInChunk(int x, int z, Block[] blocks) {
@@ -405,19 +406,20 @@ public class AetherChunkProvider implements IChunkProvider {
 		}
 	}
 
-	private void check_cauldron_save_directory_bug() {
+	private boolean check_cauldron_save_directory_bug() {
 		try {
 			getClass().getClassLoader().loadClass("net.minecraftforge.cauldron.CauldronUtils");
 		} catch(ClassNotFoundException e) {
-			return;
+			return false;
 		}
+
 		Logger log = LogManager.getLogger();
-		File save_dir;
+		File save_dir = world.getSaveHandler().getWorldDirectory();
 		try {
-			save_dir = world.getSaveHandler().getWorldDirectory().getCanonicalFile();
+			save_dir = save_dir.getCanonicalFile();
 		} catch(IOException e) {
 			e.printStackTrace();
-			return;
+			save_dir = save_dir.getAbsoluteFile();
 		}
 		File cauldron_erroneous_save_dir = null;
 		String cauldron_erroneous_save_dir_name = "DIM" + String.valueOf(AetherConfig.get_aether_world_id());
@@ -427,18 +429,19 @@ public class AetherChunkProvider implements IChunkProvider {
 			log.warn(String.format("Cauldron bug detected: the current world save path is '%s', which didn't match the configuration from AetherWorldProvider!", cauldron_erroneous_save_dir.toString()));
 		} else {
 			cauldron_erroneous_save_dir = new File(save_dir, cauldron_erroneous_save_dir_name);
-			if(!cauldron_erroneous_save_dir.isDirectory()) return;
+			if(!cauldron_erroneous_save_dir.isDirectory()) return false;
 			log.warn(String.format("Cauldron bug detected: found erroneous save directory '%s' which shouldn't exist!", cauldron_erroneous_save_dir.toString()));
 		}
 
 		Path cauldron_erroneous_save_dir_path = cauldron_erroneous_save_dir.toPath();
-		if(Files.isSymbolicLink(cauldron_erroneous_save_dir_path)) return;
+		if(Files.isSymbolicLink(cauldron_erroneous_save_dir_path)) return false;
 
 		// Try to remove this directory in case it is empty
 		cauldron_erroneous_save_dir.delete();
 
 		File aether_save_dir = new File(save_dir, "AETHER");
 		Path aether_save_dir_path = aether_save_dir.toPath();
+
 		if(Files.isDirectory(cauldron_erroneous_save_dir_path, LinkOption.NOFOLLOW_LINKS)) try {
 			Files.move(cauldron_erroneous_save_dir_path, aether_save_dir_path, StandardCopyOption.REPLACE_EXISTING);
 		} catch(DirectoryNotEmptyException e) {
@@ -450,10 +453,13 @@ public class AetherChunkProvider implements IChunkProvider {
 		} catch(IOException e) {
 			throw new RuntimeException(String.format("Failed to create Aether save directory '%s'", aether_save_dir_path), e);
 		}
+
 		try {
 			Files.createSymbolicLink(cauldron_erroneous_save_dir_path, aether_save_dir_path.getFileName());
 		} catch(Exception e) {
 			throw new RuntimeException(String.format("Failed to create a symbolic link with path '%s'", cauldron_erroneous_save_dir_path), e);
 		}
+
+		return true;
 	}
 }
