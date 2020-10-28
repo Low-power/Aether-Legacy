@@ -21,7 +21,7 @@ public class AetherWorldProvider extends WorldProvider {
 
 	private boolean eternalDay;
 	private boolean shouldCycleCatchup;
-	private long aetherTime = 6000;
+	private long aether_time = 6000;
 
 	public AetherWorldProvider() {
 		super();
@@ -39,8 +39,11 @@ public class AetherWorldProvider extends WorldProvider {
 				AetherData data = AetherData.getInstance(this.worldObj);
 				if (data.isEternalDay()) {
 					if (!data.isShouldCycleCatchup()) {
-						if (data.getAetherTime() != (worldTime % 24000L) && data.getAetherTime() != (worldTime + 1 % 24000L) && data.getAetherTime() != (worldTime - 1 % 24000L)) {
-							data.setAetherTime((data.getAetherTime() - 1) % 24000L);
+						long aether_time = data.getAetherTime();
+						if(aether_time != (worldTime % 24000L) && aether_time != ((worldTime + 1) % 24000L) && aether_time != ((worldTime - 1) % 24000L)) {
+							if(aether_time < 1) aether_time = 24000;
+							aether_time -= 1;
+							data.setAetherTime(aether_time % 24000L);
 						} else {
 							data.setShouldCycleCatchup(true);
 						}
@@ -48,16 +51,16 @@ public class AetherWorldProvider extends WorldProvider {
 						data.setAetherTime(worldTime);
 					}
 
-					this.aetherTime = data.getAetherTime();
-					AetherNetwork.sendToAll(new TimePacket(this.aetherTime));
-					data.setAetherTime(this.aetherTime);
+					this.aether_time = data.getAetherTime();
+					AetherNetwork.sendToAll(new TimePacket(this.aether_time));
+					data.setAetherTime(this.aether_time);
 				} else {
 					data.setAetherTime(6000);
 				}
 			}
 		}
 
-		int i = (int)(AetherConfig.eternalDayDisabled() ? worldTime : this.aetherTime % 24000L);
+		int i = (int)(AetherConfig.eternalDayDisabled() ? worldTime : this.aether_time % 24000L);
 
 		float f = ((float)i + partialTicks) / 24000F - 0.25F;
 
@@ -86,11 +89,11 @@ public class AetherWorldProvider extends WorldProvider {
 	}
 
 	public void setAetherTime(long time) {
-		this.aetherTime = time;
+		this.aether_time = time;
 	}
 
 	public long getAetherTime() {
-		return this.aetherTime;
+		return this.aether_time;
 	}
 
 	@Override
