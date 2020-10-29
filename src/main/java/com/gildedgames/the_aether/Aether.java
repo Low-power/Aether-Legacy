@@ -1,6 +1,7 @@
 package com.gildedgames.the_aether;
 
 import com.gildedgames.the_aether.events.AetherEntityEvents;
+import com.gildedgames.the_aether.events.CauldronOnlyEventsListener;
 import com.gildedgames.the_aether.blocks.BlocksAether;
 import com.gildedgames.the_aether.entities.AetherEntities;
 import com.gildedgames.the_aether.items.AetherItems;
@@ -13,6 +14,7 @@ import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
 import com.gildedgames.the_aether.tileentity.AetherTileEntities;
 import com.gildedgames.the_aether.world.AetherWorld;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -30,6 +32,8 @@ public class Aether {
 
 	@SidedProxy(clientSide = "com.gildedgames.the_aether.client.ClientProxy", serverSide = "com.gildedgames.the_aether.CommonProxy")
 	public static CommonProxy proxy;
+
+	private static Boolean cauldron;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -55,6 +59,10 @@ public class Aether {
 		CommonProxy.registerEvent(new PlayerAetherEvents());
 		CommonProxy.registerEvent(new AetherEventHandler());
 		CommonProxy.registerEvent(new AetherEntityEvents());
+
+		if(is_running_on_cauldron()) {
+			MinecraftForge.EVENT_BUS.register(new CauldronOnlyEventsListener());
+		}
 	}
 
 	public static ResourceLocation locate(String location) {
@@ -67,5 +75,15 @@ public class Aether {
 
 	public static String modAddress() {
 		return MOD_ID + ":";
+	}
+
+	public static boolean is_running_on_cauldron() {
+		if(cauldron == null) try {
+			Aether.class.getClassLoader().loadClass("net.minecraftforge.cauldron.CauldronUtils");
+			cauldron = Boolean.valueOf(true);
+		} catch(ClassNotFoundException e) {
+			cauldron = Boolean.valueOf(false);
+		}
+		return cauldron.booleanValue();
 	}
 }

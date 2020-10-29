@@ -8,6 +8,7 @@ import com.gildedgames.the_aether.world.gen.MapGenLargeColdAercloud;
 import com.gildedgames.the_aether.world.gen.MapGenQuicksoil;
 import com.gildedgames.the_aether.world.gen.SilverDungeonStructure;
 import com.gildedgames.the_aether.AetherConfig;
+import com.gildedgames.the_aether.Aether;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -407,11 +408,7 @@ public class AetherChunkProvider implements IChunkProvider {
 	}
 
 	private boolean check_cauldron_save_directory_bug() {
-		try {
-			getClass().getClassLoader().loadClass("net.minecraftforge.cauldron.CauldronUtils");
-		} catch(ClassNotFoundException e) {
-			return false;
-		}
+		if(!Aether.is_running_on_cauldron()) return false;
 
 		Logger log = LogManager.getLogger();
 		File save_dir = world.getSaveHandler().getWorldDirectory();
