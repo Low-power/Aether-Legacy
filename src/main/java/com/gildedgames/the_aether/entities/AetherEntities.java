@@ -21,7 +21,7 @@ import com.gildedgames.the_aether.entities.hostile.Cockatrice;
 import com.gildedgames.the_aether.entities.hostile.Mimic;
 import com.gildedgames.the_aether.entities.hostile.EntitySentry;
 import com.gildedgames.the_aether.entities.hostile.EntityWhirlwind;
-import com.gildedgames.the_aether.entities.hostile.EntityZephyr;
+import com.gildedgames.the_aether.entities.hostile.Zephyr;
 import com.gildedgames.the_aether.entities.passive.mountable.Aerbunny;
 import com.gildedgames.the_aether.entities.passive.mountable.FlyingCow;
 import com.gildedgames.the_aether.entities.passive.mountable.Moa;
@@ -65,7 +65,7 @@ public class AetherEntities {
 		register(Swet.class, "swet", 6, 0xcdda4f, 0x4fb1da);
 		register(Cockatrice.class, "cockatrice", 7, 0x6cb15c, 0x6c579d);
 		register(EntitySentry.class, "sentry", 8, 0x838c9a, 0x2561ba);
-		register(EntityZephyr.class, "zephyr", 9, 0xdfdfdf, 0x99cfe8);
+		register(Zephyr.class, "zephyr", 9, 0xdfdfdf, 0x99cfe8);
 		register(AechorPlant.class, "aechor_plant", 10, 0x076178, 0x4bc69e);
 		register(Mimic.class, "mimic", 11, 0xb18132, 0x605a4e);
 

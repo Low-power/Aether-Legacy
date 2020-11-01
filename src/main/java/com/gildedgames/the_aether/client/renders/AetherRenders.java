@@ -47,7 +47,7 @@ import com.gildedgames.the_aether.entities.hostile.Cockatrice;
 import com.gildedgames.the_aether.entities.hostile.Mimic;
 import com.gildedgames.the_aether.entities.hostile.EntitySentry;
 import com.gildedgames.the_aether.entities.hostile.EntityWhirlwind;
-import com.gildedgames.the_aether.entities.hostile.EntityZephyr;
+import com.gildedgames.the_aether.entities.hostile.Zephyr;
 import com.gildedgames.the_aether.entities.passive.mountable.Aerbunny;
 import com.gildedgames.the_aether.entities.passive.mountable.FlyingCow;
 import com.gildedgames.the_aether.entities.passive.mountable.Moa;
@@ -95,7 +95,7 @@ public class AetherRenders {
 		register(EntitySentry.class, new SentryRenderer());
 		register(AechorPlant.class, new AechorPlantRenderer());
 		register(EntityFireMinion.class, new FireMinionRenderer());
-		register(EntityZephyr.class, new ZephyrRenderer());
+		register(Zephyr.class, new ZephyrRenderer());
 		register(Valkyrie.class, new ValkyrieRenderer());
 		register(Cockatrice.class, new CockatriceRenderer());
 

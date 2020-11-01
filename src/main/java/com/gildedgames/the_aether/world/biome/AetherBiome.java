@@ -4,7 +4,7 @@ import com.gildedgames.the_aether.AetherConfig;
 import com.gildedgames.the_aether.entities.hostile.AechorPlant;
 import com.gildedgames.the_aether.entities.hostile.Cockatrice;
 import com.gildedgames.the_aether.entities.hostile.EntityWhirlwind;
-import com.gildedgames.the_aether.entities.hostile.EntityZephyr;
+import com.gildedgames.the_aether.entities.hostile.Zephyr;
 import com.gildedgames.the_aether.entities.passive.EntityAerwhale;
 import com.gildedgames.the_aether.entities.passive.Sheepuff;
 import com.gildedgames.the_aether.blocks.BlocksAether;
@@ -62,7 +62,7 @@ public class AetherBiome extends BiomeGenBase {
 	private void add_monster_entry(ArrayList<SpawnListEntry> list) {
 		list.add(new SpawnListEntry(EntityWhirlwind.class, 8, 2, 2));
 		list.add(new SpawnListEntry(Cockatrice.class, 4, 4, 4));
-		list.add(new SpawnListEntry(EntityZephyr.class, 2, 1, 1));
+		list.add(new SpawnListEntry(Zephyr.class, 2, 1, 1));
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.AetherConfig;
 import com.gildedgames.the_aether.client.models.entities.OldZephyrModel;
 import com.gildedgames.the_aether.client.models.entities.ZephyrModel;
-import com.gildedgames.the_aether.entities.hostile.EntityZephyr;
+import com.gildedgames.the_aether.entities.hostile.Zephyr;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,7 +23,7 @@ public class ZephyrRenderer extends RenderLiving {
 		super(AetherConfig.should_use_legacy_mobs_visuals() ? new OldZephyrModel() : new ZephyrModel(), 0.5F);
 	}
 
-	protected void renderZephyrMovement(EntityZephyr zephyr, float partialTickTime) {
+	protected void renderZephyrMovement(Zephyr zephyr, float partialTickTime) {
 		float f1 = ((float) zephyr.prevAttackCounter + (float) (zephyr.attackCounter - zephyr.prevAttackCounter) * partialTickTime) / 20F;
 
 		if (f1 < 0F) {
@@ -44,7 +44,7 @@ public class ZephyrRenderer extends RenderLiving {
 		}
 	}
 
-	protected int renderLayers(EntityZephyr zephyr, int pass, float particleTicks) {
+	protected int renderLayers(Zephyr zephyr, int pass, float particleTicks) {
 		if(zephyr.isInvisible()) return 0;
 
 		if(pass == 1) {
@@ -66,12 +66,12 @@ public class ZephyrRenderer extends RenderLiving {
 
 	@Override
 	protected int shouldRenderPass(EntityLivingBase entity, int pass, float particleTicks) {
-		return this.renderLayers((EntityZephyr)entity, pass, particleTicks);
+		return this.renderLayers((Zephyr)entity, pass, particleTicks);
 	}
 
 	@Override
 	protected void preRenderCallback(EntityLivingBase zephyr, float partialTickTime) {
-		this.renderZephyrMovement((EntityZephyr)zephyr, partialTickTime);
+		this.renderZephyrMovement((Zephyr)zephyr, partialTickTime);
 	}
 
 	@Override
