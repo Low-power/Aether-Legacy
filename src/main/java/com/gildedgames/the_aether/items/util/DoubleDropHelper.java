@@ -52,6 +52,10 @@ public class DoubleDropHelper {
 				items.add(silk_touched_item_stack);
 				ForgeEventFactory.fireBlockHarvesting(items, player.worldObj, block, x, y, z, meta, 0, 1f, true, player);
 				for (ItemStack is : items) {
+					if(should_double_drop && silk_touch_level > 1) {
+						// Not possible without additional mod
+						is.setItemDamage(block.damageDropped(0));
+					}
 					drop_item(player.worldObj, x, y, z, is);
 				}
 

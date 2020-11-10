@@ -51,7 +51,13 @@ public class AetherLog extends BlockLog {
 				boolean should_double_drop = meta == 0 && item instanceof SkyrootTool;
 				int fortune_level = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);
 				if(silk_touched_items != null) {
-					for(ItemStack is : silk_touched_items) dropBlockAsItem(world, x, y, z, is);
+					for(ItemStack is : silk_touched_items) {
+						if(should_double_drop && silk_touch_level > 1) {
+							// Not possible without additional mod
+							is.setItemDamage(1);
+						}
+						dropBlockAsItem(world, x, y, z, is);
+					}
 					if(silk_touch_level < 2) return;
 					if(!should_double_drop) return;
 					should_double_drop = false;
