@@ -215,7 +215,7 @@ public class AetherConfig {
 		return AetherConfig.aether_world_id.getInt();
 	}
 
-	public static int getAetherBiomeID() {
+	public static int get_aether_biome_id() {
 		return AetherConfig.aether_biome_id.getInt();
 	}
 

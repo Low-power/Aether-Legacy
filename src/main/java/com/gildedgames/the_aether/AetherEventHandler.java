@@ -161,6 +161,9 @@ public class AetherEventHandler {
 			case 4:
 				x--;
 				break;
+			case 5:
+				x++;
+				break;
 		}
 
 		EntityPlayer player = event.entityPlayer;
@@ -185,16 +188,13 @@ public class AetherEventHandler {
 			if (player.capabilities.isCreativeMode && player.isSneaking()) {
 				return;
 			}
-
 			if (world.isAirBlock(x, y, z)) {
 				world.setBlock(x, y, z, BlocksAether.aerogel);
-
 				if (!player.capabilities.isCreativeMode) {
 					event.result = new ItemStack(Items.bucket);
 				}
+				event.setResult(Event.Result.ALLOW);
 			}
-
-			event.setResult(Event.Result.ALLOW);
 		}
 	}
 

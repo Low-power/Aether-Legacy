@@ -25,7 +25,7 @@ public class AetherBiome extends BiomeGenBase {
 
 	@SuppressWarnings("unchecked")
 	public AetherBiome() {
-		super(AetherConfig.getAetherBiomeID());
+		super(AetherConfig.get_aether_biome_id());
 
 		this.spawnableCaveCreatureList.clear();
 		this.spawnableCreatureList.clear();
@@ -73,7 +73,7 @@ public class AetherBiome extends BiomeGenBase {
 
 	@Override
 	public int getWaterColorMultiplier() {
-		return 16777215;
+		return 0xffffff;
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class AetherBiome extends BiomeGenBase {
 
 	@Override
 	public WorldGenAbstractTree func_150567_a(Random rand) {
-		return (WorldGenAbstractTree) (rand.nextInt(20) == 0 ? new AetherGenOakTree() : new AetherGenSkyrootTree(false));
+		return rand.nextInt(20) == 0 ? new AetherGenOakTree() : new AetherGenSkyrootTree(false);
 	}
 
 }
