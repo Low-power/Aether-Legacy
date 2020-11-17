@@ -102,6 +102,8 @@ public class AetherEntityEvents {
 				player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), effect));
 			}
 			FMLCommonHandler.instance().firePlayerChangedDimensionEvent(player, previous_world.provider.dimensionId, new_world.provider.dimensionId);
+			player.addExperienceLevel(0);
+			player.setPlayerHealthUpdated();
 		}
 	}
 
