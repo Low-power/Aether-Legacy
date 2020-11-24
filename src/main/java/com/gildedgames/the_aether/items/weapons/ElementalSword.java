@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.items.weapons;
 
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;

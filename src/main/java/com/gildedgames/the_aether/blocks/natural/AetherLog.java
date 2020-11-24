@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.blocks.natural;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.tools.*;
 import com.gildedgames.the_aether.items.util.AetherToolType;
@@ -43,7 +43,7 @@ public class AetherLog extends BlockLog {
 					if (silk_touched_item_stack != null) {
 						silk_touched_items.add(silk_touched_item_stack);
 					}
-					ForgeEventFactory.fireBlockHarvesting(silk_touched_items, world, this, x, y, z, meta, 0, 1.0f, true, player);
+					ForgeEventFactory.fireBlockHarvesting(silk_touched_items, world, this, x, y, z, meta, 0, 1f, true, player);
 				}
 			}
 			Item item = stack.getItem();
@@ -63,7 +63,7 @@ public class AetherLog extends BlockLog {
 					should_double_drop = false;
 					fortune_level = 0;
 				} else if (item instanceof ZaniteTool || item instanceof GravititeTool || item instanceof ValkyrieTool || item == Items.diamond_axe) {
-					if (this == BlocksAether.golden_oak_log) {
+					if(this == AetherBlocks.golden_oak_log) {
 						dropBlockAsItem(world, x, y, z, new ItemStack(AetherItems.golden_amber, 1 + world.rand.nextInt(2)));
 					}
 					//should_double_drop = false;	// Not needed
@@ -84,7 +84,7 @@ public class AetherLog extends BlockLog {
 
 	@Override
 	public Item getItemDropped(int meta, Random random, int fortune) {
-		return Item.getItemFromBlock(BlocksAether.skyroot_log);
+		return Item.getItemFromBlock(AetherBlocks.skyroot_log);
 	}
 
 	@Override
@@ -95,13 +95,8 @@ public class AetherLog extends BlockLog {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister registry) {
-		this.field_150167_a = new IIcon[1];
-		this.field_150166_b = new IIcon[1];
-
-		for (int i = 0; i < this.field_150167_a.length; ++i) {
-			this.field_150167_a[i] = registry.registerIcon(this.getTextureName() + "_side");
-			this.field_150166_b[i] = registry.registerIcon(this.getTextureName() + "_top");
-		}
+		this.field_150167_a = new IIcon[] { registry.registerIcon(getTextureName() + "_side") };
+		this.field_150166_b = new IIcon[] { registry.registerIcon(getTextureName() + "_top") };
 	}
 
 }

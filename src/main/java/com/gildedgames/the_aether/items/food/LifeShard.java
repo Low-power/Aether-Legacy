@@ -3,7 +3,7 @@ package com.gildedgames.the_aether.items.food;
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.player.PlayerAether;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
@@ -24,11 +24,11 @@ public class LifeShard extends Item {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player) {
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		PlayerAether playerAether = PlayerAether.get(player);
 		ItemStack heldItem = player.getHeldItem();
 
-		if (worldIn.isRemote) {
+		if (world.isRemote) {
 			return heldItem;
 		}
 

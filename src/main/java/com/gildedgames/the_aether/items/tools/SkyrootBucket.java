@@ -6,7 +6,7 @@ import com.gildedgames.the_aether.entities.effects.InebriationPotion;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.util.SkyrootBucketType;
 import com.gildedgames.the_aether.player.PlayerAether;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.material.Material;
@@ -93,117 +93,112 @@ public class SkyrootBucket extends Item {
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack) {
 		int meta = itemstack.getItemDamage();
-
-		return this.getUnlocalizedName() + "_" + SkyrootBucketType.getType(meta).toString();
+		return getUnlocalizedName() + "_" + SkyrootBucketType.getType(meta).toString();
 	}
 
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		if(world.isRemote) return false;
-		MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world, player, true);
-		if(world.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ) != Blocks.cauldron) return false;
+		MovingObjectPosition moving_obj_pos = this.getMovingObjectPositionFromPlayer(world, player, true);
+		if(world.getBlock(moving_obj_pos.blockX, moving_obj_pos.blockY, moving_obj_pos.blockZ) != Blocks.cauldron) return false;
 		int meta = stack.getItemDamage();
-		BlockCauldron cauldron = (BlockCauldron)world.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-		int waterLevel = BlockCauldron.func_150027_b(world.getBlockMetadata(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ));
+		BlockCauldron cauldron = (BlockCauldron)world.getBlock(moving_obj_pos.blockX, moving_obj_pos.blockY, moving_obj_pos.blockZ);
+		int waterLevel = BlockCauldron.func_150027_b(world.getBlockMetadata(moving_obj_pos.blockX, moving_obj_pos.blockY, moving_obj_pos.blockZ));
 		if (SkyrootBucketType.getType(meta) == SkyrootBucketType.Water) {
 			if (waterLevel < 3) {
 				if (!player.capabilities.isCreativeMode) {
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(AetherItems.skyroot_bucket, 1, SkyrootBucketType.Empty.meta));
 				}
-				cauldron.func_150024_a(world, movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ, 3);
+				cauldron.func_150024_a(world, moving_obj_pos.blockX, moving_obj_pos.blockY, moving_obj_pos.blockZ, 3);
 			}
 		}
 		return true;
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack heldItem, World world, EntityPlayer player) {
-		int meta = heldItem.getItemDamage();
+	public ItemStack onItemRightClick(ItemStack held_item, World world, EntityPlayer player) {
+		int meta = held_item.getItemDamage();
 
 		/* Remedy and Poison Bucket checker */
 		if (SkyrootBucketType.getType(meta) != SkyrootBucketType.Water && SkyrootBucketType.getType(meta) != SkyrootBucketType.Empty) {
-			player.setItemInUse(heldItem, this.getMaxItemUseDuration(heldItem));
-
-			return heldItem;
+			player.setItemInUse(held_item, getMaxItemUseDuration(held_item));
+			return held_item;
 		}
 
 		boolean is_empty = SkyrootBucketType.getType(meta) == SkyrootBucketType.Empty;
-		MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world, player, is_empty);
+		MovingObjectPosition moving_obj_pos = this.getMovingObjectPositionFromPlayer(world, player, is_empty);
+		if(moving_obj_pos == null) return held_item;
 
-		if (movingobjectposition == null) return heldItem;
-
-		FillBucketEvent event = new FillBucketEvent(player, heldItem, world, movingobjectposition);
-		if (MinecraftForge.EVENT_BUS.post(event)) return heldItem;
-
+		FillBucketEvent event = new FillBucketEvent(player, held_item, world, moving_obj_pos);
+		if (MinecraftForge.EVENT_BUS.post(event)) return held_item;
 		if (event.getResult() == Event.Result.ALLOW) {
-			if (player.capabilities.isCreativeMode) return heldItem;
-			if (--heldItem.stackSize <= 0) return event.result;
+			if (player.capabilities.isCreativeMode) return held_item;
+			if (--held_item.stackSize <= 0) return event.result;
 
 			if (!player.inventory.addItemStackToInventory(event.result)) {
 				player.dropPlayerItemWithRandomChoice(event.result, false);
 			}
 
-			return heldItem;
+			return held_item;
 		}
-		if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-			int i = movingobjectposition.blockX;
-			int j = movingobjectposition.blockY;
-			int k = movingobjectposition.blockZ;
+		if (moving_obj_pos.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+			int x = moving_obj_pos.blockX;
+			int y = moving_obj_pos.blockY;
+			int z = moving_obj_pos.blockZ;
 
-			if (!world.canMineBlock(player, i, j, k)) return heldItem;
+			if(!world.canMineBlock(player, x, y, z)) return held_item;
 
 			if (is_empty) {
-				if (!player.canPlayerEdit(i, j, k, movingobjectposition.sideHit, heldItem)) {
-					return heldItem;
+				if (!player.canPlayerEdit(x, y, z, moving_obj_pos.sideHit, held_item)) {
+					return held_item;
 				}
 
-				Material material = world.getBlock(i, j, k).getMaterial();
-				int l = world.getBlockMetadata(i, j, k);
-
-				if (material == Material.water && l == 0) {
-					world.setBlockToAir(i, j, k);
-					return this.fillBucket(heldItem, player, AetherItems.skyroot_bucket);
+				Material material = world.getBlock(x, y, z).getMaterial();
+				int block_metadata = world.getBlockMetadata(x, y, z);
+				if(material == Material.water && block_metadata == 0) {
+					world.setBlockToAir(x, y, z);
+					return fill_bucket(held_item, player, AetherItems.skyroot_bucket);
 				}
 			} else {
 				if (SkyrootBucketType.getType(meta) == SkyrootBucketType.Empty) {
 					return new ItemStack(AetherItems.skyroot_bucket);
 				}
 
-				switch(movingobjectposition.sideHit) {
+				switch(moving_obj_pos.sideHit) {
 					case 0:
-						j--;
+						y--;
 						break;
 					case 1:
-						j++;
+						y++;
 						break;
 					case 2:
-						k--;
+						z--;
 						break;
 					case 3:
-						k++;
+						z++;
 						break;
 					case 4:
-						i--;
+						x--;
 						break;
 					case 5:
-						i++;
+						x++;
 						break;
 				}
 
-				if (!player.canPlayerEdit(i, j, k, movingobjectposition.sideHit, heldItem)) {
-					return heldItem;
+				if(!player.canPlayerEdit(x, y, z, moving_obj_pos.sideHit, held_item)) {
+					return held_item;
 				}
 
-				if (this.tryPlaceContainedLiquid(player, world, heldItem, i, j, k) && !player.capabilities.isCreativeMode) {
+				if(try_place_liquid(player, world, held_item, x, y, z) && !player.capabilities.isCreativeMode) {
 					return new ItemStack(AetherItems.skyroot_bucket);
 				}
 			}
 		}
 
-		return heldItem;
+		return held_item;
 	}
 
-	private ItemStack fillBucket(ItemStack emptyBuckets, EntityPlayer player, Item fullBucket) {
+	private ItemStack fill_bucket(ItemStack emptyBuckets, EntityPlayer player, Item fullBucket) {
 		if (player.capabilities.isCreativeMode) {
 			return emptyBuckets;
 		} else {
@@ -222,8 +217,7 @@ public class SkyrootBucket extends Item {
 		}
 	}
 
-
-	public boolean tryPlaceContainedLiquid(EntityPlayer player, World world, ItemStack stack, int x, int y, int z) {
+	private boolean try_place_liquid(EntityPlayer player, World world, ItemStack stack, int x, int y, int z) {
 		if (SkyrootBucketType.getType(stack.getItemDamage()) != SkyrootBucketType.Water) {
 			return false;
 		}
@@ -238,7 +232,7 @@ public class SkyrootBucket extends Item {
 				world.playSoundEffect((double) x, (double) y, (double) z, "random.fizz", 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
 
 				for (int l = 0; l < 8; ++l) {
-					world.spawnParticle("largesmoke", (double) x + Math.random(), (double) y + Math.random(), (double) z + Math.random(), 0.0D, 0.0D, 0.0D);
+					world.spawnParticle("largesmoke", (double)x + Math.random(), (double)y + Math.random(), (double)z + Math.random(), 0D, 0D, 0D);
 				}
 			} else {
 				if (!world.isRemote && is_not_solid && !material.isLiquid()) {

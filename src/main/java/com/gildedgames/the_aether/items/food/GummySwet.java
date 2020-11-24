@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.items.food;
 
 import com.gildedgames.the_aether.Aether;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,12 +1,12 @@
 package com.gildedgames.the_aether.world;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.world.dungeon.BronzeDungeon;
 import com.gildedgames.the_aether.world.dungeon.util.AetherDungeon;
+import com.gildedgames.the_aether.world.gen.QuicksoilStructure;
 import com.gildedgames.the_aether.world.gen.GoldenDungeonStructure;
-import com.gildedgames.the_aether.world.gen.MapGenLargeColdAercloud;
-import com.gildedgames.the_aether.world.gen.MapGenQuicksoil;
 import com.gildedgames.the_aether.world.gen.SilverDungeonStructure;
+import com.gildedgames.the_aether.world.gen.LargeColdAercloudStructure;
 import com.gildedgames.the_aether.AetherConfig;
 import com.gildedgames.the_aether.Aether;
 import net.minecraft.block.Block;
@@ -57,24 +57,15 @@ public class AetherChunkProvider implements IChunkProvider {
 
 	protected AetherDungeon dungeon_bronze = new BronzeDungeon();
 
-	private MapGenQuicksoil quicksoilGen = new MapGenQuicksoil();
-
-	private SilverDungeonStructure silverDungeonStructure = new SilverDungeonStructure();
-
-	private GoldenDungeonStructure goldenDungeonStructure = new GoldenDungeonStructure();
-
-	private MapGenLargeColdAercloud largeColdAercloudStructure = new MapGenLargeColdAercloud();
+	private QuicksoilStructure quicksoil_struct = new QuicksoilStructure();
+	private SilverDungeonStructure silver_dungeon_struct = new SilverDungeonStructure();
+	private GoldenDungeonStructure golden_dungeon_struct = new GoldenDungeonStructure();
+	private LargeColdAercloudStructure large_cold_aercould_struct = new LargeColdAercloudStructure();
 
 	public AetherChunkProvider(World world, long seed) {
 		this.world = world;
 
 		this.rand = new Random(seed);
-/*
-		this.pnr = new double[256];
-		this.ar = new double[256];
-		this.br = new double[256];
-		this.r5 = new double[256];
-*/
 		this.noisegen1 = new NoiseGeneratorOctaves(this.rand, 16);
 		this.noisegen2 = new NoiseGeneratorOctaves(this.rand, 16);
 		this.perlinnoisegen1 = new NoiseGeneratorOctaves(this.rand, 8);
@@ -116,13 +107,7 @@ public class AetherChunkProvider implements IChunkProvider {
 							double d16 = (d11 - d10) * 0.125D;
 
 							for (int k2 = 0; k2 < 8; k2++) {
-								Block filler = Blocks.air;
-
-								if (d15 > 0.0D) {
-									filler = BlocksAether.holystone;
-								}
-
-								blocks[j2] = filler;
+								blocks[j2] = d15 > 0D ? AetherBlocks.holystone : Blocks.air;
 								j2 += 128;
 								d15 += d16;
 							}
@@ -154,22 +139,18 @@ public class AetherChunkProvider implements IChunkProvider {
 			for (int l = 0; l < 16; l++) {
 				int i1 = (int)(this.r5[k + l * 16] / 3D + 3D + this.rand.nextDouble() * 0.25D);
 				int j1 = -1;
-
-				Block top = BlocksAether.aether_grass;
-				Block filler = BlocksAether.aether_dirt;
-
+				Block top = AetherBlocks.aether_grass;
+				Block filler = AetherBlocks.aether_dirt;
 				for (int k1 = 127; k1 >= 0; k1--) {
 					int l1 = (l * 16 + k) * 128 + k1;
-
 					Block block = blocks[l1];
-
 					if (block == Blocks.air) {
 						j1 = -1;
-					} else if (block == BlocksAether.holystone) {
+					} else if(block == AetherBlocks.holystone) {
 						if (j1 == -1) {
 							if (i1 <= 0) {
 								top = Blocks.air;
-								filler = BlocksAether.holystone;
+								filler = AetherBlocks.holystone;
 							}
 
 							j1 = i1;
@@ -241,12 +222,12 @@ public class AetherChunkProvider implements IChunkProvider {
 					d8 -= 8D;
 
 					if (j3 > 33 - 32) {
-						double d13 = (float) (j3 - (33 - 32)) / ((float) 32 - 1.0F);
+						double d13 = (float) (j3 - (33 - 32)) / ((float) 32 - 1F);
 						d8 = d8 * (1D - d13) + -30D * d13;
 					}
 
 					if (j3 < 8) {
-						double d14 = (float) (8 - j3) / ((float) 8 - 1.0F);
+						double d14 = (float) (8 - j3) / ((float) 8 - 1F);
 						d8 = d8 * (1D - d14) + -30D * d14;
 					}
 
@@ -265,19 +246,18 @@ public class AetherChunkProvider implements IChunkProvider {
 	@Override
 	public Chunk provideChunk(int x, int z) {
 		this.rand.setSeed((long) x * 341873128712L + (long) z * 132897987541L);
-		Block[] ablock = new Block[32768];
 
-		this.setBlocksInChunk(x, z, ablock);
-		this.buildSurfaces(x, z, ablock);
+		Block[] blocks = new Block[32768];
 
-		this.quicksoilGen.func_151539_a(this, this.world, x, z, ablock);
+		setBlocksInChunk(x, z, blocks);
+		buildSurfaces(x, z, blocks);
 
-		this.largeColdAercloudStructure.func_151539_a(this, this.world, x, z, ablock);
+		this.quicksoil_struct.func_151539_a(this, this.world, x, z, blocks);
+		this.large_cold_aercould_struct.func_151539_a(this, this.world, x, z, blocks);
+		this.silver_dungeon_struct.func_151539_a(this, this.world, x, z, blocks);
+		this.golden_dungeon_struct.func_151539_a(this, this.world, x, z, blocks);
 
-		this.silverDungeonStructure.func_151539_a(this, this.world, x, z, ablock);
-		this.goldenDungeonStructure.func_151539_a(this, this.world, x, z, ablock);
-
-		Chunk chunk = new Chunk(this.world, ablock, x, z);
+		Chunk chunk = new Chunk(this.world, blocks, x, z);
 		chunk.generateSkylightMap();
 
 		return chunk;
@@ -291,14 +271,14 @@ public class AetherChunkProvider implements IChunkProvider {
 
 	@Override
 	public void recreateStructures(int x, int z) {
-		this.largeColdAercloudStructure.func_151539_a(this, this.world, x, z, (Block[]) null);
-		this.silverDungeonStructure.func_151539_a(this, this.world, x, z, (Block[]) null);
-		this.goldenDungeonStructure.func_151539_a(this, this.world, x, z, (Block[]) null);
+		this.large_cold_aercould_struct.func_151539_a(this, this.world, x, z, (Block[]) null);
+		this.silver_dungeon_struct.func_151539_a(this, this.world, x, z, (Block[]) null);
+		this.golden_dungeon_struct.func_151539_a(this, this.world, x, z, (Block[]) null);
 	}
 
 	@Override
-	public ChunkPosition func_147416_a(World worldIn, String structureName, int x, int y, int z) //getNearestStructurePos
-	{
+	// getNearestStructurePos
+	public ChunkPosition func_147416_a(World world, String structureName, int x, int y, int z) {
 		return null;
 	}
 
@@ -314,9 +294,9 @@ public class AetherChunkProvider implements IChunkProvider {
 		long l = this.rand.nextLong() / 2L * 2L + 1L;
 		this.rand.setSeed((long) x * k + (long) z * l ^ this.world.getSeed());
 
-		this.largeColdAercloudStructure.generateStructuresInChunk(this.world, this.rand, chunkX, chunkZ);
-		this.silverDungeonStructure.generateStructuresInChunk(this.world, this.rand, chunkX, chunkZ);
-		this.goldenDungeonStructure.generateStructuresInChunk(this.world, this.rand, chunkX, chunkZ);
+		this.large_cold_aercould_struct.generateStructuresInChunk(this.world, this.rand, chunkX, chunkZ);
+		this.silver_dungeon_struct.generateStructuresInChunk(this.world, this.rand, chunkX, chunkZ);
+		this.golden_dungeon_struct.generateStructuresInChunk(this.world, this.rand, chunkX, chunkZ);
 
 		biome.decorate(this.world, this.rand, x, z);
 

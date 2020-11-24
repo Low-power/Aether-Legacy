@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.entities.hostile;
 
 import com.gildedgames.the_aether.entities.projectile.ZephyrSnowballEntity;
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,9 +27,9 @@ public class Zephyr extends EntityFlying implements IMob {
 	public Zephyr(World world) {
 		super(world);
 
-		this.setSize(4F, 4F);
+		setSize(4F, 4F);
 		this.attackCounter = 0;
-		this.sound_pitch = (this.getRNG().nextFloat() - this.getRNG().nextFloat()) * 0.2F + 1F;
+		this.sound_pitch = (getRNG().nextFloat() - getRNG().nextFloat()) * 0.2F + 1F;
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public class Zephyr extends EntityFlying implements IMob {
 		int x = MathHelper.floor_double(this.posX);
 		int y = MathHelper.floor_double(this.boundingBox.minY);
 		int z = MathHelper.floor_double(this.posZ);
-		if(this.worldObj.getBlock(x, y - 1, z) != BlocksAether.aether_grass) return false;
-		return this.rand.nextInt(85) == 0 && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).size() == 0 && !this.worldObj.isAnyLiquid(this.boundingBox) && this.worldObj.getBlockLightValue(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.boundingBox.minY), MathHelper.floor_double(this.posZ)) > 8 && super.getCanSpawnHere();
+		if(this.worldObj.getBlock(x, y - 1, z) != AetherBlocks.aether_grass) return false;
+		return this.rand.nextInt(85) == 0 && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty() && !this.worldObj.isAnyLiquid(this.boundingBox) && this.worldObj.getBlockLightValue(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.boundingBox.minY), MathHelper.floor_double(this.posZ)) > 8 && super.getCanSpawnHere();
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class Zephyr extends EntityFlying implements IMob {
 
 	@Override
 	protected void dropFewItems(boolean is_kill_by_player, int loot_modifier) {
-		this.dropItem(Item.getItemFromBlock(BlocksAether.aercloud), 1);
+		dropItem(Item.getItemFromBlock(AetherBlocks.aercloud), 1);
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package com.gildedgames.the_aether.world.gen.components;
 
 import com.gildedgames.the_aether.entities.bosses.sun_spirit.SunSpirit;
-import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.world.gen.AetherStructure;
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
+import com.gildedgames.the_aether.items.AetherItems;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraft.item.ItemStack;
+import net.minecraft.init.Blocks;
 import java.util.Random;
 
 public class GoldenDungeonComponent extends AetherStructure {
@@ -32,7 +32,7 @@ public class GoldenDungeonComponent extends AetherStructure {
 		r = (int) Math.floor((double) r * 0.8D);
 		int wid = (int) Math.sqrt((r * r) / 2);
 
-		this.setBlocks(BlocksAether.locked_hellfire_stone, BlocksAether.locked_light_hellfire_stone, 10);
+		setBlocks(AetherBlocks.locked_hellfire_stone, AetherBlocks.locked_light_hellfire_stone, 10);
 
 		for (int j = 4; j > -5; j--) {
 			int a = wid;
@@ -48,23 +48,19 @@ public class GoldenDungeonComponent extends AetherStructure {
 			for (int i = -a; i <= a; i++) {
 				for (int k = -a; k <= a; k++) {
 					if (j == 4) {
-						this.setBlockWithOffset(i, j, k);
+						setBlockWithOffset(i, j, k);
 					} else if (j > -4) {
 						if (i == a || -i == a || k == a || -k == a) {
-							this.setBlockWithOffset(i, j, k);
+							setBlockWithOffset(i, j, k);
 						} else {
-							this.setBlockWithOffset(i, j, k, Blocks.air, 0);
-
-							if (j == -2 && (i == (a - 1) || -i == (a - 1) || k == (a - 1) || -k == (a - 1)) && (i % 3 == 0 || k % 3 == 0)) {
-
-							}
+							setBlockWithOffset(i, j, k, Blocks.air, 0);
 						}
 					} else {
 						this.setBlockWithOffset(i, j, k);
 
 						if ((i == (a - 2) || -i == (a - 2)) && (k == (a - 2) || -k == (a - 2))) {
-							this.setBlockWithOffset(i, j + 1, k, Blocks.netherrack, 0);
-							this.setBlockWithOffset(i, j + 2, k, Blocks.fire, 0);
+							setBlockWithOffset(i, j + 1, k, Blocks.netherrack, 0);
+							setBlockWithOffset(i, j + 2, k, Blocks.fire, 0);
 						}
 					}
 				}
@@ -88,44 +84,39 @@ public class GoldenDungeonComponent extends AetherStructure {
 						b = -b;
 					}
 
-					if (!BlocksAether.isGood(this.getBlockStateWithOffset(a, j, b))) {
-						this.setBlocks(BlocksAether.holystone, BlocksAether.mossy_holystone, 5);
+					if(!AetherBlocks.is_empty(getBlockStateWithOffset(a, j, b))) {
+						setBlocks(AetherBlocks.holystone, AetherBlocks.mossy_holystone, 5);
 
 						if (j == -3) {
-							this.setBlockWithOffset(a, j, b);
+							setBlockWithOffset(a, j, b);
 						} else if (j < 1) {
 							if (i == wid) {
 								if (k < 2 && k > -2 && j < 0) {
-									this.setBlockWithOffset(a, j, b, Blocks.air, 0);
+									setBlockWithOffset(a, j, b, Blocks.air, 0);
 								} else {
-									this.setBlocks(BlocksAether.locked_hellfire_stone, BlocksAether.locked_light_hellfire_stone, 10);
-
-									this.setBlockWithOffset(a, j, b);
+									setBlocks(AetherBlocks.locked_hellfire_stone, AetherBlocks.locked_light_hellfire_stone, 10);
+									setBlockWithOffset(a, j, b);
 								}
 							} else {
 								if (k == 3 || k == -3) {
-									this.setBlockWithOffset(a, j, b);
+									setBlockWithOffset(a, j, b);
 								} else {
-									this.setBlockWithOffset(a, j, b, Blocks.air, 0);
-
-									if (j == -1 && (k == 2 || k == -2) && (i - wid - 2) % 3 == 0) {
-
-									}
+									setBlockWithOffset(a, j, b, Blocks.air, 0);
 								}
 							}
 						} else if (i == wid) {
-							this.setBlocks(BlocksAether.locked_hellfire_stone, BlocksAether.locked_light_hellfire_stone, 10);
-							this.setBlockWithOffset(a, j, b);
+							setBlocks(AetherBlocks.locked_hellfire_stone, AetherBlocks.locked_light_hellfire_stone, 10);
+							setBlockWithOffset(a, j, b);
 						} else {
-							this.setBlocks(BlocksAether.holystone, BlocksAether.mossy_holystone, 5);
-							this.setBlockWithOffset(a, j, b);
+							setBlocks(AetherBlocks.holystone, AetherBlocks.mossy_holystone, 5);
+							setBlockWithOffset(a, j, b);
 						}
 					}
 
 					a = -a;
 					b = -b;
 
-					this.setBlocks(BlocksAether.locked_hellfire_stone, BlocksAether.locked_light_hellfire_stone, 10);
+					setBlocks(AetherBlocks.locked_hellfire_stone, AetherBlocks.locked_light_hellfire_stone, 10);
 
 					if (i < wid + 6) {
 						if (j == -3) {
@@ -133,27 +124,23 @@ public class GoldenDungeonComponent extends AetherStructure {
 						} else if (j < 1) {
 							if (i == wid) {
 								if (k < 2 && k > -2 && j < 0) {
-									this.setBlockWithOffset(a, j, b);
+									setBlockWithOffset(a, j, b);
 								} else {
-									this.setBlockWithOffset(a, j, b);
+									setBlockWithOffset(a, j, b);
 								}
 							} else if (i == wid + 5) {
-								this.setBlockWithOffset(a, j, b);
+								setBlockWithOffset(a, j, b);
 							} else {
 								if (i == wid + 4 && k == 0 && j == -2) {
-									this.setBlockWithOffset(a, j, b, BlocksAether.treasure_chest, 0);
+									setBlockWithOffset(a, j, b, AetherBlocks.treasure_chest, 0);
 								} else if (k == 3 || k == -3) {
-									this.setBlockWithOffset(a, j, b);
+									setBlockWithOffset(a, j, b);
 								} else {
-									this.setBlockWithOffset(a, j, b, Blocks.air, 0);
-
-									if (j == -1 && (k == 2 || k == -2) && (i - wid - 2) % 3 == 0) {
-
-									}
+									setBlockWithOffset(a, j, b, Blocks.air, 0);
 								}
 							}
 						} else {
-							this.setBlockWithOffset(a, j, b);
+							setBlockWithOffset(a, j, b);
 						}
 					}
 				}

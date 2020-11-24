@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.world;
 
 import com.gildedgames.the_aether.world.util.AetherPortalPosition;
 import com.gildedgames.the_aether.player.PlayerAether;
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,9 +51,9 @@ public class AetherTeleporter extends Teleporter {
 	public boolean placeInExistingPortal(Entity entity, double x, double y, double z, float rotationYaw) {
 		short short1 = 128;
 		double d3 = -1D;
-		int i = 0;
-		int j = 0;
-		int k = 0;
+		int block_x = 0;
+		int block_y = 0;
+		int block_z = 0;
 		int l = MathHelper.floor_double(entity.posX);
 		int i1 = MathHelper.floor_double(entity.posZ);
 		long j1 = ChunkCoordIntPair.chunkXZ2Int(l, i1);
@@ -64,21 +64,19 @@ public class AetherTeleporter extends Teleporter {
 		if (this.destination_coordinate_cache.containsItem(j1)) {
 			AetherPortalPosition portal_pos = (AetherPortalPosition)this.destination_coordinate_cache.getValueByKey(j1);
 			d3 = 0D;
-			i = portal_pos.posX;
-			j = portal_pos.posY;
-			k = portal_pos.posZ;
+			block_x = portal_pos.posX;
+			block_y = portal_pos.posY;
+			block_z = portal_pos.posZ;
 			portal_pos.lastUpdateTime = this.world.getTotalWorldTime();
 			flag = false;
 		} else {
 			for (l3 = l - short1; l3 <= l + short1; ++l3) {
 				double d4 = (double)l3 + 0.5D - entity.posX;
-
 				for (int l1 = i1 - short1; l1 <= i1 + short1; ++l1) {
 					double d5 = (double)l1 + 0.5D - entity.posZ;
-
 					for (int i2 = this.world.getActualHeight() - 1; i2 >= 0; --i2) {
-						if (this.world.getBlock(l3, i2, l1) == BlocksAether.aether_portal) {
-							while (this.world.getBlock(l3, i2 - 1, l1) == BlocksAether.aether_portal) {
+						if(this.world.getBlock(l3, i2, l1) == AetherBlocks.aether_portal) {
+							while(this.world.getBlock(l3, i2 - 1, l1) == AetherBlocks.aether_portal) {
 								--i2;
 							}
 
@@ -87,9 +85,9 @@ public class AetherTeleporter extends Teleporter {
 
 							if (d3 < 0D || d8 < d3) {
 								d3 = d8;
-								i = l3;
-								j = i2;
-								k = l1;
+								block_x = l3;
+								block_y = i2;
+								block_z = l1;
 							}
 						}
 					}
@@ -99,28 +97,24 @@ public class AetherTeleporter extends Teleporter {
 
 		if (d3 >= 0D) {
 			if (flag) {
-				this.destination_coordinate_cache.add(j1, new AetherPortalPosition(i, j, k, this.world.getTotalWorldTime()));
+				this.destination_coordinate_cache.add(j1, new AetherPortalPosition(block_x, block_y, block_z, this.world.getTotalWorldTime()));
 				this.destination_coordinate_keys.add(Long.valueOf(j1));
 			}
 
-			double d11 = (double) i + 0.5D;
-			double d6 = (double) j + 0.5D;
-			d7 = (double) k + 0.5D;
+			double d11 = (double)block_x + 0.5D;
+			double d6 = (double)block_y + 0.5D;
+			d7 = (double)block_z + 0.5D;
 			int i4 = -1;
-
-			if (this.world.getBlock(i - 1, j, k) == BlocksAether.aether_portal) {
+			if(this.world.getBlock(block_x - 1, block_y, block_z) == AetherBlocks.aether_portal) {
 				i4 = 2;
 			}
-
-			if (this.world.getBlock(i + 1, j, k) == BlocksAether.aether_portal) {
+			if(this.world.getBlock(block_x + 1, block_y, block_z) == AetherBlocks.aether_portal) {
 				i4 = 0;
 			}
-
-			if (this.world.getBlock(i, j, k - 1) == BlocksAether.aether_portal) {
+			if(this.world.getBlock(block_x, block_y, block_z - 1) == AetherBlocks.aether_portal) {
 				i4 = 3;
 			}
-
-			if (this.world.getBlock(i, j, k + 1) == BlocksAether.aether_portal) {
+			if(this.world.getBlock(block_x, block_y, block_z + 1) == AetherBlocks.aether_portal) {
 				i4 = 1;
 			}
 
@@ -136,9 +130,8 @@ public class AetherTeleporter extends Teleporter {
 				int i3 = Direction.offsetZ[i4];
 				int j3 = Direction.offsetX[k2];
 				int k3 = Direction.offsetZ[k2];
-				boolean flag1 = !this.world.isAirBlock(i + l2 + j3, j, k + i3 + k3) || !this.world.isAirBlock(i + l2 + j3, j + 1, k + i3 + k3);
-				boolean flag2 = !this.world.isAirBlock(i + l2, j, k + i3) || !this.world.isAirBlock(i + l2, j + 1, k + i3);
-
+				boolean flag1 = !this.world.isAirBlock(block_x + l2 + j3, block_y, block_z + i3 + k3) || !this.world.isAirBlock(block_x + l2 + j3, block_y + 1, block_z + i3 + k3);
+				boolean flag2 = !this.world.isAirBlock(block_x + l2, block_y, block_z + i3) || !this.world.isAirBlock(block_x + l2, block_y + 1, block_z + i3);
 				if (flag1 && flag2) {
 					i4 = Direction.rotateOpposite[i4];
 					k2 = Direction.rotateOpposite[k2];
@@ -146,12 +139,12 @@ public class AetherTeleporter extends Teleporter {
 					i3 = Direction.offsetZ[i4];
 					j3 = Direction.offsetX[k2];
 					k3 = Direction.offsetZ[k2];
-					l3 = i - j3;
+					l3 = block_x - j3;
 					d11 -= (double) j3;
-					int k1 = k - k3;
+					int k1 = block_z - k3;
 					d7 -= (double) k3;
-					flag1 = !this.world.isAirBlock(l3 + l2 + j3, j, k1 + i3 + k3) || !this.world.isAirBlock(l3 + l2 + j3, j + 1, k1 + i3 + k3);
-					flag2 = !this.world.isAirBlock(l3 + l2, j, k1 + i3) || !this.world.isAirBlock(l3 + l2, j + 1, k1 + i3);
+					flag1 = !this.world.isAirBlock(l3 + l2 + j3, block_y, k1 + i3 + k3) || !this.world.isAirBlock(l3 + l2 + j3, block_y + 1, k1 + i3 + k3);
+					flag2 = !this.world.isAirBlock(l3 + l2, block_y, k1 + i3) || !this.world.isAirBlock(l3 + l2, block_y + 1, k1 + i3);
 				}
 
 				float f1 = 0.5F;
@@ -359,8 +352,8 @@ public class AetherTeleporter extends Teleporter {
 						l3 = k5 + (j3 - 1) * l5 + i3 * l2;
 						i4 = j2 + k3;
 						j4 = k2 + (j3 - 1) * l2 - i3 * l5;
-						flag = k3 < 0;
-						this.world.setBlock(l3, i4, j4, flag ? Blocks.glowstone : Blocks.air);
+						boolean is_frame = k3 < 0;
+						this.world.setBlock(l3, i4, j4, is_frame ? Blocks.glowstone : Blocks.air);
 					}
 				}
 			}
@@ -372,8 +365,8 @@ public class AetherTeleporter extends Teleporter {
 					l3 = k5 + (j3 - 1) * l5;
 					i4 = j2 + k3;
 					j4 = k2 + (j3 - 1) * l2;
-					flag = j3 == 0 || j3 == 3 || k3 == -1 || k3 == 3;
-					this.world.setBlock(l3, i4, j4, (Block) (flag ? Blocks.glowstone : BlocksAether.aether_portal), 0, 2);
+					boolean is_frame = j3 == 0 || j3 == 3 || k3 == -1 || k3 == 3;
+					this.world.setBlock(l3, i4, j4, is_frame ? Blocks.glowstone : AetherBlocks.aether_portal, 0, 2);
 				}
 			}
 

@@ -8,12 +8,31 @@ import com.gildedgames.the_aether.network.packets.ShouldCyclePacket;
 import com.gildedgames.the_aether.player.PlayerAether;
 import com.gildedgames.the_aether.world.AetherData;
 import com.gildedgames.the_aether.world.AetherWorldProvider;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
+import com.gildedgames.the_aether.blocks.portal.BlockAetherPortal;
+import com.gildedgames.the_aether.entities.AetherEntities;
+import com.gildedgames.the_aether.entities.bosses.Valkyrie;
+import com.gildedgames.the_aether.entities.passive.mountable.FlyingCow;
+import com.gildedgames.the_aether.items.AetherItems;
+import com.gildedgames.the_aether.items.dungeon.DungeonKey;
+import com.gildedgames.the_aether.items.util.SkyrootBucketType;
+import com.gildedgames.the_aether.items.weapons.SkyrootSword;
+import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.client.Minecraft;
+import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.player.*;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
@@ -32,29 +51,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.player.*;
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import com.gildedgames.the_aether.blocks.portal.BlockAetherPortal;
-import com.gildedgames.the_aether.entities.AetherEntities;
-import com.gildedgames.the_aether.entities.bosses.Valkyrie;
-import com.gildedgames.the_aether.entities.passive.mountable.FlyingCow;
-import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.items.dungeon.DungeonKey;
-import com.gildedgames.the_aether.items.util.SkyrootBucketType;
-import com.gildedgames.the_aether.items.weapons.ItemSkyrootSword;
-import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
-import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraft.world.World;
 import java.util.Random;
 
 public class AetherEventHandler {
@@ -172,7 +171,7 @@ public class AetherEventHandler {
 
 		if((!AetherConfig.activateOnlyWithSkyroot() && item == Items.water_bucket) || (item == AetherItems.skyroot_bucket && stack.getItemDamage() == 1)) {
 			// Water
-			if (((BlockAetherPortal)BlocksAether.aether_portal).trySpawnPortal(world, x, y, z)) {
+			if(((BlockAetherPortal)AetherBlocks.aether_portal).trySpawnPortal(world, x, y, z)) {
 				if (!player.capabilities.isCreativeMode) {
 					if(item == AetherItems.skyroot_bucket && stack.getItemDamage() == 1) {
 						event.result = new ItemStack(AetherItems.skyroot_bucket);
@@ -189,7 +188,7 @@ public class AetherEventHandler {
 				return;
 			}
 			if (world.isAirBlock(x, y, z)) {
-				world.setBlock(x, y, z, BlocksAether.aerogel);
+				world.setBlock(x, y, z, AetherBlocks.aerogel);
 				if (!player.capabilities.isCreativeMode) {
 					event.result = new ItemStack(Items.bucket);
 				}
@@ -203,7 +202,7 @@ public class AetherEventHandler {
 		Item item = event.crafting.getItem();
 		if(is_gravitite_tool(item)) {
 			event.player.triggerAchievement(AetherAchievements.grav_tools);
-		} else if(item == Item.getItemFromBlock(BlocksAether.enchanter)) {
+		} else if(item == Item.getItemFromBlock(AetherBlocks.enchanter)) {
 			event.player.triggerAchievement(AetherAchievements.enchanter);
 		}
 	}
@@ -213,13 +212,12 @@ public class AetherEventHandler {
 		if(!(event.source instanceof EntityDamageSource)) return;
 
 		EntityLivingBase entity = event.entityLiving;
-		EntityDamageSource source = (EntityDamageSource) event.source;
+		EntityDamageSource source = (EntityDamageSource)event.source;
 
 		if (source.getEntity() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) source.getEntity();
-			ItemStack currentItem = player.inventory.getCurrentItem();
-
-			if (currentItem != null && currentItem.getItem() instanceof ItemSkyrootSword && !(entity instanceof EntityPlayer) && !(entity instanceof EntityWither) && !(entity instanceof Valkyrie)) {
+			ItemStack current_item = player.inventory.getCurrentItem();
+			if(current_item != null && current_item.getItem() instanceof SkyrootSword && !(entity instanceof EntityPlayer) && !(entity instanceof EntityWither) && !(entity instanceof Valkyrie)) {
 				for (EntityItem item_entity : event.drops) {
 					ItemStack item_stack = item_entity.getEntityItem();
 					Item item = item_stack.getItem();
@@ -324,12 +322,9 @@ public class AetherEventHandler {
 	@SubscribeEvent
 	public void onPlayerSleepInBed(PlayerWakeUpEvent event) {
 		final World world = event.entityPlayer.worldObj;
-
 		if (!world.isRemote && event.entityPlayer.dimension == AetherConfig.get_aether_world_id()) {
 			final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-
 			final WorldServer server_world = server.worldServerForDimension(0);
-
 			if (server_world.playerEntities.size() > 0) {
 				if (server_world.areAllPlayersAsleep()) {
 					performTimeSet(event, world, server_world);

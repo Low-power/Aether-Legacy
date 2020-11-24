@@ -1,8 +1,8 @@
 package com.gildedgames.the_aether.world.gen;
 
 import com.gildedgames.the_aether.world.gen.components.GoldenDungeonComponent;
-import com.gildedgames.the_aether.world.gen.components.ComponentGoldenIsland;
-import com.gildedgames.the_aether.world.gen.components.ComponentGoldenIslandStub;
+import com.gildedgames.the_aether.world.gen.components.GoldenIslandComponent;
+import com.gildedgames.the_aether.world.gen.components.StubGoldenIslandComponent;
 import com.gildedgames.the_aether.world.util.RandomTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
@@ -48,21 +48,19 @@ public class GoldenDungeonStructure extends MapGenStructure {
 		public Start() {
 		}
 
-		public Start(World worldIn, Random random, int chunkX, int chunkZ) {
+		public Start(World world, Random random, int chunkX, int chunkZ) {
 			super(chunkX, chunkZ);
-			this.create(worldIn, random, chunkX, chunkZ);
+			this.create(world, random, chunkX, chunkZ);
 		}
 
 		@SuppressWarnings("unchecked")
-		private void create(World worldIn, Random random, int chunkX, int chunkZ) {
-			random.setSeed(worldIn.getSeed());
-			long i = random.nextLong();
-			long j = random.nextLong();
-			long k = (long) chunkX * i;
-			long l = (long) chunkZ * j;
-			random.setSeed(k ^ l ^ worldIn.getSeed());
+		private void create(World world, Random random, int chunkX, int chunkZ) {
+			random.setSeed(world.getSeed());
+			long x = (long)chunkX * random.nextLong();
+			long z = (long)chunkZ * random.nextLong();
+			random.setSeed(x ^ z ^ world.getSeed());
 
-			ComponentGoldenIsland dungeon = new ComponentGoldenIsland((chunkX << 4) + 2, (chunkZ << 4) + 2);
+			GoldenIslandComponent dungeon = new GoldenIslandComponent((chunkX << 4) + 2, (chunkZ << 4) + 2);
 
 			this.dungeonDirection = random.nextInt(4);
 			this.stubIslandCount = 8 + random.nextInt(5);
@@ -72,18 +70,18 @@ public class GoldenDungeonStructure extends MapGenStructure {
 			for (int stubIslands = 0; stubIslands < this.stubIslandCount; ++stubIslands) {
 				float f1 = 0.01745329F;
 				float f2 = random.nextFloat() * 360F;
-				float f3 = ((random.nextFloat() * 0.125F) + 0.7F) * 24.0F;
+				float f3 = ((random.nextFloat() * 0.125F) + 0.7F) * 24F;
 				int l4 = MathHelper.floor_double(Math.cos(f1 * f2) * (double) f3);
-				int k5 = -MathHelper.floor_double(24.0D * (double) random.nextFloat() * 0.29999999999999999D);
+				int k5 = -MathHelper.floor_double(24D * (double)random.nextFloat() * 0.3D);
 				int i6 = MathHelper.floor_double(-Math.sin(f1 * f2) * (double) f3);
 
-				this.components.add(new ComponentGoldenIslandStub((chunkX << 4) + 2, (chunkZ << 4) + 2, l4, k5, i6, 8));
+				this.components.add(new StubGoldenIslandComponent((chunkX << 4) + 2, (chunkZ << 4) + 2, l4, k5, i6, 8));
 			}
 
 			this.components.add(new GoldenDungeonComponent((chunkX << 4) + 2, (chunkZ << 4) + 2, this.dungeonDirection));
 
-			this.customOffset(random);
-			this.updateBoundingBox();
+			customOffset(random);
+			updateBoundingBox();
 		}
 
 		private void customOffset(Random random) {

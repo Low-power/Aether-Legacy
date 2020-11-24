@@ -55,11 +55,10 @@ public class AetherClientEvents {
 	private static boolean wasInAether = false;
 
 	@SubscribeEvent
-	public void onClientTick(TickEvent.ClientTickEvent event) throws Exception {
+	public void on_client_tick(TickEvent.ClientTickEvent event) throws Exception {
 		Minecraft mc = Minecraft.getMinecraft();
 		TickEvent.Phase phase = event.phase;
 		TickEvent.Type type = event.type;
-
 		if (phase == TickEvent.Phase.END) {
 			if (type.equals(TickEvent.Type.CLIENT)) {
 				if (!AetherConfig.triviaDisabled()) {
@@ -74,14 +73,12 @@ public class AetherClientEvents {
 
 				handleExtendedReach(mc);
 			}
-		}
-
-		if (phase == TickEvent.Phase.START) {
+		} else if (phase == TickEvent.Phase.START) {
 			if (type.equals(TickEvent.Type.CLIENT)) {
 				if (mc.currentScreen == null || mc.currentScreen.allowUserInput) {
 					if (!mc.thePlayer.isUsingItem()) {
 						if (GameSettings.isKeyDown(mc.gameSettings.keyBindPickBlock)) {
-							this.sendPickupPacket(mc);
+							send_pickup_packet(mc);
 						}
 					}
 				}
@@ -169,61 +166,45 @@ public class AetherClientEvents {
 		}
 	}
 
+	private static boolean pick_entity(MovingObjectPosition target, EntityPlayer player, World world) {
+		if(!player.capabilities.isCreativeMode) return false;
+		if(target.entityHit == null) return false;
 
-	private void sendPickupPacket(Minecraft mc) {
-		if (mc.objectMouseOver != null) {
-			if (!this.onPickEntity(mc.objectMouseOver, mc.thePlayer, mc.theWorld)) {
-				return;
-			}
+		int id = AetherEntities.getEntityID(target.entityHit);
+		if(id < 0 || !AetherSpawnEgg.egg_info_map.containsKey(Integer.valueOf(id))) return false;
+		ItemStack egg_item_stack = new ItemStack(AetherItems.aether_spawn_egg, 1, id);
 
-			if (mc.thePlayer.capabilities.isCreativeMode) {
-				int index = mc.thePlayer.inventoryContainer.inventorySlots.size() - 9 + mc.thePlayer.inventory.currentItem;
-
-				mc.playerController.sendSlotPacket(mc.thePlayer.inventory.getStackInSlot(mc.thePlayer.inventory.currentItem), index);
-			}
-		}
-	}
-
-	private boolean onPickEntity(MovingObjectPosition target, EntityPlayer player, World world) {
-		ItemStack result = null;
-		boolean isCreative = player.capabilities.isCreativeMode;
-
-		if (!isCreative) {
-			return false;
-		}
-
-		if (target.entityHit != null) {
-			int id = AetherEntities.getEntityID(target.entityHit);
-
-			if (id >= 0 && AetherSpawnEgg.entityEggs.containsKey(id)) {
-				result = new ItemStack(AetherItems.aether_spawn_egg, 1, id);
-			}
-		}
-
-		if (result == null) {
-			return false;
-		}
-
-		for (int x = 0; x < 9; x++) {
-			ItemStack stack = player.inventory.getStackInSlot(x);
-
-			if (stack != null && stack.isItemEqual(result) && ItemStack.areItemStackTagsEqual(stack, result)) {
-				player.inventory.currentItem = x;
-
+		for(int i = 0; i < 9; i++) {
+			ItemStack stack = player.inventory.getStackInSlot(i);
+			if(stack == null) continue;
+			if(stack.isItemEqual(egg_item_stack) && ItemStack.areItemStackTagsEqual(stack, egg_item_stack)) {
+				player.inventory.currentItem = i;
 				return true;
 			}
 		}
 
 		int slot = player.inventory.getFirstEmptyStack();
-
 		if (slot < 0 || slot >= 9) {
 			slot = player.inventory.currentItem;
 		}
 
-		player.inventory.setInventorySlotContents(slot, result);
+		player.inventory.setInventorySlotContents(slot, egg_item_stack);
 		player.inventory.currentItem = slot;
 
 		return true;
+	}
+
+	private static void send_pickup_packet(Minecraft mc) {
+		if (mc.objectMouseOver != null) {
+			if(!pick_entity(mc.objectMouseOver, mc.thePlayer, mc.theWorld)) {
+				return;
+			}
+
+			if (mc.thePlayer.capabilities.isCreativeMode) {
+				int index = mc.thePlayer.inventoryContainer.inventorySlots.size() - 9 + mc.thePlayer.inventory.currentItem;
+				mc.playerController.sendSlotPacket(mc.thePlayer.inventory.getStackInSlot(mc.thePlayer.inventory.currentItem), index);
+			}
+		}
 	}
 
 	@SubscribeEvent

@@ -3,7 +3,7 @@ package com.gildedgames.the_aether.items.weapons;
 import com.gildedgames.the_aether.entities.projectile.EntityHammerProjectile;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.player.PlayerAether;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;

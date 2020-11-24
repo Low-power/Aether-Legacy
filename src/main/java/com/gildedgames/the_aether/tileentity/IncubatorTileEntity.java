@@ -3,7 +3,7 @@ package com.gildedgames.the_aether.tileentity;
 import com.gildedgames.the_aether.api.events.AetherHooks;
 import com.gildedgames.the_aether.entities.passive.mountable.Moa;
 import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.blocks.container.BlockAetherContainer;
 import com.gildedgames.the_aether.items.MoaEgg;
 import com.gildedgames.the_aether.items.AetherItems;
@@ -73,7 +73,7 @@ public class IncubatorTileEntity extends AetherTileEntity {
 
 	@Override
 	public void updateEntity() {
-		boolean flag = this.isIncubating();
+		boolean incubating = this.isIncubating();
 
 		if (this.powerRemaining > 0) {
 			this.powerRemaining--;
@@ -93,15 +93,12 @@ public class IncubatorTileEntity extends AetherTileEntity {
 
 				if (!this.worldObj.isRemote) {
 					Moa moa = new Moa(this.worldObj);
-
 					moa.setPlayerGrown(true);
 					moa.setGrowingAge(-24000);
 					moa.setMoaType(moaEgg.getMoaTypeFromItemStack(this.getStackInSlot(1)));
-
 					for (int safeY = 0; !this.worldObj.isAirBlock(this.xCoord, this.yCoord + safeY, this.zCoord); safeY++) {
 						moa.setPositionAndUpdate(this.xCoord + 0.5D, this.yCoord + safeY + 1.5D, this.zCoord + 0.5D);
 					}
-
 					this.worldObj.spawnEntityInWorld(moa);
 				}
 
@@ -116,11 +113,12 @@ public class IncubatorTileEntity extends AetherTileEntity {
 		}
 
 		if (this.powerRemaining <= 0) {
-			if (this.getStackInSlot(0) != null && this.getStackInSlot(1) != null && this.getStackInSlot(1).getItem() == AetherItems.moa_egg && this.getStackInSlot(0).getItem() == Item.getItemFromBlock(BlocksAether.ambrosium_torch)) {
+			ItemStack item_stack_in_slot_0 = getStackInSlot(0);
+			ItemStack item_stack_in_slot_1 = getStackInSlot(1);
+			if(item_stack_in_slot_0 != null && item_stack_in_slot_1 != null && item_stack_in_slot_0.getItem() == Item.getItemFromBlock(AetherBlocks.ambrosium_torch) && item_stack_in_slot_1.getItem() == AetherItems.moa_egg) {
 				this.powerRemaining += 1000;
-
 				if (!this.worldObj.isRemote) {
-					this.decrStackSize(0, 1);
+					decrStackSize(0, 1);
 				}
 			} else {
 				this.powerRemaining = 0;
@@ -128,20 +126,21 @@ public class IncubatorTileEntity extends AetherTileEntity {
 			}
 		}
 
-		if (flag != this.isIncubating()) {
-			this.markDirty();
-			BlockAetherContainer.setState(this.worldObj, this.xCoord, this.yCoord, this.zCoord, this.isIncubating());
+		if(incubating != isIncubating()) {
+			markDirty();
+			BlockAetherContainer.setState(this.worldObj, this.xCoord, this.yCoord, this.zCoord, isIncubating());
 		}
 	}
 
 	@Override
 	public boolean isValidSlotItem(int index, ItemStack itemstack) {
-		return (index == 0 && itemstack.getItem() == Item.getItemFromBlock(BlocksAether.ambrosium_torch) ? true : (index == 1 && itemstack.getItem() == AetherItems.moa_egg));
+		if(index == 0 && itemstack.getItem() == Item.getItemFromBlock(AetherBlocks.ambrosium_torch)) return true;
+		return index == 1 && itemstack.getItem() == AetherItems.moa_egg;
 	}
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
-		return side == 0 ? new int[]{} : new int[]{0, 1};
+		return side == 0 ? new int[0] : new int[] { 0, 1 };
 	}
 
 }

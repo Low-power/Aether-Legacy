@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.items.dungeon;
 
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

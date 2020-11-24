@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.items.util;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -18,22 +18,21 @@ public enum AetherToolType {
 			Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack,
 			Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore,
 			Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.mob_spawner,
-			BlocksAether.holystone, BlocksAether.holystone_brick, BlocksAether.mossy_holystone,
-			BlocksAether.enchanter, BlocksAether.incubator, BlocksAether.enchanter, BlocksAether.ambrosium_ore,
-			BlocksAether.icestone, BlocksAether.aerogel, BlocksAether.carved_stone, BlocksAether.angelic_stone,
-			BlocksAether.hellfire_stone, BlocksAether.sentry_stone, BlocksAether.light_angelic_stone,
-			BlocksAether.light_hellfire_stone
+			AetherBlocks.holystone, AetherBlocks.holystone_brick, AetherBlocks.mossy_holystone,
+			AetherBlocks.enchanter, AetherBlocks.incubator, AetherBlocks.enchanter, AetherBlocks.ambrosium_ore,
+			AetherBlocks.icestone, AetherBlocks.aerogel, AetherBlocks.carved_stone, AetherBlocks.angelic_stone,
+			AetherBlocks.hellfire_stone, AetherBlocks.sentry_stone, AetherBlocks.light_angelic_stone,
+			AetherBlocks.light_hellfire_stone
 	})) {
 		@Override
 		public boolean canHarvestBlock(ToolMaterial toolMaterial, Block state) {
 			Block block = state;
 
-			if (block == BlocksAether.zanite_ore || block == BlocksAether.zanite_block || block == BlocksAether.icestone) {
+			if(block == AetherBlocks.zanite_ore || block == AetherBlocks.zanite_block || block == AetherBlocks.icestone) {
 				return toolMaterial.getHarvestLevel() >= 1;
-			} else if (block == BlocksAether.gravitite_ore || block == BlocksAether.enchanted_gravitite) {
+			} else if(block == AetherBlocks.gravitite_ore || block == AetherBlocks.enchanted_gravitite) {
 				return toolMaterial.getHarvestLevel() >= 2;
-			}
-			else if (block == BlocksAether.aerogel) {
+			} else if(block == AetherBlocks.aerogel) {
 				return toolMaterial.getHarvestLevel() == 3;
 			}
 
@@ -48,8 +47,8 @@ public enum AetherToolType {
 	SHOVEL(Sets.newHashSet(new Block[] {
 			Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow,
 			Blocks.snow_layer, Blocks.clay, Blocks.farmland, Blocks.soul_sand,
-			Blocks.mycelium, BlocksAether.aether_dirt, BlocksAether.aether_grass,
-			BlocksAether.aercloud, BlocksAether.enchanted_aether_grass, BlocksAether.quicksoil
+			Blocks.mycelium, AetherBlocks.aether_dirt, AetherBlocks.aether_grass,
+			AetherBlocks.aercloud, AetherBlocks.enchanted_aether_grass, AetherBlocks.quicksoil
 	})) {
 		@Override
 		public boolean canHarvestBlock(ToolMaterial toolMaterial, Block block) {
@@ -59,8 +58,8 @@ public enum AetherToolType {
 	AXE(Sets.newHashSet(new Block[] {
 			Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.chest,
 			Blocks.double_stone_slab, Blocks.stone_slab, Blocks.pumpkin,
-			Blocks.lit_pumpkin, BlocksAether.skyroot_log, BlocksAether.golden_oak_log, BlocksAether.skyroot_planks,
-			BlocksAether.chest_mimic
+			Blocks.lit_pumpkin, AetherBlocks.skyroot_log, AetherBlocks.golden_oak_log, AetherBlocks.skyroot_planks,
+			AetherBlocks.chest_mimic
 	})) {
 		@Override
 		public float getStrVsBlock(ItemStack stack, Block block) {

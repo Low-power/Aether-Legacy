@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.items.armor;
 
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;

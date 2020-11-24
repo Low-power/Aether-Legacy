@@ -115,7 +115,7 @@ public class SkyrootBedBlock extends BlockBed {
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
 		if (p_149691_1_ == 0) {
-			return BlocksAether.skyroot_planks.getBlockTextureFromSide(p_149691_1_);
+			return AetherBlocks.skyroot_planks.getBlockTextureFromSide(p_149691_1_);
 		} else {
 			int k = getDirection(p_149691_2_);
 			int l = Direction.bedDirection[k][p_149691_1_];

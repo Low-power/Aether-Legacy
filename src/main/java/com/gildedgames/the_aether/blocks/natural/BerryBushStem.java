@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.blocks.natural;
 
 import com.gildedgames.the_aether.Aether;
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import net.minecraft.block.IGrowable;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.util.Random;
 
-public class BerryBushStem extends BlockAetherFlower implements IGrowable {
+public class BerryBushStem extends AetherFlower implements IGrowable {
 
 	public BerryBushStem() {
 		this.setHardness(0.2F);
@@ -28,7 +28,7 @@ public class BerryBushStem extends BlockAetherFlower implements IGrowable {
 		super.updateTick(world, x, y, z, random);
 
 		if (world.getBlockLightValue(x, y + 1, z) >= 9 && random.nextInt(60) == 0) {
-			world.setBlock(x, y, z, BlocksAether.berry_bush);
+			world.setBlock(x, y, z, AetherBlocks.berry_bush);
 		}
 	}
 
@@ -38,7 +38,7 @@ public class BerryBushStem extends BlockAetherFlower implements IGrowable {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess worldIn, int x, int y, int z, int side) {
+	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
 		return true;
 	}
 
@@ -54,7 +54,7 @@ public class BerryBushStem extends BlockAetherFlower implements IGrowable {
 
 	@Override
 	public void func_149853_b(World world, Random random, int x, int y, int z) {
-		world.setBlock(x, y, z, BlocksAether.berry_bush);
+		world.setBlock(x, y, z, AetherBlocks.berry_bush);
 	}
 
 }

@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.client.renders;
 
 import com.gildedgames.the_aether.entities.bosses.valkyrie_queen.ValkyrieQueen;
-import com.gildedgames.the_aether.entities.passive.EntityAerwhale;
+import com.gildedgames.the_aether.entities.passive.Aerwhale;
 import com.gildedgames.the_aether.entities.passive.EntityMiniCloud;
 import com.gildedgames.the_aether.entities.passive.Sheepuff;
 import com.gildedgames.the_aether.client.renders.block.AetherFlowerRenderer;
@@ -36,7 +36,7 @@ import com.gildedgames.the_aether.client.renders.entity.WhirlwindRenderer;
 import com.gildedgames.the_aether.client.renders.entity.ZephyrRenderer;
 import com.gildedgames.the_aether.client.renders.entity.ZephyrSnowballRenderer;
 import com.gildedgames.the_aether.client.renders.items.PhoenixBowRenderer;
-import com.gildedgames.the_aether.entities.block.EntityFloatingBlock;
+import com.gildedgames.the_aether.entities.block.FloatingBlockEntity;
 import com.gildedgames.the_aether.entities.block.EntityTNTPresent;
 import com.gildedgames.the_aether.entities.bosses.EntityFireMinion;
 import com.gildedgames.the_aether.entities.bosses.Valkyrie;
@@ -45,8 +45,8 @@ import com.gildedgames.the_aether.entities.bosses.sun_spirit.SunSpirit;
 import com.gildedgames.the_aether.entities.hostile.AechorPlant;
 import com.gildedgames.the_aether.entities.hostile.Cockatrice;
 import com.gildedgames.the_aether.entities.hostile.Mimic;
-import com.gildedgames.the_aether.entities.hostile.EntitySentry;
-import com.gildedgames.the_aether.entities.hostile.EntityWhirlwind;
+import com.gildedgames.the_aether.entities.hostile.Sentry;
+import com.gildedgames.the_aether.entities.hostile.Whirlwind;
 import com.gildedgames.the_aether.entities.hostile.Zephyr;
 import com.gildedgames.the_aether.entities.passive.mountable.Aerbunny;
 import com.gildedgames.the_aether.entities.passive.mountable.FlyingCow;
@@ -73,7 +73,7 @@ public class AetherRenders {
 	public static void initialization() {
 		/* Misc */
 		register(EntityHammerProjectile.class, new HammerProjectileRenderer());
-		register(EntityFloatingBlock.class, new FloatingBlockRenderer());
+		register(FloatingBlockEntity.class, new FloatingBlockRenderer());
 		register(ParachuteEntity.class, new ParachuteRenderer());
 		register(ZephyrSnowballEntity.class, new ZephyrSnowballRenderer());
 		register(EntityPhoenixArrow.class, new PhoenixArrowRenderer());
@@ -92,7 +92,7 @@ public class AetherRenders {
 
 		/* Hostile */
 		register(Mimic.class, new MimicRenderer());
-		register(EntitySentry.class, new SentryRenderer());
+		register(Sentry.class, new SentryRenderer());
 		register(AechorPlant.class, new AechorPlantRenderer());
 		register(EntityFireMinion.class, new FireMinionRenderer());
 		register(Zephyr.class, new ZephyrRenderer());
@@ -104,12 +104,12 @@ public class AetherRenders {
 		register(Phyg.class, new PhygRenderer());
 		register(FlyingCow.class, new FlyingCowRenderer());
 		register(Sheepuff.class, new SheepuffRenderer());
-		register(EntityAerwhale.class, new AerwhaleRenderer());
+		register(Aerwhale.class, new AerwhaleRenderer());
 		register(Aerbunny.class, new AerbunnyRenderer());
 		register(Swet.class, new SwetRenderer());
 		register(EntityMiniCloud.class, new MiniCloudRenderer());
 		register(EntityTNTPresent.class, new TNTPresentRenderer());
-		register(EntityWhirlwind.class, new WhirlwindRenderer());
+		register(Whirlwind.class, new WhirlwindRenderer());
 
 		MinecraftForgeClient.registerItemRenderer(AetherItems.phoenix_bow, new PhoenixBowRenderer());
 		RenderingRegistry.registerBlockHandler(new BerryBushRenderer());

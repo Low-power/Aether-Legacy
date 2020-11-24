@@ -1,74 +1,61 @@
 package com.gildedgames.the_aether.client.renders.entity;
 
+import com.gildedgames.the_aether.entities.block.EntityTNTPresent;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import com.gildedgames.the_aether.entities.block.EntityTNTPresent;
-
 public class TNTPresentRenderer extends Render {
+	public TNTPresentRenderer() {
+		this.shadowSize = 0.5F;
+	}
 
-    private RenderBlocks blockRenderer = new RenderBlocks();
+	private RenderBlocks blockRenderer = new RenderBlocks();
 
-    public TNTPresentRenderer() {
-        this.shadowSize = 0.5F;
-    }
+	public void doRender(EntityTNTPresent tnt_present, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float)x, (float)y + 0.48F, (float)z);
 
-    public void doRender(EntityTNTPresent p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_ + 0.48F, (float) p_76986_6_);
-        float f2;
+		if ((float)tnt_present.fuse - p_76986_9_ + 1F < 10F) {
+			float f2 = 1F - ((float)tnt_present.fuse - p_76986_9_ + 1F) / 10F;
+			if(f2 < 0F) f2 = 0F; else if(f2 > 1F) f2 = 1F;
+			f2 *= f2;
+			f2 *= f2;
+			float f3 = 1F + f2 * 0.3F;
+			GL11.glScalef(f3, f3, f3);
+		}
 
-        if ((float) p_76986_1_.fuse - p_76986_9_ + 1.0F < 10.0F) {
-            f2 = 1.0F - ((float) p_76986_1_.fuse - p_76986_9_ + 1.0F) / 10.0F;
+		float f2 = (1F - ((float)tnt_present.fuse - p_76986_9_ + 1F) / 100F) * 0.8F;
+		bindEntityTexture(tnt_present);
+		this.blockRenderer.renderBlockAsItem(AetherBlocks.present, 0, tnt_present.getBrightness(p_76986_9_));
 
-            if (f2 < 0.0F) {
-                f2 = 0.0F;
-            }
+		if (tnt_present.fuse / 5 % 2 == 0) {
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
+			GL11.glColor4f(1F, 1F, 1F, f2);
+			this.blockRenderer.renderBlockAsItem(AetherBlocks.present, 0, 1F);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+		}
 
-            if (f2 > 1.0F) {
-                f2 = 1.0F;
-            }
+		GL11.glPopMatrix();
+	}
 
-            f2 *= f2;
-            f2 *= f2;
-            float f3 = 1.0F + f2 * 0.3F;
-            GL11.glScalef(f3, f3, f3);
-        }
+	@Override
+	public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
+		this.doRender((EntityTNTPresent)entity, x, y, z, p_76986_8_, p_76986_9_);
+	}
 
-        f2 = (1.0F - ((float) p_76986_1_.fuse - p_76986_9_ + 1.0F) / 100.0F) * 0.8F;
-        this.bindEntityTexture(p_76986_1_);
-        this.blockRenderer.renderBlockAsItem(BlocksAether.present, 0, p_76986_1_.getBrightness(p_76986_9_));
-
-        if (p_76986_1_.fuse / 5 % 2 == 0) {
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, f2);
-            this.blockRenderer.renderBlockAsItem(BlocksAether.present, 0, 1.0F);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-        }
-
-        GL11.glPopMatrix();
-    }
-
-    @Override
-    public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-        this.doRender((EntityTNTPresent) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-    }
-
-    @Override
-    protected ResourceLocation getEntityTexture(Entity entity) {
-        return TextureMap.locationBlocksTexture;
-    }
-
+	@Override
+	protected ResourceLocation getEntityTexture(Entity entity) {
+		return TextureMap.locationBlocksTexture;
+	}
 }

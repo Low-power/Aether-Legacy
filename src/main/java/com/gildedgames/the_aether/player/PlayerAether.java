@@ -13,7 +13,7 @@ import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.network.AetherNetwork;
 import com.gildedgames.the_aether.player.perks.AetherRankings;
 import com.gildedgames.the_aether.player.perks.util.EnumAetherPerkType;
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.items.tools.ValkyrieTool;
 import com.gildedgames.the_aether.player.abilities.AccessoriesAbility;
 import com.gildedgames.the_aether.player.abilities.ArmorAbility;
@@ -41,6 +41,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.UUID;
 
 public class PlayerAether implements IPlayerAether {
@@ -150,27 +151,25 @@ public class PlayerAether implements IPlayerAether {
 			}
 		}
 
-		for (int i = 0; i < this.clouds.size(); ++i) {
-			Entity entity = this.clouds.get(i);
-
-			if (entity.isDead) {
-				this.clouds.remove(i);
-			}
+		Iterator<Entity> iterator = this.clouds.iterator();
+		while(iterator.hasNext()) {
+			Entity entity = iterator.next();
+			if(entity.isDead) iterator.remove();
 		}
 
 		if (this.cooldown > 0) {
 			this.cooldown -= 2;
 		}
 
-		if (this.isInsideBlock(BlocksAether.aercloud)) {
-			this.getEntity().fallDistance = 0F;
+		if(isInsideBlock(AetherBlocks.aercloud)) {
+			getEntity().fallDistance = 0F;
 		}
 
-		if (this.getEntity().motionY < -2F) {
-			this.activateParachute();
+		if(getEntity().motionY < -2F) {
+			activateParachute();
 		}
 
-		if (!this.getEntity().onGround) {
+		if(!getEntity().onGround) {
 			this.wingSinage += 0.75F;
 		} else {
 			this.wingSinage += 0.15F;
@@ -209,11 +208,9 @@ public class PlayerAether implements IPlayerAether {
 				this.getEntity().timeUntilPortal = this.getEntity().getPortalCooldown();
 			}
 
-			if (this.getEntity().worldObj.getBlock((int) this.getEntity().posX, (int) this.getEntity().posY - 1, (int) this.getEntity().posZ) != Blocks.air) {
-				AxisAlignedBB playerBounding = this.getEntity().boundingBox;
-
-				if (this.getEntity().worldObj.getBlock((int) playerBounding.minX, (int) playerBounding.minY, (int) playerBounding.minZ) != BlocksAether.aether_portal &&
-				   this.getEntity().worldObj.getBlock((int) playerBounding.minX, (int) playerBounding.minY, (int) playerBounding.minZ) != BlocksAether.aether_portal) {
+			if(getEntity().worldObj.getBlock((int)getEntity().posX, (int)getEntity().posY - 1, (int)getEntity().posZ) != Blocks.air) {
+				AxisAlignedBB bb = getEntity().boundingBox;
+				if(getEntity().worldObj.getBlock((int)bb.minX, (int)bb.minY, (int)bb.minZ) != AetherBlocks.aether_portal) {
 					this.inPortal = false;
 				}
 			}
@@ -242,15 +239,13 @@ public class PlayerAether implements IPlayerAether {
 		} else {
 			this.prevTimeInPortal = this.timeInPortal;
 
-			if (this.isInsideBlock(BlocksAether.aether_portal)) {
+			if(isInsideBlock(AetherBlocks.aether_portal)) {
 				this.timeInPortal += 0.0125F;
-
 				if (this.timeInPortal >= 1F) {
 					this.timeInPortal = 1F;
 				}
-			} else if (this.getEntity().isPotionActive(Potion.confusion) && this.getEntity().getActivePotionEffect(Potion.confusion).getDuration() > 60) {
+			} else if(getEntity().isPotionActive(Potion.confusion) && this.getEntity().getActivePotionEffect(Potion.confusion).getDuration() > 60) {
 				this.timeInPortal += 0.006666667F;
-
 				if (this.timeInPortal > 1F) {
 					this.timeInPortal = 1F;
 				}
@@ -258,14 +253,13 @@ public class PlayerAether implements IPlayerAether {
 				if (this.timeInPortal > 0F) {
 					this.timeInPortal -= 0.05F;
 				}
-
 				if (this.timeInPortal < 0F) {
 					this.timeInPortal = 0F;
 				}
 			}
 		}
 
-		if (!player.worldObj.isRemote && this.bedLocation != null && player.dimension == AetherConfig.get_aether_world_id() && player.worldObj.getBlock(this.bedLocation.posX, this.bedLocation.posY, this.bedLocation.posZ) != BlocksAether.skyroot_bed) {
+		if(!player.worldObj.isRemote && this.bedLocation != null && player.dimension == AetherConfig.get_aether_world_id() && player.worldObj.getBlock(this.bedLocation.posX, this.bedLocation.posY, this.bedLocation.posZ) != AetherBlocks.skyroot_bed) {
 			setBedLocation(null);
 		}
 	}

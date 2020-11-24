@@ -1,37 +1,34 @@
 package com.gildedgames.the_aether.client.renders.entity;
 
+import com.gildedgames.the_aether.entities.hostile.Sentry;
 import com.gildedgames.the_aether.Aether;
-import com.gildedgames.the_aether.entities.hostile.EntitySentry;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
 public class SentryRenderer extends RenderLiving {
 
 	private static final ResourceLocation TEXTURE = Aether.locate("textures/entities/sentry/sentry.png");
-
 	private static final ResourceLocation TEXTURE_LIT = Aether.locate("textures/entities/sentry/sentry_lit.png");
-
 	private static final ResourceLocation TEXTURE_EYE = Aether.locate("textures/entities/sentry/eye.png");
 
 	public SentryRenderer() {
 		super(new ModelSlime(0), 0.3F);
 
-		this.setRenderPassModel(this.mainModel);
+		setRenderPassModel(this.mainModel);
 	}
 
 	@Override
-	protected void preRenderCallback(EntityLivingBase entityliving, float f) {
+	protected void preRenderCallback(EntityLivingBase living_entity, float f) {
 		float f1 = 1.75F;
 		GL11.glScalef(f1, f1, f1);
 	}
 
-	protected int renderEyeGlow(EntitySentry entity, int pass, float particleTicks) {
+	protected int renderEyeGlow(Sentry entity, int pass, float particleTicks) {
 		if (pass == 0 && entity.isAwake()) {
 			this.bindTexture(TEXTURE_EYE);
 			GL11.glEnable(GL11.GL_BLEND);
@@ -47,8 +44,8 @@ public class SentryRenderer extends RenderLiving {
 			char c0 = 61680;
 			int j = c0 % 65536;
 			int k = c0 / 65536;
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			return 1;
 		}
 
@@ -57,11 +54,11 @@ public class SentryRenderer extends RenderLiving {
 
 	@Override
 	protected int shouldRenderPass(EntityLivingBase entity, int pass, float particleTicks) {
-		return this.renderEyeGlow((EntitySentry) entity, pass, particleTicks);
+		return this.renderEyeGlow((Sentry)entity, pass, particleTicks);
 	}
 
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		return !((EntitySentry) entity).isAwake() ? TEXTURE : TEXTURE_LIT;
+		return !((Sentry)entity).isAwake() ? TEXTURE : TEXTURE_LIT;
 	}
 
 }

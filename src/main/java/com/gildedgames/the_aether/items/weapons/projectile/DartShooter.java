@@ -7,7 +7,7 @@ import com.gildedgames.the_aether.entities.projectile.darts.GoldenDartEntity;
 import com.gildedgames.the_aether.entities.projectile.darts.PoisonDartEntity;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.util.EnumDartShooterType;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

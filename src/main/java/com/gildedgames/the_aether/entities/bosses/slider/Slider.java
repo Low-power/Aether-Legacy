@@ -7,28 +7,29 @@ import com.gildedgames.the_aether.entities.util.AetherItemEntity;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.player.PlayerAether;
 import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import com.gildedgames.the_aether.blocks.dungeon.BlockDungeonBase;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
+import com.gildedgames.the_aether.blocks.dungeon.DungeonBaseBlock;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.command.IEntitySelector;
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -110,8 +111,8 @@ public class Slider extends EntityFlying implements IAetherBoss {
 		this.doorStart = nbttagcompound.getIntArray("doorStart");
 		this.doorEnd = nbttagcompound.getIntArray("doorEnd");
 
-		this.setAwake(nbttagcompound.getBoolean("isAwake"));
-		this.setBossName(nbttagcompound.getString("bossName"));
+		set_awake(nbttagcompound.getBoolean("isAwake"));
+		set_boss_name(nbttagcompound.getString("bossName"));
 	}
 
 	public boolean criticalCondition() {
@@ -319,7 +320,7 @@ public class Slider extends EntityFlying implements IAetherBoss {
 		Block block = this.worldObj.getBlock((int) x, (int) y, (int) z);
 		int metadata = this.worldObj.getBlockMetadata((int) x, (int) y, (int) z);
 
-		if (block == Blocks.air || block instanceof BlockDungeonBase || block.getBlockHardness(this.worldObj, (int) x, (int) y, (int) z) < 0F) {
+		if (block == Blocks.air || block instanceof DungeonBaseBlock || block.getBlockHardness(this.worldObj, (int)x, (int)y, (int)z) < 0F) {
 			return;
 		}
 
@@ -368,7 +369,7 @@ public class Slider extends EntityFlying implements IAetherBoss {
 		return false;
 	}
 
-	private void openDoor() {
+	private void open_door() {
 		for (int x = this.doorStart[0]; x < this.doorEnd[0] + 1; x++) {
 			for (int y = this.doorStart[1]; y < this.doorEnd[1] + 1; y++) {
 				for (int z = this.doorStart[2]; z < this.doorEnd[2] + 1; z++) {
@@ -378,7 +379,7 @@ public class Slider extends EntityFlying implements IAetherBoss {
 		}
 	}
 
-	private void closeDoor() {
+	private void close_door() {
 		if (checkIsAir(this.dungeonX + 15, this.dungeonY + 1, this.dungeonZ + 6, this.dungeonX + 15, this.dungeonY + 4, this.dungeonZ + 9)) {
 			//EAST
 			this.doorStart = new int[] {this.dungeonX + 15, this.dungeonY + 1, this.dungeonZ + 6};
@@ -388,7 +389,7 @@ public class Slider extends EntityFlying implements IAetherBoss {
 
 			for(int y = this.dungeonY + 1; y < this.dungeonY + 8; y++) {
 				for(int z = this.dungeonZ + 5; z < this.dungeonZ + 11; z++) {
-					this.worldObj.setBlock(x, y, z, BlocksAether.locked_carved_stone);
+					this.worldObj.setBlock(x, y, z, AetherBlocks.locked_carved_stone);
 				}
 			}
 		} else if (checkIsAir(this.dungeonX, this.dungeonY + 1, this.dungeonZ + 6, this.dungeonX, this.dungeonY + 4, this.dungeonZ + 9)) {
@@ -400,7 +401,7 @@ public class Slider extends EntityFlying implements IAetherBoss {
 
 			for(int y = this.dungeonY + 1; y < this.dungeonY + 8; y++) {
 				for(int z = this.dungeonZ + 5; z < this.dungeonZ + 11; z++) {
-					this.worldObj.setBlock(x, y, z, BlocksAether.locked_carved_stone);
+					this.worldObj.setBlock(x, y, z, AetherBlocks.locked_carved_stone);
 				}
 			}
 		} else if (checkIsAir(this.dungeonX + 6, this.dungeonY + 1, this.dungeonZ + 15, this.dungeonX + 9, this.dungeonY + 4, this.dungeonZ + 15)) {
@@ -412,7 +413,7 @@ public class Slider extends EntityFlying implements IAetherBoss {
 
 			for(int y = this.dungeonY + 1; y < this.dungeonY + 8; y++) {
 				for(int x = this.dungeonX + 5; x < this.dungeonX + 11; x++) {
-					this.worldObj.setBlock(x, y, z, BlocksAether.locked_carved_stone);
+					this.worldObj.setBlock(x, y, z, AetherBlocks.locked_carved_stone);
 				}
 			}
 		} else if (checkIsAir(this.dungeonX + 6, this.dungeonY + 1, this.dungeonZ, this.dungeonX + 9, this.dungeonY + 4, this.dungeonZ)) {
@@ -424,7 +425,7 @@ public class Slider extends EntityFlying implements IAetherBoss {
 
 			for(int y = this.dungeonY + 1; y < this.dungeonY + 8; y++) {
 				for(int x = this.dungeonX + 5; x < this.dungeonX + 11; x++) {
-					this.worldObj.setBlock(x, y, z, BlocksAether.locked_carved_stone);
+					this.worldObj.setBlock(x, y, z, AetherBlocks.locked_carved_stone);
 				}
 			}
 		}
@@ -432,30 +433,26 @@ public class Slider extends EntityFlying implements IAetherBoss {
 
 	@Override
 	public void applyEntityCollision(Entity entity) {
-		if (this.isAwake() && this.isMoving()) {
-			boolean flag = entity.attackEntityFrom(new EntityDamageSource("crush", this), 6);
-
-			if (flag && entity instanceof EntityLivingBase) {
-				EntityLivingBase collidedEntity = (EntityLivingBase) entity;
-				collidedEntity.addVelocity(collidedEntity.motionY, 0.35D, collidedEntity.motionZ);
-				this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "aether_legacy:aeboss.slider.collide", 2.5F, 1F / (this.rand.nextFloat() * 0.2F + 0.9F));
-
-			this.stop();
-			}
+		if(!isAwake() || !isMoving()) return;
+		boolean attack_ok = entity.attackEntityFrom(new EntityDamageSource("crush", this), 6);
+		if(attack_ok && entity instanceof EntityLivingBase) {
+			EntityLivingBase collidedEntity = (EntityLivingBase)entity;
+			collidedEntity.addVelocity(collidedEntity.motionY, 0.35D, collidedEntity.motionZ);
+			this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "aether_legacy:aeboss.slider.collide", 2.5F, 1F / (this.rand.nextFloat() * 0.2F + 0.9F));
+			stop();
 		}
 	}
 
 	@Override
 	protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
-		this.dropItem(Item.getItemFromBlock(BlocksAether.carved_stone), 7 + rand.nextInt(3));
-		this.entityDropItem(new ItemStack(AetherItems.dungeon_key), 0.5F);
+		dropItem(Item.getItemFromBlock(AetherBlocks.carved_stone), 7 + rand.nextInt(3));
+		entityDropItem(new ItemStack(AetherItems.dungeon_key), 0.5F);
 	}
 
 	@Override
 	public EntityItem entityDropItem(ItemStack stack, float offsetY) {
 		if (stack.stackSize != 0 && stack.getItem() != null) {
 			AetherItemEntity item_entity = new AetherItemEntity(this.worldObj, this.posX, this.posY + (double) offsetY, this.posZ, stack);
-
 			if (captureDrops) {
 				this.capturedDrops.add(item_entity);
 			} else {
@@ -468,7 +465,7 @@ public class Slider extends EntityFlying implements IAetherBoss {
 	}
 
 	public void stop() {
-		this.setMoving(false);
+		setMoving(false);
 		this.moveTime = 12;
 		this.direction = EnumFacing.UP;
 		this.motionX = this.motionY = this.motionZ = this.velocity = 0F;
@@ -487,33 +484,30 @@ public class Slider extends EntityFlying implements IAetherBoss {
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource ds, float var2) {
+	public boolean attackEntityFrom(DamageSource ds, float damage) {
 		if (ds.getEntity() == null || !(ds.getEntity() instanceof EntityPlayer) || ds.isProjectile() || ds.isMagicDamage() || ds.isExplosion() || ds.isFireDamage()) {
 			return false;
 		}
 
 		EntityPlayer player = (EntityPlayer)ds.getEntity();
 		ItemStack stack = player.inventory.getCurrentItem();
-
 		if (stack == null || stack.getItem() == null) {
 			return false;
 		}
 
 		if (!stack.getItem().canHarvestBlock(Blocks.stone, stack)) {
 			this.sendMessage(player, "Hmm. Perhaps I need to attack it with a Pickaxe?");
-
 			return false;
 		}
 
-		boolean flag = super.attackEntityFrom(ds, Math.max(0, var2));
-
-		if (flag) {
+		boolean r = super.attackEntityFrom(ds, Math.max(0, damage));
+		if(r) {
 			for (int size = 0; size < (this.getHealth() <= 0 ? 2 : 4); size++) {
 				double a = this.posX + ((this.rand.nextFloat() - this.rand.nextFloat()) * 1.5D);
 				double b = this.boundingBox.minY + 1.75D;
 				double c = this.posZ + ((this.rand.nextFloat() - this.rand.nextFloat()) * 1.5D);
 
-				if (this.getHealth() <= 0) {
+				if(getHealth() <= 0) {
 					this.worldObj.spawnParticle("explode", a, b, c, 0D, 0D, 0D);
 				}
 
@@ -529,9 +523,9 @@ public class Slider extends EntityFlying implements IAetherBoss {
 				}
 			}
 
-			if (this.getHealth() <= 0 || this.isDead) {
-				openDoor();
-				unlockBlock(this.dungeonX, this.dungeonY, this.dungeonZ);
+			if(getHealth() <= 0 || this.isDead) {
+				open_door();
+				unlock_block(this.dungeonX, this.dungeonY, this.dungeonZ);
 
 				this.worldObj.setBlock(this.dungeonX + 7, this.dungeonY + 1, this.dungeonZ + 7, Blocks.trapdoor, 3, 2);
 				this.worldObj.setBlock(this.dungeonX + 8, this.dungeonY + 1, this.dungeonZ + 7, Blocks.trapdoor, 2, 2);
@@ -540,29 +534,20 @@ public class Slider extends EntityFlying implements IAetherBoss {
 
 				PlayerAether.get(player).setFocusedBoss(null);
 
-				List<?> dungeonPlayers = this.getPlayersInDungeon(player);
-
-				for (int i = 0; i < dungeonPlayers.size(); ++i) {
-					Entity entity = (Entity) dungeonPlayers.get(i);
-
-					if (entity instanceof EntityPlayer) {
-						((EntityPlayer)entity).triggerAchievement(AetherAchievements.defeat_bronze);
-					}
+				for(EntityPlayer p : get_dungeon_players_excluding(player)) {
+					p.triggerAchievement(AetherAchievements.defeat_bronze);
 				}
-
 				player.triggerAchievement(AetherAchievements.defeat_bronze);
 
 				this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "aether_legacy:aeboss.slider.death", 2.5F, 1F / (this.rand.nextFloat() * 0.2F + 0.9F));
-				this.setDead();
+				setDead();
 			}
 
 			if (!this.isAwake()) {
 				this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "aether_legacy:aeboss_slider.awaken", 2.5F, 1F / (this.rand.nextFloat() * 0.2F + 0.9F));
 				this.setAttackTarget(player);
-
-				this.closeDoor();
-
-				this.setAwake(true);
+				close_door();
+				set_awake(true);
 			}
 
 			if (this.isMoving()) {
@@ -595,33 +580,28 @@ public class Slider extends EntityFlying implements IAetherBoss {
 
 		PlayerAether.get(player).setFocusedBoss(this);
 
-		return flag;
+		return r;
 	}
 
-	private void unlockBlock(int x, int y, int z) {
+	private void unlock_block(int x, int y, int z) {
 		Block block = this.worldObj.getBlock(x, y, z);
-
-		if (block == BlocksAether.locked_carved_stone || block == BlocksAether.locked_sentry_stone) {
-			this.worldObj.setBlock(x, y, z, ((BlockDungeonBase) block).getUnlockedBlock());
-			this.unlockBlock(x + 1, y, z);
-			this.unlockBlock(x - 1, y, z);
-			this.unlockBlock(x, y + 1, z);
-			this.unlockBlock(x, y - 1, z);
-			this.unlockBlock(x, y, z + 1);
-			this.unlockBlock(x, y, z - 1);
+		if(block == AetherBlocks.locked_carved_stone || block == AetherBlocks.locked_sentry_stone) {
+			this.worldObj.setBlock(x, y, z, ((DungeonBaseBlock)block).getUnlockedBlock());
+			unlock_block(x + 1, y, z);
+			unlock_block(x - 1, y, z);
+			unlock_block(x, y + 1, z);
+			unlock_block(x, y - 1, z);
+			unlock_block(x, y, z + 1);
+			unlock_block(x, y, z - 1);
 		}
 	}
 
 	@Override
 	protected void collideWithNearbyEntities() {
-		List<?> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0D, 0.20000000298023224D));
-
-		if (list != null && !list.isEmpty()) {
-			for (int i = 0; i < list.size(); ++i) {
-				Entity entity = (Entity)list.get(i);
-
-				this.applyEntityCollision(entity);
-			}
+		List<Entity> nearby_entities = (List<Entity>)this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0D, 0.20000000298023224D));
+		if(nearby_entities == null || nearby_entities.isEmpty()) return;
+		for(Entity entity : nearby_entities) {
+			applyEntityCollision(entity);
 		}
 	}
 
@@ -655,17 +635,22 @@ public class Slider extends EntityFlying implements IAetherBoss {
 
 	public void reset() {
 		this.moveTime = 0;
-
-		this.stop();
-		this.openDoor();
-		this.setAwake(false);
-		this.setAttackTarget(null);
-		this.setHealth(this.getMaxHealth());
-		this.setPositionAndUpdate(this.dungeonX + 8, this.dungeonY + 2, this.dungeonZ + 8);
+		stop();
+		open_door();
+		set_awake(false);
+		setAttackTarget(null);
+		setHealth(this.getMaxHealth());
+		setPositionAndUpdate(this.dungeonX + 8, this.dungeonY + 2, this.dungeonZ + 8);
 	}
 
-	public List<?> getPlayersInDungeon(EntityPlayer player) {
-		return this.worldObj.getEntitiesWithinAABBExcludingEntity(player, AxisAlignedBB.getBoundingBox(this.dungeonX, this.dungeonY, this.dungeonZ, this.dungeonX, this.dungeonY, this.dungeonZ).expand(10, 10, 10));
+	private List<EntityPlayer> get_dungeon_players_excluding(final EntityPlayer player) {
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(this.dungeonX, this.dungeonY, this.dungeonZ, this.dungeonX, this.dungeonY, this.dungeonZ).expand(10, 10, 10);
+		IEntitySelector selector = new IEntitySelector() {
+			public boolean isEntityApplicable(Entity entity) {
+				return entity != player;
+			}
+		};
+		return (List<EntityPlayer>)this.worldObj.selectEntitiesWithinAABB(EntityPlayer.class, aabb, selector);
 	}
 
 	public void setDungeon(double posX, double posY, double posZ) {
@@ -674,8 +659,8 @@ public class Slider extends EntityFlying implements IAetherBoss {
 		this.dungeonZ = (int) posZ;
 	}
 
-	public void setAwake(boolean isAwake) {
-		this.dataWatcher.updateObject(18, new Byte(isAwake ? (byte) 1 : (byte) 0));
+	private void set_awake(boolean value) {
+		this.dataWatcher.updateObject(18, new Byte(value ? (byte)1 : (byte)0));
 	}
 
 	public boolean isAwake() {
@@ -694,7 +679,7 @@ public class Slider extends EntityFlying implements IAetherBoss {
 		return this.dataWatcher.getWatchableObjectString(19);
 	}
 
-	public void setBossName(String name) {
+	private void set_boss_name(String name) {
 		this.dataWatcher.updateObject(19, name);
 	}
 

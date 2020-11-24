@@ -1,9 +1,8 @@
 package com.gildedgames.the_aether.world.gen;
 
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-
-import com.gildedgames.the_aether.blocks.BlocksAether;
 
 public class AetherGenUtils {
 
@@ -16,8 +15,7 @@ public class AetherGenUtils {
 			x += structure.random.nextInt(8) - structure.random.nextInt(8);
 			y += structure.random.nextInt(4) - structure.random.nextInt(4);
 			z += structure.random.nextInt(8) - structure.random.nextInt(8);
-
-			if (structure.getBlockStateWithOffset(x, y, z).getMaterial() == Material.air && y < 255 && structure.getBlockStateWithOffset(x, y - 1, z) == BlocksAether.aether_grass) {
+			if(structure.getBlockStateWithOffset(x, y, z).getMaterial() == Material.air && y < 255 && structure.getBlockStateWithOffset(x, y - 1, z) == AetherBlocks.aether_grass) {
 				structure.setBlockWithOffset(x, y, z, state, meta);
 			}
 		}
@@ -28,7 +26,7 @@ public class AetherGenUtils {
 		int y = offsetY;
 		int z = offsetZ;
 
-		if (structure.getBlockStateWithOffset(x, y - 1, z) != BlocksAether.aether_grass && structure.getBlockStateWithOffset(x, y - 1, z) != BlocksAether.aether_dirt) {
+		if(structure.getBlockStateWithOffset(x, y - 1, z) != AetherBlocks.aether_grass && structure.getBlockStateWithOffset(x, y - 1, z) != AetherBlocks.aether_dirt) {
 			return;
 		}
 
@@ -38,7 +36,7 @@ public class AetherGenUtils {
 			for (int y1 = y + 5; y1 < y + 12; y1++) {
 				for (int z1 = z - 3; z1 < z + 4; z1++) {
 					if ((x1 - x) * (x1 - x) + (y1 - y - 8) * (y1 - y - 8) + (z1 - z) * (z1 - z) < 12 + structure.random.nextInt(5)) {
-						structure.setBlockWithOffset(x1, y1, z1, BlocksAether.golden_oak_leaves, 0);
+						structure.setBlockWithOffset(x1, y1, z1, AetherBlocks.golden_oak_leaves, 0);
 					}
 				}
 			}
@@ -46,33 +44,28 @@ public class AetherGenUtils {
 
 		for (int n = 0; n < height; n++) {
 			if (n > 4) {
-				if (structure.random.nextInt(3) > 0) {
-					goldenOakBranch(structure, x, y + n, z, n / 4 - 1);
+				if (structure.random.nextInt(3) > 1) {
+					create_golden_oak_branch(structure, x, y + n, z, n / 4 - 1);
 				}
 			}
 
-			structure.setBlockWithOffset(x, y + n, z, BlocksAether.golden_oak_log, 0);
+			structure.setBlockWithOffset(x, y + n, z, AetherBlocks.golden_oak_log, 0);
 		}
 	}
 
-	private static void goldenOakBranch(AetherStructure structure, int x, int y, int z, int slant) {
-		int directionX = structure.random.nextInt(3) - 1;
-		int directionY = slant;
-		int directionZ = structure.random.nextInt(3) - 1;
-		int i = x;
-		int k = z;
+	private static void create_golden_oak_branch(AetherStructure structure, int x, int y, int z, int slant) {
+		int x_direction = structure.random.nextInt(3) - 1;
+		int y_direction = slant;
+		int z_direction = structure.random.nextInt(3) - 1;
+		x += x_direction;
+		y += y_direction;
+		z += z_direction;
+		int branch_x = x;
+		int branch_z = z;
 
-		for (int n = 0; n < structure.random.nextInt(2); n++) {
-			x += directionX;
-			y += directionY;
-			z += directionZ;
-			i -= directionX;
-			k -= directionZ;
-
-			if (structure.getBlockStateWithOffset(x, y, z) == BlocksAether.golden_oak_leaves) {
-				structure.setBlockWithOffset(x, y, z, BlocksAether.golden_oak_log, 0);
-				structure.setBlockWithOffset(i, y, k, BlocksAether.golden_oak_log, 0);
-			}
+		if(structure.getBlockStateWithOffset(x, y, z) == AetherBlocks.golden_oak_leaves) {
+			structure.setBlockWithOffset(x, y, z, AetherBlocks.golden_oak_log, 0);
+			structure.setBlockWithOffset(branch_x, y, branch_z, AetherBlocks.golden_oak_log, 0);
 		}
 	}
 

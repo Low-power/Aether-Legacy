@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.items.tools;
 
 import com.gildedgames.the_aether.items.util.AetherToolType;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -56,11 +56,12 @@ public abstract class AetherTool extends ItemTool {
 	@Override
 	public float getDigSpeed(ItemStack stack, Block block, int meta) {
 		for (String type : getToolClasses(stack)) {
-			if (block.isToolEffective(type, meta))
+			if (block.isToolEffective(type, meta)) {
 				return this.efficiencyOnProperMaterial;
+			}
 		}
 
-		return this.tool_type.getStrVsBlock(stack, block) == 4.0F ? this.efficiencyOnProperMaterial : 1.0F;
+		return this.tool_type.getStrVsBlock(stack, block) == 4F ? this.efficiencyOnProperMaterial : 1F;
 	}
 
 	@Override

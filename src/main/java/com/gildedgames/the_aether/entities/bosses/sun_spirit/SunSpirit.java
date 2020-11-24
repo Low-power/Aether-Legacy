@@ -9,33 +9,34 @@ import com.gildedgames.the_aether.entities.projectile.crystals.EntityCrystal;
 import com.gildedgames.the_aether.entities.projectile.crystals.EnumCrystalType;
 import com.gildedgames.the_aether.entities.util.AetherNameGen;
 import com.gildedgames.the_aether.entities.util.AetherItemEntity;
+import com.gildedgames.the_aether.blocks.dungeon.DungeonBaseBlock;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.player.PlayerAether;
 import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
 import com.gildedgames.the_aether.world.AetherData;
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import com.gildedgames.the_aether.blocks.dungeon.BlockDungeonBase;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.command.IEntitySelector;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
+import net.minecraft.init.Blocks;
+import net.minecraft.world.WorldProvider;
+import net.minecraft.world.World;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
 import java.util.List;
 
 public class SunSpirit extends EntityFlying implements IMob, IAetherBoss {
@@ -143,89 +144,70 @@ public class SunSpirit extends EntityFlying implements IMob, IAetherBoss {
 		this.velocity = 0.5D - (double) this.getHealth() / 70D * 0.2D;
 		this.width = this.height = 2F;
 
-		if (this.getAttackTarget() instanceof EntityPlayer) {
-			List<?> dungeonPlayers = this.getPlayersInDungeon();
-			EntityPlayer dungeonTarget = (EntityPlayer) this.getAttackTarget();
-			PlayerAether playerAether = PlayerAether.get(dungeonTarget);
-
-			for (int i = 0; i < dungeonPlayers.size(); ++i) {
-				Entity entity = (Entity)dungeonPlayers.get(i);
-
-				if (entity instanceof EntityPlayer) {
-					PlayerAether dungeonPA = PlayerAether.get((EntityPlayer)entity);
-
-					if (dungeonPA.getFocusedBoss() != this) {
-						dungeonPA.setFocusedBoss(this);
-					}
+		if(getAttackTarget() instanceof EntityPlayer) {
+			EntityPlayer target = (EntityPlayer)getAttackTarget();
+			List<EntityPlayer> dungeon_players = get_dungeon_players_excluding(target);
+			for(EntityPlayer p : dungeon_players) {
+				PlayerAether player_data = PlayerAether.get(p);
+				if(player_data.getFocusedBoss() != this) {
+					player_data.setFocusedBoss(this);
 				}
 			}
 
-			if (dungeonTarget.isDead) {
-				for (int i = 0; i < dungeonPlayers.size(); ++i) {
-					Entity entity = (Entity) dungeonPlayers.get(i);
+			PlayerAether player_data = PlayerAether.get(target);
 
-					if (entity instanceof EntityPlayer) {
-						PlayerAether dungeonPA = PlayerAether.get((EntityPlayer) entity);
-
-						dungeonPA.setFocusedBoss(null);
-					}
+			if(target.isDead) {
+				//player_data.setFocusedBoss(null);
+				for(EntityPlayer p : dungeon_players) {
+					player_data = PlayerAether.get(p);
+					player_data.setFocusedBoss(null);
 				}
 
-				this.setPosition((double) this.originPointX + 0.5D, (double) this.originPointY, (double) this.originPointZ + 0.5D);
-
+				setPosition((double)this.originPointX + 0.5D, (double)this.originPointY, (double)this.originPointZ + 0.5D);
 				this.chatLog = 10;
-
 				this.motionX = this.motionY = this.motionZ = 0D;
-
-				this.chatLine(dungeonTarget, "\u00a7cSuch is the fate of a being who opposes the might of the sun.");
+				chatLine(target, "\u00a7cSuch is the fate of a being who opposes the might of the sun.");
 				this.chatCount = 100;
-
-				this.setPosition((double) this.originPointX + 0.5D, (double) this.originPointY, (double) this.originPointZ + 0.5D);
-				this.setDoor(Blocks.air);
-
-				this.setFreezing(false);
-				this.setAttackTarget(null);
-				this.setHealth(this.getMaxHealth());
+				setPosition((double)this.originPointX + 0.5D, (double)this.originPointY, (double)this.originPointZ + 0.5D);
+				setDoor(Blocks.air);
+				setFreezing(false);
+				setAttackTarget(null);
+				setHealth(this.getMaxHealth());
 			} else {
-				playerAether.setFocusedBoss(this);
+				player_data.setFocusedBoss(this);
 			}
 
-			if (this.isDead()) {
-				this.setFreezing(true);
-				this.chatLine(dungeonTarget, "\u00a7bSuch bitter cold... is this the feeling... of pain?");
+			if(isDead()) {
+				setFreezing(true);
+				chatLine(target, "\u00a7bSuch bitter cold... is this the feeling... of pain?");
 				this.chatCount = 100;
 
-				for (int i = 0; i < dungeonPlayers.size(); ++i) {
-					Entity entity = (Entity)dungeonPlayers.get(i);
-
-					if (entity instanceof EntityPlayer) {
-						((EntityPlayer)entity).triggerAchievement(AetherAchievements.defeat_gold);
-					}
+				for(EntityPlayer p : dungeon_players) {
+					p.triggerAchievement(AetherAchievements.defeat_gold);
 				}
-
-				dungeonTarget.triggerAchievement(AetherAchievements.defeat_gold);
+				target.triggerAchievement(AetherAchievements.defeat_gold);
 
 				if(!this.worldObj.isRemote && !AetherConfig.eternalDayDisabled()) {
 					AetherData data = AetherData.getInstance(this.worldObj);
 					if(!data.isEternalDay()) data.setEternalDay(true);
 				}
 
-				this.setDoor(Blocks.air);
-				this.unlockTreasure();
+				setDoor(Blocks.air);
+				unlockTreasure();
 			}
 		}
 
-		this.setFreezing(this.hurtTime > 0);
+		setFreezing(this.hurtTime > 0);
 
-		if (this.getHealth() > 0) {
+		if(getHealth() > 0) {
 			double xCoord = this.posX + (this.rand.nextFloat() - 0.5F) * this.rand.nextFloat();
 			double yCoord = this.boundingBox.minY + this.rand.nextFloat() - 0.5D;
 			double zCoord = this.posZ + (this.rand.nextFloat() - 0.5F) * this.rand.nextFloat();
 
 			this.worldObj.spawnParticle("flame", xCoord, yCoord, zCoord, 0D, -0.07500000298023224D, 0D);
 
-			this.burnEntities();
-			this.evapWater();
+			burnEntities();
+			evapWater();
 		}
 
 		if (this.chatCount > 0) {
@@ -445,11 +427,10 @@ public class SunSpirit extends EntityFlying implements IMob, IAetherBoss {
 
 	@Override
 	public boolean interact(EntityPlayer player) {
-		if (this.chatWithMe(player)) {
+		if(chatWithMe(player)) {
 			this.rotary = (180D / Math.PI) * Math.atan2(this.posX - player.posX, this.posZ - player.posZ);
-			this.setAttackTarget(player);
-			this.setDoor(BlocksAether.locked_hellfire_stone);
-
+			setAttackTarget(player);
+			setDoor(AetherBlocks.locked_hellfire_stone);
 			return true;
 		}
 
@@ -549,17 +530,22 @@ public class SunSpirit extends EntityFlying implements IMob, IAetherBoss {
 			for (y = this.originPointY - 3; y < this.originPointY + 6; ++y) {
 				for (z = this.originPointZ - 20; z < this.originPointZ + 20; ++z) {
 					Block unlock_block = this.worldObj.getBlock(x, y, z);
-
-					if (unlock_block == BlocksAether.locked_hellfire_stone || unlock_block == BlocksAether.locked_light_hellfire_stone) {
-						this.worldObj.setBlock(x, y, z, ((BlockDungeonBase) unlock_block).getUnlockedBlock());
+					if(unlock_block == AetherBlocks.locked_hellfire_stone || unlock_block == AetherBlocks.locked_light_hellfire_stone) {
+						this.worldObj.setBlock(x, y, z, ((DungeonBaseBlock)unlock_block).getUnlockedBlock());
 					}
 				}
 			}
 		}
 	}
 
-	public List<?> getPlayersInDungeon() {
-		return this.worldObj.getEntitiesWithinAABBExcludingEntity(this.getAttackTarget(), AxisAlignedBB.getBoundingBox(this.originPointX, this.originPointY, this.originPointZ, this.originPointX, this.originPointY, this.originPointZ).expand(20, 3, 20));
+	private List<EntityPlayer> get_dungeon_players_excluding(final EntityPlayer player) {
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(this.originPointX, this.originPointY, this.originPointZ, this.originPointX, this.originPointY, this.originPointZ).expand(20, 3, 20);
+		IEntitySelector selector = new IEntitySelector() {
+			public boolean isEntityApplicable(Entity entity) {
+				return entity != player;
+			}
+		};
+		return (List<EntityPlayer>)this.worldObj.selectEntitiesWithinAABB(EntityPlayer.class, aabb, selector);
 	}
 
 	public void setOriginPosition(int x, int y, int z) {

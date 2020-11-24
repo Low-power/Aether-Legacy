@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.entities.passive;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.items.AetherItems;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ public abstract class AetherAnimal extends EntityAnimal {
 
 	@Override
 	public float getBlockPathWeight(int x, int y, int z) {
-		return this.worldObj.getBlock(x, y - 1, z) == BlocksAether.aether_grass ? 10.0F : this.worldObj.getLightBrightness(x, y, z) - 0.5F;
+		return this.worldObj.getBlock(x, y - 1, z) == AetherBlocks.aether_grass ? 10.0F : this.worldObj.getLightBrightness(x, y, z) - 0.5F;
 	}
 
 	@Override

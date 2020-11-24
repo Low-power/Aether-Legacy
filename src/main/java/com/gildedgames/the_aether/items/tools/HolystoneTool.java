@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.items.tools;
 
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.util.AetherToolType;
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -18,7 +18,7 @@ public class HolystoneTool extends AetherTool {
 
 	@Override
 	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-		return repair.getItem() == Item.getItemFromBlock(BlocksAether.holystone);
+		return repair.getItem() == Item.getItemFromBlock(AetherBlocks.holystone);
 	}
 
 	@Override

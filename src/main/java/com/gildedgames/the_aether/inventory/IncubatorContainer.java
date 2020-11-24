@@ -1,9 +1,11 @@
 package com.gildedgames.the_aether.inventory;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.tileentity.IncubatorTileEntity;
 import com.gildedgames.the_aether.inventory.slots.IncubatorSlot;
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.tileentity.IncubatorTileEntity;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -11,8 +13,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
 
 public class IncubatorContainer extends Container {
 
@@ -49,15 +50,12 @@ public class IncubatorContainer extends Container {
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
 
-		for (int i = 0; i < this.crafters.size(); ++i) {
-			ICrafting icrafting = (ICrafting) this.crafters.get(i);
-
+		for(ICrafting crafting : (List<ICrafting>)this.crafters) {
 			if (this.progress != this.incubator.progress) {
-				icrafting.sendProgressBarUpdate(this, 0, this.incubator.progress);
+				crafting.sendProgressBarUpdate(this, 0, this.incubator.progress);
 			}
-
 			if (this.powerRemaining != this.incubator.powerRemaining) {
-				icrafting.sendProgressBarUpdate(this, 1, this.incubator.powerRemaining);
+				crafting.sendProgressBarUpdate(this, 1, this.incubator.powerRemaining);
 			}
 		}
 
@@ -78,49 +76,49 @@ public class IncubatorContainer extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return this.incubator.isUseableByPlayer(entityplayer);
+	public boolean canInteractWith(EntityPlayer player) {
+		return this.incubator.isUseableByPlayer(player);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer entityplayer, int index) {
-		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(index);
-
+	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+		ItemStack item_stack_copy = null;
+		Slot slot = (Slot)this.inventorySlots.get(index);
 		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
+			ItemStack item_stack = slot.getStack();
+			item_stack_copy = item_stack.copy();
 
 			if (index != 1 && index != 0) {
-				if (itemstack.getItem() == Item.getItemFromBlock(BlocksAether.ambrosium_torch) && this.mergeItemStack(itemstack1, 1, 2, false)) {
-					return itemstack;
-				} else if (itemstack.getItem() == AetherItems.moa_egg && this.mergeItemStack(itemstack1, 0, 1, false)) {
-					return itemstack;
+				Item item = item_stack_copy.getItem();
+				if(item == Item.getItemFromBlock(AetherBlocks.ambrosium_torch) && mergeItemStack(item_stack, 1, 2, false)) {
+					return item_stack_copy;
+				} else if(item == AetherItems.moa_egg && mergeItemStack(item_stack, 0, 1, false)) {
+					return item_stack_copy;
 				} else if (index >= 2 && index < 29) {
-					if (!this.mergeItemStack(itemstack1, 29, 38, false)) {
+					if(!mergeItemStack(item_stack, 29, 38, false)) {
 						return null;
 					}
-				} else if (index >= 29 && index < 37 && !this.mergeItemStack(itemstack1, 2, 29, false)) {
+				} else if(index >= 29 && index < 37 && !mergeItemStack(item_stack, 2, 29, false)) {
 					return null;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 2, 38, false)) {
+			} else if(!mergeItemStack(item_stack, 2, 38, false)) {
 				return null;
 			}
 
-			if (itemstack1.stackSize == 0) {
-				slot.putStack((ItemStack) null);
+			if(item_stack.stackSize == 0) {
+				slot.putStack(null);
 			} else {
 				slot.onSlotChanged();
 			}
 
-			if (itemstack1.stackSize == itemstack.stackSize) {
+			if(item_stack.stackSize == item_stack_copy.stackSize) {
 				return null;
 			}
 
-			slot.onPickupFromSlot(entityplayer, itemstack1);
+			slot.onPickupFromSlot(player, item_stack);
 		}
 
-		return itemstack;
+		return item_stack_copy;
 	}
 
 }

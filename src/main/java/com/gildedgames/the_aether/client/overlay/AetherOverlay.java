@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.client.overlay;
 
 import com.gildedgames.the_aether.api.player.util.IAetherBoss;
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.entities.passive.mountable.Moa;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.player.PlayerAether;
@@ -51,7 +51,6 @@ public class AetherOverlay {
 			GL11.glDisable(GL11.GL_ALPHA_TEST);
 			GL11.glColor4f(0.5F, 0.5F, 0.5F, alpha);
 
-
 			mc.renderEngine.bindTexture(TEXTURE_POISON_VIGNETTE);
 
 			tessellator.startDrawingQuads();
@@ -71,7 +70,6 @@ public class AetherOverlay {
 
 	public static void renderCure(Minecraft mc) {
 		PlayerAether playerAether = PlayerAether.get(mc.thePlayer);
-
 		if (playerAether.isCured()) {
 			ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 			Tessellator tessellator = Tessellator.instance;
@@ -138,7 +136,6 @@ public class AetherOverlay {
 
 	public static void renderCooldown(Minecraft mc) {
 		PlayerAether playerInfo = PlayerAether.get(mc.thePlayer);
-
 		if (playerInfo.getHammerCooldown() != 0) {
 			ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 
@@ -173,7 +170,6 @@ public class AetherOverlay {
 
 	public static void renderJumps(Minecraft mc) {
 		EntityPlayer player = mc.thePlayer;
-
 		if (player == null || !(player.ridingEntity instanceof Moa)) {
 			return;
 		}
@@ -218,18 +214,18 @@ public class AetherOverlay {
 		GL11.glDepthMask(false);
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		GL11.glColor4f(1F, 1F, 1F, timeInPortal);
-		IIcon iicon = BlocksAether.aether_portal.getBlockTextureFromSide(1);
+		IIcon icon = AetherBlocks.aether_portal.getBlockTextureFromSide(1);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-		float f = iicon.getMinU();
-		float f1 = iicon.getMinV();
-		float f2 = iicon.getMaxU();
-		float f3 = iicon.getMaxV();
+		float min_u = icon.getMinU();
+		float min_v = icon.getMinV();
+		float max_u = icon.getMaxU();
+		float max_v = icon.getMaxV();
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(0D, (double)scaledRes.getScaledHeight(), -90D, (double)f, (double)f3);
-		tessellator.addVertexWithUV((double)scaledRes.getScaledWidth(), (double)scaledRes.getScaledHeight(), -90D, (double)f2, (double)f3);
-		tessellator.addVertexWithUV((double)scaledRes.getScaledWidth(), 0D, -90D, (double)f2, (double)f1);
-		tessellator.addVertexWithUV(0D, 0D, -90D, (double)f, (double)f1);
+		tessellator.addVertexWithUV(0D, (double)scaledRes.getScaledHeight(), -90D, (double)min_u, (double)max_v);
+		tessellator.addVertexWithUV((double)scaledRes.getScaledWidth(), (double)scaledRes.getScaledHeight(), -90D, (double)max_u, (double)max_v);
+		tessellator.addVertexWithUV((double)scaledRes.getScaledWidth(), 0D, -90D, (double)max_u, (double)min_v);
+		tessellator.addVertexWithUV(0D, 0D, -90D, (double)min_u, (double)min_v);
 		tessellator.draw();
 		GL11.glDepthMask(true);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

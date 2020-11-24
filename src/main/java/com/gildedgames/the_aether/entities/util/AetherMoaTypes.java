@@ -4,7 +4,7 @@ import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.api.AetherAPI;
 import com.gildedgames.the_aether.api.moa.AetherMoaType;
 import com.gildedgames.the_aether.api.moa.MoaProperties;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 
 public class AetherMoaTypes {
 
@@ -18,11 +18,9 @@ public class AetherMoaTypes {
 	}
 
 	public static AetherMoaType register(String name, int hexColor, MoaProperties properties) {
-		AetherMoaType moaType = new AetherMoaType(hexColor, properties, AetherCreativeTabs.misc);
-
-		AetherAPI.instance().register(Aether.locate(name), moaType);
-
-		return moaType;
+		AetherMoaType type = new AetherMoaType(hexColor, properties, AetherCreativeTabs.misc);
+		AetherAPI.instance().register(Aether.locate(name), type);
+		return type;
 	}
 
 }

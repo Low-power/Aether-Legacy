@@ -3,7 +3,7 @@ package com.gildedgames.the_aether.items.weapons.projectile;
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.entities.projectile.EntityPhoenixArrow;
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -25,22 +25,22 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class PhoenixBow extends ItemBow {
 
 	@SideOnly(Side.CLIENT)
-	private IIcon[] iconArray;
+	private IIcon[] icons;
 
 	public PhoenixBow() {
 		super();
 
 		this.maxStackSize = 1;
-		this.setMaxDamage(384);
-		this.setFull3D();
-		this.setTextureName(Aether.find("weapons/bow"));
-		this.setCreativeTab(AetherCreativeTabs.weapons);
+		setMaxDamage(384);
+		setFull3D();
+		setTextureName(Aether.find("weapons/bow"));
+		setCreativeTab(AetherCreativeTabs.weapons);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getItemIconForUseDuration(int p_94599_1_) {
-		return this.iconArray[p_94599_1_];
+	public IIcon getItemIconForUseDuration(int i) {
+		return this.icons[i];
 	}
 
 	@Override
@@ -66,12 +66,11 @@ public class PhoenixBow extends ItemBow {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister p_94581_1_) {
-		this.itemIcon = p_94581_1_.registerIcon(Aether.find("weapons/phoenix_bow"));
-		this.iconArray = new IIcon[bowPullIconNameArray.length];
-
-		for (int i = 0; i < this.iconArray.length; ++i) {
-			this.iconArray[i] = p_94581_1_.registerIcon(this.getIconString() + "_" + bowPullIconNameArray[i]);
+	public void registerIcons(IIconRegister register) {
+		this.itemIcon = register.registerIcon(Aether.find("weapons/phoenix_bow"));
+		this.icons = new IIcon[bowPullIconNameArray.length];
+		for (int i = 0; i < this.icons.length; ++i) {
+			this.icons[i] = register.registerIcon(getIconString() + "_" + bowPullIconNameArray[i]);
 		}
 	}
 
@@ -164,7 +163,7 @@ public class PhoenixBow extends ItemBow {
 	}
 
 	public static float getArrowVelocity(int charge) {
-		float f = (float) charge / 20F;
+		float f = (float)charge / 20F;
 		f = (f * f + f * 2F) / 3F;
 
 		if (f > 1F) {

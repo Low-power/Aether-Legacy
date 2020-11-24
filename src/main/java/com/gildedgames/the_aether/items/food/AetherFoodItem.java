@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.items.food;
 
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ public class AetherFoodItem extends ItemFood {
 	}
 
 	@Override
-	public EnumRarity getRarity(ItemStack p_77613_1_) {
-		return p_77613_1_.getItem() == AetherItems.enchanted_blueberry ? EnumRarity.rare : super.getRarity(p_77613_1_);
+	public EnumRarity getRarity(ItemStack item_stack) {
+		return item_stack.getItem() == AetherItems.enchanted_blueberry ? EnumRarity.rare : super.getRarity(item_stack);
 	}
 }

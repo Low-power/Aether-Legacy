@@ -1,11 +1,10 @@
 package com.gildedgames.the_aether.entities.passive.mountable;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
 import com.gildedgames.the_aether.entities.util.MountableEntity;
+import com.gildedgames.the_aether.entities.hostile.swet.EnumSwetType;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.player.PlayerAether;
-import com.gildedgames.the_aether.entities.hostile.swet.EnumSwetType;
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,6 +13,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -70,7 +70,7 @@ public class Swet extends MountableEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (this.getAttackTarget() != null) {
+		if(getAttackTarget() != null) {
 			for (int i = 0; i < 3; i++) {
 				double d = (float) this.posX + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.3F;
 				double d1 = (float) this.posY + this.height;
@@ -80,23 +80,21 @@ public class Swet extends MountableEntity {
 			}
 		}
 
-		if (this.riddenByEntity == null && !this.isFriendly()) {
-			List<?> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.5D, 0.75D, 0.5D), new IEntitySelector() {
-					@Override
-					public boolean isEntityApplicable(Entity entity) {
+		if(this.riddenByEntity == null && !isFriendly()) {
+			List<EntityLivingBase> entity_list = (List<EntityLivingBase>)this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.5D, 0.75D, 0.5D), new IEntitySelector() {
+				@Override
+				public boolean isEntityApplicable(Entity entity) {
 					return !(entity instanceof Swet) && entity instanceof EntityLivingBase && entity.ridingEntity == null;
-					}
-					});
-
-			for (int j = 0; j < list.size() && this.riddenByEntity == null; ++j) {
-				EntityLivingBase entity = (EntityLivingBase) list.get(j);
-
-				this.capturePrey(entity);
+				}
+			});
+			for(EntityLivingBase entity : entity_list) {
+				capturePrey(entity);
+				if(this.riddenByEntity != null) break;
 			}
 		}
 
-		if (this.handleWaterMovement()) {
-			this.dissolve();
+		if(handleWaterMovement()) {
+			dissolve();
 		}
 	}
 
@@ -157,47 +155,44 @@ public class Swet extends MountableEntity {
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource damageSource, float i) {
+	public boolean attackEntityFrom(DamageSource damageSource, float damage) {
 		Entity entity = damageSource.getEntity();
 
-		if (this.hops == 3 && entity == null && this.getHealth() > 1) {
-			this.setHealth(1);
+		if(this.hops == 3 && entity == null && getHealth() > 1) {
+			setHealth(1);
 		}
 
-		boolean flag = super.attackEntityFrom(damageSource, i);
-
-		if (flag && this.riddenByEntity != null && (this.riddenByEntity instanceof EntityLivingBase)) {
+		boolean attack_ok = super.attackEntityFrom(damageSource, damage);
+		if(attack_ok && this.riddenByEntity != null && (this.riddenByEntity instanceof EntityLivingBase)) {
 			EntityLivingBase rider = (EntityLivingBase) this.riddenByEntity;
-
 			if (entity != null && rider == entity) {
 				if (this.rand.nextInt(3) == 0) {
 					this.kickoff = true;
-					}
+				}
 			} else {
-				rider.attackEntityFrom(DamageSource.causeMobDamage(this), i);
+				rider.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
 
-				if (this.getHealth() <= 0) {
+				if(getHealth() <= 0) {
 					this.kickoff = true;
 				}
 			}
 		}
 
-		if (flag && this.getHealth() <= 0) {
-			this.dissolve();
-		} else if (flag && (entity instanceof EntityLivingBase)) {
-			EntityLivingBase entityliving = (EntityLivingBase) entity;
-
-			if (entityliving.getHealth() > 0 && (this.riddenByEntity == null || this.riddenByEntity != null && entityliving != this.riddenByEntity)) {
-				this.setAttackTarget((EntityLivingBase) entity);
+		if(attack_ok && getHealth() <= 0) {
+			dissolve();
+		} else if(attack_ok && entity instanceof EntityLivingBase) {
+			EntityLivingBase living_entity = (EntityLivingBase)entity;
+			if(living_entity.getHealth() > 0 && (this.riddenByEntity == null || this.riddenByEntity != living_entity)) {
+				setAttackTarget(living_entity);
 				this.kickoff = true;
 			}
 		}
 
-		if (this.isFriendly()) {
-			this.setAttackTarget(null);
+		if(isFriendly()) {
+			setAttackTarget(null);
 		}
 
-		return flag;
+		return attack_ok;
 	}
 
 	@Override
@@ -205,11 +200,11 @@ public class Swet extends MountableEntity {
 		super.updateEntityActionState();
 		this.entityAge++;
 
-		if (this.isFriendly() && this.riddenByEntity != null) {
+		if(isFriendly() && this.riddenByEntity != null) {
 			return;
 		}
 
-		if (this.getAttackTarget() == null && this.riddenByEntity == null && this.getHealth() > 0) {
+		if(getAttackTarget() == null && this.riddenByEntity == null && getHealth() > 0) {
 			if (this.onGround && this.slimeJumpDelay-- <= 0) {
 				this.slimeJumpDelay = this.getJumpDelay();
 
@@ -342,9 +337,8 @@ public class Swet extends MountableEntity {
 				return;
 			}
 
-			this.setFriendly(aetherRider.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.swet_cape)) ? true : false);
-
-			if (this.isFriendly()) {
+			setFriendly(aetherRider.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.swet_cape)));
+			if(isFriendly()) {
 				this.prevRotationYaw = this.rotationYaw = rider.rotationYaw;
 				this.rotationPitch = rider.rotationPitch * 0.5F;
 
@@ -417,7 +411,7 @@ public class Swet extends MountableEntity {
 				this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
 
 				if (!this.worldObj.isRemote) {
-					this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
+					setAIMoveSpeed((float)getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
 					super.moveEntityWithHeading(par1, par2);
 				}
 			} else {
@@ -436,7 +430,7 @@ public class Swet extends MountableEntity {
 	protected void jump() {
 		super.jump();
 
-		this.playSound("mob.slime.small", 1F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1F) * 0.8F);
+		playSound("mob.slime.small", 1F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1F) * 0.8F);
 	}
 
 	public void setSwetType(int id) {
@@ -445,7 +439,6 @@ public class Swet extends MountableEntity {
 
 	public EnumSwetType getSwetType() {
 		int id = this.dataWatcher.getWatchableObjectByte(21);
-
 		return EnumSwetType.get(id);
 	}
 
@@ -477,8 +470,8 @@ public class Swet extends MountableEntity {
 
 	@Override
 	public void applyEntityCollision(Entity entity) {
-		if (this.hops == 0 && !this.isFriendly() && this.riddenByEntity == null && this.getAttackTarget() != null && entity != null && entity == this.getAttackTarget() && (entity.ridingEntity == null || !(entity.ridingEntity instanceof Swet))) {
-			this.capturePrey(entity);
+		if(this.hops == 0 && !isFriendly() && this.riddenByEntity == null && this.getAttackTarget() != null && entity != null && entity == this.getAttackTarget() && (entity.ridingEntity == null || !(entity.ridingEntity instanceof Swet))) {
+			capturePrey(entity);
 		}
 
 		super.applyEntityCollision(entity);
@@ -488,7 +481,7 @@ public class Swet extends MountableEntity {
 	public boolean interact(EntityPlayer player) {
 		if (!this.worldObj.isRemote && this.isFriendly()) {
 			if (this.riddenByEntity == null) {
-				this.capturePrey(player);
+				capturePrey(player);
 			} else if (this.riddenByEntity == player) {
 				player.mountEntity(null);
 			}
@@ -512,13 +505,12 @@ public class Swet extends MountableEntity {
 	@Override
 	protected void dropFewItems(boolean recentlyHit, int lootLevel) {
 		int count = this.rand.nextInt(3);
-
 		if (lootLevel > 0) {
 			count += this.rand.nextInt(lootLevel + 1);
 		}
-
-		this.entityDropItem(new ItemStack(this.getSwetType().getId() == 0 ? BlocksAether.aercloud : Blocks.glowstone, count, this.getSwetType().getId() == 0 ? 1 : 0), 1F);
-		this.entityDropItem(new ItemStack(AetherItems.swet_ball, count), 1F);
+		int id = getSwetType().getId();
+		entityDropItem(new ItemStack(id == 0 ? AetherBlocks.aercloud : Blocks.glowstone, count, id == 0 ? 1 : 0), 1F);
+		entityDropItem(new ItemStack(AetherItems.swet_ball, count), 1F);
 	}
 
 	@Override
@@ -543,8 +535,8 @@ public class Swet extends MountableEntity {
 		this.hops = compound.getShort("Hops");
 		this.flutter = compound.getShort("Flutter");
 
-		this.setFriendly(compound.getBoolean("isFriendly"));
-		this.setSwetType(compound.getInteger("swetType"));
+		setFriendly(compound.getBoolean("isFriendly"));
+		setSwetType(compound.getInteger("swetType"));
 	}
 
 }

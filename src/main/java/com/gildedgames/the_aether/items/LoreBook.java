@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.items;
 
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.network.AetherGuiHandler;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;

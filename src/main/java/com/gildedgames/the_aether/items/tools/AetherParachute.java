@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.items.tools;
 
 import com.gildedgames.the_aether.entities.passive.mountable.ParachuteEntity;
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

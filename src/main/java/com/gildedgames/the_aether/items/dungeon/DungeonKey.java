@@ -3,7 +3,7 @@ package com.gildedgames.the_aether.items.dungeon;
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.util.EnumDungeonKeyType;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
@@ -63,7 +63,6 @@ public class DungeonKey extends Item {
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack) {
 		int meta = itemstack.getItemDamage();
-
 		return this.getUnlocalizedName() + "_" + EnumDungeonKeyType.getType(meta).toString();
 	}
 

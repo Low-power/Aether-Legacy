@@ -7,21 +7,20 @@ import com.gildedgames.the_aether.items.MoaEgg;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.world.gen.AetherGenUtils;
 import com.gildedgames.the_aether.world.gen.AetherStructure;
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import net.minecraft.block.Block;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraft.item.ItemStack;
+import net.minecraft.init.Blocks;
 import java.util.Random;
 
 public class SilverDungeonComponent extends AetherStructure {
 
-	private static final Block LOCKED_ANGELIC_STONE = BlocksAether.locked_angelic_stone;
-
-	private static final Block LOCKED_LIGHT_ANGELIC_STONE = BlocksAether.locked_light_angelic_stone;
+	private static final Block LOCKED_ANGELIC_STONE = AetherBlocks.locked_angelic_stone;
+	private static final Block LOCKED_LIGHT_ANGELIC_STONE = AetherBlocks.locked_light_angelic_stone;
 
 	private int[][][] rooms = new int[3][3][3];
 
@@ -53,63 +52,62 @@ public class SilverDungeonComponent extends AetherStructure {
 	public boolean generate() {
 		this.replaceAir = true;
 
-		this.setStructureOffset(21, 17, 20);
+		setStructureOffset(21, 17, 20);
 
 		for (int tries = 0; tries < 100; tries++) {
-			AetherGenUtils.generateClouds(this, BlocksAether.aercloud, 0, false, 10, this.random.nextInt(77), 0, this.random.nextInt(50), this.xTendency, this.zTendency);
+			AetherGenUtils.generateClouds(this, AetherBlocks.aercloud, 0, false, 10, this.random.nextInt(77), 0, this.random.nextInt(50), this.xTendency, this.zTendency);
 		}
 
-		this.setStructureOffset(31, 24, 30);
+		setStructureOffset(31, 24, 30);
 
 		this.replaceSolid = true;
 
-		this.setBlocks(BlocksAether.holystone, BlocksAether.mossy_holystone, 30);
-
-		this.addSolidBox(0, -5, 0, 55, 5, 30);
+		setBlocks(AetherBlocks.holystone, AetherBlocks.mossy_holystone, 30);
+		addSolidBox(0, -5, 0, 55, 5, 30);
 
 		for (int x = 0; x < 55; x += 4) {
-			this.generateColumn(x, 0, 0, 14);
-			this.generateColumn(x, 0, 27, 14);
+			generateColumn(x, 0, 0, 14);
+			generateColumn(x, 0, 27, 14);
 		}
 
 		for (int z = 0; z < 12; z += 4) {
-			this.generateColumn(0, 0, z, 14);
-			this.generateColumn(52, 0, z, 14);
+			generateColumn(0, 0, z, 14);
+			generateColumn(52, 0, z, 14);
 		}
 
 		for (int z = 19; z < 30; z += 4) {
-			this.generateColumn(0, 0, z, 14);
-			this.generateColumn(52, 0, z, 14);
+			generateColumn(0, 0, z, 14);
+			generateColumn(52, 0, z, 14);
 		}
 
-		this.setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 20);
-		this.addHollowBox(4, -1, 4, 47, 16, 22);
-		this.addPlaneX(11, 0, 5, 15, 20);
-		this.addPlaneX(18, 0, 5, 15, 20);
-		this.addPlaneX(25, 0, 5, 15, 20);
-		this.addPlaneZ(5, 0, 11, 20, 15);
-		this.addPlaneZ(5, 0, 18, 20, 15);
+		setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 20);
+		addHollowBox(4, -1, 4, 47, 16, 22);
+		addPlaneX(11, 0, 5, 15, 20);
+		addPlaneX(18, 0, 5, 15, 20);
+		addPlaneX(25, 0, 5, 15, 20);
+		addPlaneZ(5, 0, 11, 20, 15);
+		addPlaneZ(5, 0, 18, 20, 15);
 
-		this.setBlocks(LOCKED_ANGELIC_STONE, BlocksAether.angelic_trap, 30);
-		this.addPlaneY(5, 4, 5, 20, 20);
-		this.addPlaneY(5, 9, 5, 20, 20);
+		setBlocks(LOCKED_ANGELIC_STONE, AetherBlocks.angelic_trap, 30);
+		addPlaneY(5, 4, 5, 20, 20);
+		addPlaneY(5, 9, 5, 20, 20);
 
 		for (int y = 0; y < 2; y++) {
 			for (int z = 14; z < 16; z++) {
-				this.setBlockWithOffset(4, y, z, Blocks.air, 0);
+				setBlockWithOffset(4, y, z, Blocks.air, 0);
 			}
 		}
 
-		this.setBlocks(Blocks.air, Blocks.air, 1);
-		this.addSolidBox(0, -4, 14, 1, 4, 2);
-		this.addSolidBox(1, -3, 14, 1, 3, 2);
-		this.addSolidBox(2, -2, 14, 1, 2, 2);
-		this.addSolidBox(3, -1, 14, 1, 1, 2);
+		setBlocks(Blocks.air, Blocks.air, 1);
+		addSolidBox(0, -4, 14, 1, 4, 2);
+		addSolidBox(1, -3, 14, 1, 3, 2);
+		addSolidBox(2, -2, 14, 1, 2, 2);
+		addSolidBox(3, -1, 14, 1, 1, 2);
 
-		this.setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 15);
+		setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 15);
 
 		for (int y = 0; y < 7; y++) {
-			this.addPlaneY(-1, 15 + y, -1 + 2 * y, 57, 32 - 4 * y);
+			addPlaneY(-1, 15 + y, -1 + 2 * y, 57, 32 - 4 * y);
 		}
 
 		this.generateStaircase(19, 0, 5 + this.finalStaircaseZ * 7, 10);
@@ -124,16 +122,16 @@ public class SilverDungeonComponent extends AetherStructure {
 
 		for (y = 0; y < 2; y++) {
 			for (z = 7 + 7 * this.finalStaircaseZ; z < 9 + 7 * this.finalStaircaseZ; z++) {
-				this.setBlockWithOffset(x, y, z, Blocks.air, 0);
+				setBlockWithOffset(x, y, z, Blocks.air, 0);
 			}
 		}
 
-		this.generateStaircase(12, 0, 5 + this.firstStaircaseZ * 7, 5);
+		generateStaircase(12, 0, 5 + this.firstStaircaseZ * 7, 5);
 
 		this.rooms[1][0][this.firstStaircaseZ] = 1;
 		this.rooms[1][1][this.firstStaircaseZ] = 1;
 
-		this.generateStaircase(5, 5, 5 + this.secondStaircaseZ * 7, 5);
+		generateStaircase(5, 5, 5 + this.secondStaircaseZ * 7, 5);
 
 		this.rooms[0][1][this.secondStaircaseZ] = 1;
 		this.rooms[0][2][this.secondStaircaseZ] = 1;
@@ -235,23 +233,23 @@ public class SilverDungeonComponent extends AetherStructure {
 						int roomType = this.random.nextInt(3);
 
 						if (type >= 3) {
-							this.setBlockWithOffset(7 + p * 7, -1 + q * 5, 7 + r * 7, BlocksAether.angelic_trap, 0);
+							setBlockWithOffset(7 + p * 7, -1 + q * 5, 7 + r * 7, AetherBlocks.angelic_trap, 0);
 
 							switch (roomType) {
 								case 1: {
-									this.addPlaneY(7 + 7 * p, 5 * q, 7 + 7 * r, 2, 2);
+									addPlaneY(7 + 7 * p, 5 * q, 7 + 7 * r, 2, 2);
 
 									int u = 7 + 7 * p + this.random.nextInt(2);
 									int v = 7 + 7 * r + this.random.nextInt(2);
 
-									if (this.getBlockState(u, 5 * q + 1, v).getMaterial() == Material.air) {
-										this.setBlockWithOffset(u, 5 * q + 1, v, Blocks.chest, 0);
+									if(getBlockState(u, 5 * q + 1, v).getMaterial() == Material.air) {
+										setBlockWithOffset(u, 5 * q + 1, v, Blocks.chest, 0);
 
-										TileEntity tileEntity = this.getTileEntityFromPosWithOffset(u, 5 * q + 1, v);
-
-										if (tileEntity instanceof TileEntityChest) {
+										TileEntity tile_entity = getTileEntityFromPosWithOffset(u, 5 * q + 1, v);
+										if(tile_entity instanceof TileEntityChest) {
+											TileEntityChest chest_tile_entity = (TileEntityChest)tile_entity;
 											for (u = 0; u < 3 + random.nextInt(3); u++) {
-												((TileEntityChest) tileEntity).setInventorySlotContents(this.random.nextInt(((TileEntityChest) tileEntity).getSizeInventory()), this.getNormalLoot(this.random));
+												chest_tile_entity.setInventorySlotContents(this.random.nextInt(chest_tile_entity.getSizeInventory()), getNormalLoot(this.random));
 											}
 										}
 									}
@@ -259,11 +257,11 @@ public class SilverDungeonComponent extends AetherStructure {
 									break;
 								}
 								case 2: {
-									this.addPlaneY(7 + 7 * p, 5 * q, 7 + 7 * r, 2, 2);
-									this.setBlockWithOffset(7 + 7 * p + this.random.nextInt(2), 5 * q + 1, 7 + 7 * r + this.random.nextInt(2), BlocksAether.chest_mimic, 0);
+									addPlaneY(7 + 7 * p, 5 * q, 7 + 7 * r, 2, 2);
+									setBlockWithOffset(7 + 7 * p + this.random.nextInt(2), 5 * q + 1, 7 + 7 * r + this.random.nextInt(2), AetherBlocks.chest_mimic, 0);
 
 									if (this.random.nextBoolean()) {
-										this.setBlockWithOffset(7 + 7 * p + this.random.nextInt(2), 5 * q + 1, 7 + 7 * r + this.random.nextInt(2), BlocksAether.chest_mimic, 0);
+										setBlockWithOffset(7 + 7 * p + this.random.nextInt(2), 5 * q + 1, 7 + 7 * r + this.random.nextInt(2), AetherBlocks.chest_mimic, 0);
 									}
 
 									break;
@@ -277,125 +275,119 @@ public class SilverDungeonComponent extends AetherStructure {
 
 		for (x = 0; x < 24; x++) {
 			for (z = 0; z < 20; z++) {
-				int distance = (int) (Math.sqrt(x * x + (z - 7) * (z - 7)) + Math.sqrt(x * x + (z - 12) * (z - 12)));
-
+				int distance = (int)(Math.sqrt(x * x + (z - 7) * (z - 7)) + Math.sqrt(x * x + (z - 12) * (z - 12)));
 				if (distance == 21) {
-					this.setBlockWithOffset(26 + x, 0, 5 + z, LOCKED_LIGHT_ANGELIC_STONE, 0);
+					setBlockWithOffset(26 + x, 0, 5 + z, LOCKED_LIGHT_ANGELIC_STONE, 0);
 				} else if (distance > 21) {
-					this.setBlockWithOffset(26 + x, 0, 5 + z, LOCKED_ANGELIC_STONE, 0);
+					setBlockWithOffset(26 + x, 0, 5 + z, LOCKED_ANGELIC_STONE, 0);
 				}
 			}
 		}
 
-		this.setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 20);
-		this.addPlaneY(44, 1, 11, 6, 8);
-		this.addSolidBox(46, 2, 13, 4, 2, 4);
-		this.addLineX(46, 4, 13, 4);
-		this.addLineX(46, 4, 16, 4);
-		this.addPlaneX(49, 4, 13, 4, 4);
+		setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 20);
+		addPlaneY(44, 1, 11, 6, 8);
+		addSolidBox(46, 2, 13, 4, 2, 4);
+		addLineX(46, 4, 13, 4);
+		addLineX(46, 4, 16, 4);
+		addPlaneX(49, 4, 13, 4, 4);
 
-		this.setBlocks(Blocks.wool, 11, Blocks.wool, 11, 20);
-		this.addPlaneY(47, 3, 14, 2, 2);
+		setBlocks(Blocks.wool, 11, Blocks.wool, 11, 20);
+		addPlaneY(47, 3, 14, 2, 2);
 
 		for (x = 0; x < 2; x++) {
 			for (z = 0; z < 2; z++) {
-				this.setBlockWithOffset(44 + x * 5, 2, 11 + z * 7, BlocksAether.ambrosium_torch, 0);
+				setBlockWithOffset(44 + x * 5, 2, 11 + z * 7, AetherBlocks.ambrosium_torch, 0);
 			}
 		}
 
-		this.setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 20);
-		this.addPlaneY(35, 1, 5, 6, 3); //left
-		this.addPlaneY(35, 1, 22, 6, 3); //right
+		setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 20);
+		addPlaneY(35, 1, 5, 6, 3); //left
+		addPlaneY(35, 1, 22, 6, 3); //right
 
 		//left
-		this.addLineZ(34, 1, 5, 2);
-		this.addLineZ(41, 1, 5, 2);
-		this.addLineX(36, 1, 8, 4);
+		addLineZ(34, 1, 5, 2);
+		addLineZ(41, 1, 5, 2);
+		addLineX(36, 1, 8, 4);
 		//right
-		this.addLineZ(34, 1, 23, 2);
-		this.addLineZ(41, 1, 23, 2);
-		this.addLineX(36, 1, 21, 4);
+		addLineZ(34, 1, 23, 2);
+		addLineZ(41, 1, 23, 2);
+		addLineX(36, 1, 21, 4);
 
-		this.setBlocks(Blocks.water, Blocks.water, 1);
-		this.addPlaneY(35, 1, 5, 6, 3);
-		this.addPlaneY(35, 1, 22, 6, 3);
+		setBlocks(Blocks.water, Blocks.water, 1);
+		addPlaneY(35, 1, 5, 6, 3);
+		addPlaneY(35, 1, 22, 6, 3);
 
-		this.setBlockWithOffset(35, 1, 7, LOCKED_ANGELIC_STONE, 0);
-		this.setBlockWithOffset(40, 1, 7, LOCKED_ANGELIC_STONE, 0);
-		this.setBlockWithOffset(35, 1, 22, LOCKED_ANGELIC_STONE, 0);
-		this.setBlockWithOffset(40, 1, 22, LOCKED_ANGELIC_STONE, 0);
+		setBlockWithOffset(35, 1, 7, LOCKED_ANGELIC_STONE, 0);
+		setBlockWithOffset(40, 1, 7, LOCKED_ANGELIC_STONE, 0);
+		setBlockWithOffset(35, 1, 22, LOCKED_ANGELIC_STONE, 0);
+		setBlockWithOffset(40, 1, 22, LOCKED_ANGELIC_STONE, 0);
 
 		for (x = 36; x < 40; x += 3) {
 			for (z = 8; z < 22; z += 13) {
-				this.setBlockWithOffset(x, 2, z, BlocksAether.ambrosium_torch, 0);
+				setBlockWithOffset(x, 2, z, AetherBlocks.ambrosium_torch, 0);
 			}
 		}
 
-		this.generateChandelier(28, 0, 10, 8);
-		this.generateChandelier(43, 0, 10, 8);
-		this.generateChandelier(43, 0, 19, 8);
-		this.generateChandelier(28, 0, 19, 8);
+		generateChandelier(28, 0, 10, 8);
+		generateChandelier(43, 0, 10, 8);
+		generateChandelier(43, 0, 19, 8);
+		generateChandelier(28, 0, 19, 8);
 
-		this.generateGoldenOakSapling(45, 1, 6);
-		this.generateGoldenOakSapling(45, 1, 21);
+		generateGoldenOakSapling(45, 1, 6);
+		generateGoldenOakSapling(45, 1, 21);
 
-		ValkyrieQueen valkyrieQueen = new ValkyrieQueen(this.worldObj, (double) this.getActualX(40, 15), (double) this.getActualY(1) + 0.5D, (double) this.getActualZ(40, 15));
+		ValkyrieQueen valkyrie_queen = new ValkyrieQueen(this.worldObj, (double)getActualX(40, 15), (double)getActualY(1) + 0.5D, (double)getActualZ(40, 15));
+		valkyrie_queen.setPosition(getActualX(40, 15), getActualY(2), getActualZ(40, 15));
+		valkyrie_queen.setDungeon(getActualX(26, 24), getActualY(0), getActualZ(26, 24));
+		spawnEntity(valkyrie_queen, 40, 1, 15);
 
-		valkyrieQueen.setPosition(this.getActualX(40, 15), this.getActualY(2), this.getActualZ(40, 15));
-		valkyrieQueen.setDungeon(this.getActualX(26, 24), this.getActualY(0), this.getActualZ(26, 24));
-
-		this.spawnEntity(valkyrieQueen, 40, 1, 15);
-
-		this.setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 20);
-		this.addHollowBox(41, -2, 13, 4, 4, 4);
+		setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 20);
+		addHollowBox(41, -2, 13, 4, 4, 4);
 
 		x = 42 + this.random.nextInt(2);
 		z = 14 + this.random.nextInt(2);
 
-		this.setBlockWithOffset(x, -1, z, BlocksAether.treasure_chest, 0);
+		setBlockWithOffset(x, -1, z, AetherBlocks.treasure_chest, 0);
 
 		return true;
 	}
 
 	public void generateGoldenOakSapling(int x, int y, int z) {
-		this.setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 2);
-		this.addPlaneY(x, y, z, 3, 3);
+		setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 2);
+		addPlaneY(x, y, z, 3, 3);
 
-		this.setBlockWithOffset(x + 1, y, z + 1, BlocksAether.aether_dirt, 0);
-		this.setBlockWithOffset(x + 1, y + 1, z + 1, BlocksAether.golden_oak_sapling, 0);
+		setBlockWithOffset(x + 1, y, z + 1, AetherBlocks.aether_dirt, 0);
+		setBlockWithOffset(x + 1, y + 1, z + 1, AetherBlocks.golden_oak_sapling, 0);
 
 		for (int lineX = x; lineX < x + 3; lineX += 2) {
 			for (int lineZ = z; lineZ < z + 3; lineZ += 2) {
-				this.setBlockWithOffset(lineX, y + 1, lineZ, BlocksAether.ambrosium_torch, 0);
+				setBlockWithOffset(lineX, y + 1, lineZ, AetherBlocks.ambrosium_torch, 0);
 			}
 		}
 	}
 
 	public void generateChandelier(int x, int y, int z, int height) {
 		for (int lineY = y + (height + 3); lineY < y + (height + 6); lineY++) {
-			this.setBlockWithOffset(x, lineY, z, Blocks.fence, 0);
+			setBlockWithOffset(x, lineY, z, Blocks.fence, 0);
 		}
-
 		for (int lineX = (x - 1); lineX < (x + 2); lineX++) {
-			this.setBlockWithOffset(lineX, y + (height + 1), z, Blocks.glowstone, 0);
+			setBlockWithOffset(lineX, y + (height + 1), z, Blocks.glowstone, 0);
 		}
-
 		for (int lineY = (y + height); lineY < y + (height + 3); lineY++) {
-			this.setBlockWithOffset(x, lineY, z, Blocks.glowstone, 0);
+			setBlockWithOffset(x, lineY, z, Blocks.glowstone, 0);
 		}
-
 		for (int lineZ = (z - 1); lineZ < (z + 2); lineZ++) {
-			this.setBlockWithOffset(x, y + (height + 1), lineZ, Blocks.glowstone, 0);
+			setBlockWithOffset(x, y + (height + 1), lineZ, Blocks.glowstone, 0);
 		}
 	}
 
 	public void generateColumn(int x, int y, int z, int yRange) {
-		this.setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 20);
-		this.addPlaneY(x, y, z, 3, 3);
-		this.addPlaneY(x, y + yRange, z, 3, 3);
-		this.setBlocks(BlocksAether.pillar, BlocksAether.pillar, 1);
-		this.addLineY(x + 1, y, z + 1, yRange - 1);
-		this.setBlockWithOffset(x + 1, y + (yRange - 1), z + 1, BlocksAether.pillar_top, 0);
+		setBlocks(LOCKED_ANGELIC_STONE, LOCKED_LIGHT_ANGELIC_STONE, 20);
+		addPlaneY(x, y, z, 3, 3);
+		addPlaneY(x, y + yRange, z, 3, 3);
+		setBlocks(AetherBlocks.pillar, AetherBlocks.pillar, 1);
+		addLineY(x + 1, y, z + 1, yRange - 1);
+		setBlockWithOffset(x + 1, y + (yRange - 1), z + 1, AetherBlocks.pillar_top, 0);
 	}
 
 	public void generateStaircase(int x, int y, int z, int height) {
@@ -510,7 +502,7 @@ public class SilverDungeonComponent extends AetherStructure {
 			}
 		}
 
-		return new ItemStack(BlocksAether.ambrosium_torch, random.nextInt(4) + 1);
+		return new ItemStack(AetherBlocks.ambrosium_torch, random.nextInt(4) + 1);
 	}
 
 	public static ItemStack getSilverLoot(Random random) {

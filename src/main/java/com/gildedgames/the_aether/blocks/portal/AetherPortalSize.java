@@ -1,13 +1,13 @@
 package com.gildedgames.the_aether.blocks.portal;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
-import net.minecraft.block.Block;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import net.minecraft.block.BlockPortal;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.world.World;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Direction;
-import net.minecraft.world.World;
 
 public class AetherPortalSize {
 
@@ -20,23 +20,19 @@ public class AetherPortalSize {
 	public int height;
 	public int width;
 
-	public AetherPortalSize(World worldIn, int x, int y, int z, int axis) {
-		this.world = worldIn;
+	public AetherPortalSize(World world, int x, int y, int z, int axis) {
+		this.world = world;
 		this.axis = axis;
-
 		this.leftDir = BlockPortal.field_150001_a[axis][0];
 		this.rightDir = BlockPortal.field_150001_a[axis][1];
 
-		for (int i1 = y; y > i1 - 21 && y > 0 && this.isEmptyBlock(worldIn.getBlock(x, y - 1, z)); --y) {
-			;
-		}
+		int orig_y = y;
+		while(y > orig_y - 21 && y > 0 && is_empty_block(world.getBlock(x, y - 1, z))) y--;
 
-		int i = this.getDistanceUntilEdge(x, y, z, this.leftDir) - 1;
-
+		int i = get_distance_until_edge(x, y, z, this.leftDir) - 1;
 		if (i >= 0) {
 			this.bottomLeft = new ChunkCoordinates(x + i * Direction.offsetX[this.leftDir], y, z + i * Direction.offsetZ[this.leftDir]);
-			this.width = this.getDistanceUntilEdge(this.bottomLeft.posX, this.bottomLeft.posY, this.bottomLeft.posZ, this.rightDir);
-
+			this.width = get_distance_until_edge(this.bottomLeft.posX, this.bottomLeft.posY, this.bottomLeft.posZ, this.rightDir);
 			if (this.width < 2 || this.width > 21) {
 				this.bottomLeft = null;
 				this.width = 0;
@@ -44,28 +40,22 @@ public class AetherPortalSize {
 		}
 
 		if (this.bottomLeft != null) {
-			this.height = this.calculatePortalHeight();
+			this.height = calculate_portal_height();
 		}
 	}
 
-	protected int getDistanceUntilEdge(int x, int y, int z, int leftDir) {
-		int j1 = Direction.offsetX[leftDir];
-		int k1 = Direction.offsetZ[leftDir];
+	private int get_distance_until_edge(int x, int y, int z, int left_dir) {
+		int j1 = Direction.offsetX[left_dir];
+		int k1 = Direction.offsetZ[left_dir];
 		int i1;
 		Block block;
 
 		for (i1 = 0; i1 < 22; ++i1) {
 			block = this.world.getBlock(x + j1 * i1, y, z + k1 * i1);
+			if(!is_empty_block(block)) break;
 
-			if (!this.isEmptyBlock(block)) {
-				break;
-			}
-
-			Block block1 = this.world.getBlock(x + j1 * i1, y - 1, z + k1 * i1);
-
-			if (block1 != Blocks.glowstone) {
-				break;
-			}
+			block = this.world.getBlock(x + j1 * i1, y - 1, z + k1 * i1);
+			if(block != Blocks.glowstone) break;
 		}
 
 		block = this.world.getBlock(x + j1 * i1, y, z + k1 * i1);
@@ -80,32 +70,25 @@ public class AetherPortalSize {
 		return this.width;
 	}
 
-	protected int calculatePortalHeight() {
+	private int calculate_portal_height() {
 		label24:
-
 		for (this.height = 0; this.height < 21; ++this.height) {
 			for (int i = 0; i < this.width; ++i) {
 				int k = this.bottomLeft.posX + i * Direction.offsetX[BlockPortal.field_150001_a[this.axis][1]];
 				int l = this.bottomLeft.posZ + i * Direction.offsetZ[BlockPortal.field_150001_a[this.axis][1]];
 				Block block = this.world.getBlock(k, this.bottomLeft.posY + this.height, l);
-
-				if (!this.isEmptyBlock(block)) {
-					break label24;
-				}
-
-				if (block == BlocksAether.aether_portal) {
+				if(!is_empty_block(block)) break label24;
+				if(block == AetherBlocks.aether_portal) {
 					++this.portalBlockCount;
 				}
 
 				if (i == 0) {
 					block = this.world.getBlock(k + Direction.offsetX[BlockPortal.field_150001_a[this.axis][0]], this.bottomLeft.posY + this.height, l + Direction.offsetZ[BlockPortal.field_150001_a[this.axis][0]]);
-
 					if (block != Blocks.glowstone) {
 						break label24;
 					}
 				} else if (i == this.width - 1) {
 					block = this.world.getBlock(k + Direction.offsetX[BlockPortal.field_150001_a[this.axis][1]], this.bottomLeft.posY + this.height, l + Direction.offsetZ[BlockPortal.field_150001_a[this.axis][1]]);
-
 					if (block != Blocks.glowstone) {
 						break label24;
 					}
@@ -114,11 +97,10 @@ public class AetherPortalSize {
 		}
 
 		for (int j = 0; j < this.width; ++j) {
-			int i = this.bottomLeft.posX + j * Direction.offsetX[BlockPortal.field_150001_a[this.axis][1]];
-			int k = this.bottomLeft.posY + this.height;
-			int l = this.bottomLeft.posZ + j * Direction.offsetZ[BlockPortal.field_150001_a[this.axis][1]];
-
-			if (this.world.getBlock(i, k, l) != Blocks.glowstone) {
+			int x = this.bottomLeft.posX + j * Direction.offsetX[BlockPortal.field_150001_a[this.axis][1]];
+			int y = this.bottomLeft.posY + this.height;
+			int z = this.bottomLeft.posZ + j * Direction.offsetZ[BlockPortal.field_150001_a[this.axis][1]];
+			if (this.world.getBlock(x, y, z) != Blocks.glowstone) {
 				this.height = 0;
 				break;
 			}
@@ -134,8 +116,8 @@ public class AetherPortalSize {
 		}
 	}
 
-	protected boolean isEmptyBlock(Block blockIn) {
-		return blockIn.getMaterial() == Material.air || blockIn == Blocks.fire || blockIn == BlocksAether.aether_portal;
+	private boolean is_empty_block(Block block) {
+		return block.getMaterial() == Material.air || block == Blocks.fire || block == AetherBlocks.aether_portal;
 	}
 
 	public boolean isValid() {
@@ -143,13 +125,12 @@ public class AetherPortalSize {
 	}
 
 	public void placePortalBlocks() {
-		for (int i = 0; i < this.width; ++i) {
-			int j = this.bottomLeft.posX + Direction.offsetX[this.rightDir] * i;
-			int k = this.bottomLeft.posZ + Direction.offsetZ[this.rightDir] * i;
-
-			for (int l = 0; l < this.height; ++l) {
-				int i1 = this.bottomLeft.posY + l;
-				this.world.setBlock(j, i1, k, BlocksAether.aether_portal, this.axis, 2);
+		for (int i = 0; i < this.width; i++) {
+			int x = this.bottomLeft.posX + Direction.offsetX[this.rightDir] * i;
+			int z = this.bottomLeft.posZ + Direction.offsetZ[this.rightDir] * i;
+			for (int j = 0; j < this.height; j++) {
+				int y = this.bottomLeft.posY + j;
+				this.world.setBlock(x, y, z, AetherBlocks.aether_portal, this.axis, 2);
 			}
 		}
 	}

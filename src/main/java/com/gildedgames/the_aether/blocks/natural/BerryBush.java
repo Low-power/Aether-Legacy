@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.blocks.natural;
 
 import com.gildedgames.the_aether.Aether;
 import com.gildedgames.the_aether.CommonProxy;
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.items.AetherItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.util.Random;
 
-public class BerryBush extends BlockAetherFlower {
+public class BerryBush extends AetherFlower {
 
 	public BerryBush() {
 		this.setHardness(0.2F);
@@ -28,7 +28,7 @@ public class BerryBush extends BlockAetherFlower {
 
 	@Override
 	public Item getItemDropped(int meta, Random rand, int fortune) {
-		return Item.getItemFromBlock(BlocksAether.berry_bush_stem);
+		return Item.getItemFromBlock(AetherBlocks.berry_bush_stem);
 	}
 
 	@Override
@@ -39,48 +39,40 @@ public class BerryBush extends BlockAetherFlower {
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
 		int min, max;
-
-		if (world.getBlock(x, y, z) == BlocksAether.enchanted_aether_grass) {
+		if(world.getBlock(x, y, z) == AetherBlocks.enchanted_aether_grass) {
 			min = 1;
 			max = 4;
 		} else {
 			min = 1;
 			max = 3;
 		}
-
-		int randomNum = world.rand.nextInt(max - min + 1) + min;
+		int count = world.rand.nextInt(max - min + 1) + min;
 		player.addStat(StatList.mineBlockStatArray[Block.getIdFromBlock(this)], 1);
 		player.addExhaustion(0.025F);
-
-		world.setBlock(x, y, z, BlocksAether.berry_bush_stem);
-
-		if (randomNum != 0) {
-			this.dropBlockAsItem(world, x, y, z, new ItemStack(AetherItems.blueberry, randomNum, 0));
-		}
+		dropBlockAsItem(world, x, y, z, new ItemStack(AetherItems.blueberry, count, 0));
+		world.setBlock(x, y, z, AetherBlocks.berry_bush_stem);
 	}
 
 	@Override
 	protected void checkAndDropBlock(World world, int x, int y, int z) {
-		if (!this.canBlockStay(world, x, y, z)) {
+		if(!canBlockStay(world, x, y, z)) {
 			int min, max;
-
-			if (world.getBlock(x, y, z) == BlocksAether.enchanted_aether_grass) {
+			if(world.getBlock(x, y, z) == AetherBlocks.enchanted_aether_grass) {
 				min = 1;
 				max = 4;
 			} else {
 				min = 1;
 				max = 3;
 			}
-
-			int randomNum = world.rand.nextInt(max - min + 1) + min;
-			this.dropBlockAsItem(world, x, y, z, new ItemStack(AetherItems.blueberry, randomNum, 0));
-			world.setBlock(x, y, z, BlocksAether.berry_bush_stem);
+			int count = world.rand.nextInt(max - min + 1) + min;
+			dropBlockAsItem(world, x, y, z, new ItemStack(AetherItems.blueberry, count, 0));
+			world.setBlock(x, y, z, AetherBlocks.berry_bush_stem);
 		}
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
-		return AxisAlignedBB.getBoundingBox((double) p_149668_2_ + this.minX, (double) p_149668_3_ + this.minY, (double) p_149668_4_ + this.minZ, (double) p_149668_2_ + this.maxX, (double) p_149668_3_ + this.maxY, (double) p_149668_4_ + this.maxZ);
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+		return AxisAlignedBB.getBoundingBox((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
 	}
 
 	@Override

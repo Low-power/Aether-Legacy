@@ -2,13 +2,13 @@ package com.gildedgames.the_aether.items.weapons;
 
 import com.gildedgames.the_aether.entities.projectile.EntityLightningKnife;
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.world.World;
 
 public class LightningKnife extends Item {
@@ -32,9 +32,7 @@ public class LightningKnife extends Item {
 
 		if (!world.isRemote) {
 			EntityLightningKnife lightningKnife = new EntityLightningKnife(world, player);
-
 			lightningKnife.shoot(player, player.rotationPitch, player.rotationYaw, 0F, 1.5F, 1F);
-
 			world.spawnEntityInWorld(lightningKnife);
 		}
 

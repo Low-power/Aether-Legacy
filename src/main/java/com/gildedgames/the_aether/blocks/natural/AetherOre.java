@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.blocks.natural;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.tools.AetherTool;
 import com.gildedgames.the_aether.items.tools.SkyrootTool;
@@ -37,7 +37,7 @@ public class AetherOre extends Block {
 
 	@Override
 	public Item getItemDropped(int meta, Random random, int fortune) {
-		return this == BlocksAether.zanite_ore ? AetherItems.zanite_gemstone : AetherItems.ambrosium_shard;
+		return this == AetherBlocks.zanite_ore ? AetherItems.zanite_gemstone : AetherItems.ambrosium_shard;
 	}
 
 	@Override
@@ -52,21 +52,16 @@ public class AetherOre extends Block {
 	}
 
 	@Override
-	public int getExpDrop(IBlockAccess p_149690_1_, int p_149690_5_, int p_149690_7_) {
+	public int getExpDrop(IBlockAccess world, int metadata, int fortune_level) {
 		Random random = new Random();
-
-		if (this.getItemDropped(p_149690_5_, random, p_149690_7_) != Item.getItemFromBlock(this)) {
-			int amount = 0;
-
-			if (this == BlocksAether.ambrosium_ore) {
-				amount = MathHelper.getRandomIntegerInRange(random, 0, 2);
-			} else if (this == BlocksAether.zanite_ore) {
-				amount = MathHelper.getRandomIntegerInRange(random, 2, 5);
+		if(getItemDropped(metadata, random, fortune_level) != Item.getItemFromBlock(this)) {
+			if(this == AetherBlocks.ambrosium_ore) {
+				return MathHelper.getRandomIntegerInRange(random, 0, 2);
 			}
-
-			return amount;
+			if(this == AetherBlocks.zanite_ore) {
+				return MathHelper.getRandomIntegerInRange(random, 2, 5);
+			}
 		}
-
 		return 0;
 	}
 

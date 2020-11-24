@@ -5,7 +5,7 @@ import com.gildedgames.the_aether.api.accessories.AccessoryType;
 import com.gildedgames.the_aether.client.ClientProxy;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.player.PlayerAether;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
@@ -72,25 +72,20 @@ public class Accessory extends Item {
 
 	@SuppressWarnings("unchecked")
 	public static ItemStack dispenseAccessory(IBlockSource blockSource, ItemStack stack) {
-		EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockMetadata());
-		int i = blockSource.getXInt() + enumfacing.getFrontOffsetX();
-		int j = blockSource.getYInt() + enumfacing.getFrontOffsetY();
-		int k = blockSource.getZInt() + enumfacing.getFrontOffsetZ();
-		AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox((double) i, (double) j, (double) k, (double) (i + 1), (double) (j + 1), (double) (k + 1));
-		List<EntityLivingBase> list = blockSource.getWorld().getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
-
-		if (list.isEmpty()) {
-			return null;
-		}
-
-		EntityPlayer player = (EntityPlayer) list.get(0);
+		EnumFacing facing = BlockDispenser.func_149937_b(blockSource.getBlockMetadata());
+		int x = blockSource.getXInt() + facing.getFrontOffsetX();
+		int y = blockSource.getYInt() + facing.getFrontOffsetY();
+		int z = blockSource.getZInt() + facing.getFrontOffsetZ();
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox((double)x, (double)y, (double)z, (double)(x + 1), (double)(y + 1), (double)(z + 1));
+		List<EntityPlayer> player_list = (List<EntityPlayer>)blockSource.getWorld().getEntitiesWithinAABB(EntityPlayer.class, aabb);
+		if(player_list.isEmpty()) return null;
+		EntityPlayer player = player_list.get(0);
 
 		ItemStack itemstack = stack.copy();
 		itemstack.stackSize = 1;
 
-		PlayerAether playerAether = PlayerAether.get((EntityPlayer) player);
-
-		if (!playerAether.getAccessoryInventory().setAccessorySlot(itemstack)) {
+		PlayerAether player_data = PlayerAether.get((EntityPlayer)player);
+		if(!player_data.getAccessoryInventory().setAccessorySlot(itemstack)) {
 			return null;
 		}
 
@@ -102,22 +97,20 @@ public class Accessory extends Item {
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		ItemStack heldItem = player.getHeldItem();
-
 		if (heldItem != null) {
 			if (PlayerAether.get(player).getAccessoryInventory().setAccessorySlot(heldItem.copy())) {
 				--heldItem.stackSize;
-
 				return heldItem;
 			}
 		}
-
 		return super.onItemRightClick(stack, world, player);
 	}
-	
+
 	@Override
 	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-		return (repair.getItem() == AetherItems.zanite_gemstone && toRepair.getItem() == AetherItems.zanite_ring) ||
-			(repair.getItem() == AetherItems.zanite_gemstone && toRepair.getItem() == AetherItems.zanite_pendant);
+		if(repair.getItem() != AetherItems.zanite_gemstone) return false;
+		return toRepair.getItem() == AetherItems.zanite_ring ||
+			toRepair.getItem() == AetherItems.zanite_pendant;
 	}
 
 	public AccessoryType getExtraType() {
@@ -167,8 +160,7 @@ public class Accessory extends Item {
 		return this;
 	}
 
-	public boolean hasInactiveTexture()
-	{
+	public boolean hasInactiveTexture() {
 		return this.hasInactiveTexture;
 	}
 

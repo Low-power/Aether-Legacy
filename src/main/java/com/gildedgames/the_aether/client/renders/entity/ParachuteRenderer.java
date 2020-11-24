@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.client.renders.entity;
 
 import com.gildedgames.the_aether.entities.passive.mountable.ParachuteEntity;
-import com.gildedgames.the_aether.blocks.BlocksAether;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -17,21 +17,19 @@ public class ParachuteRenderer extends Render {
 		super();
 	}
 
-	public void renderParachute(ParachuteEntity parachute, double d, double d1, double d2, float f, float f1) {
-		this.bindTexture(TextureMap.locationBlocksTexture);
-
+	public void renderParachute(ParachuteEntity parachute, double x, double y, double z, float f, float ticks) {
+		bindTexture(TextureMap.locationBlocksTexture);
 		int meta = parachute.isGoldenParachute ? 2 : 0;
-
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) d, (float) d1 + 0.5F, (float) d2);
-		this.bindEntityTexture(parachute);
-		this.renderBlocks.renderBlockAsItem(BlocksAether.aercloud, meta, parachute.getBrightness(f1));
+		GL11.glTranslatef((float)x, (float)y + 0.5F, (float)z);
+		bindEntityTexture(parachute);
+		this.renderBlocks.renderBlockAsItem(AetherBlocks.aercloud, meta, parachute.getBrightness(ticks));
 		GL11.glPopMatrix();
 	}
 
 	@Override
-	public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {
-		this.renderParachute((ParachuteEntity) entity, d, d1, d2, f, f1);
+	public void doRender(Entity entity, double x, double y, double z, float f1, float f2) {
+		renderParachute((ParachuteEntity)entity, x, y, z, f1, f2);
 	}
 
 	@Override

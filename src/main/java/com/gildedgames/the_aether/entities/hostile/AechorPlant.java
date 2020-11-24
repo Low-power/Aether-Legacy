@@ -1,19 +1,19 @@
 package com.gildedgames.the_aether.entities.hostile;
 
-import com.gildedgames.the_aether.blocks.BlocksAether;
 import com.gildedgames.the_aether.entities.passive.AetherAnimal;
 import com.gildedgames.the_aether.entities.projectile.PoisonNeedleEntity;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.util.SkyrootBucketType;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.World;
 
 public class AechorPlant extends AetherAnimal {
 
@@ -96,8 +96,8 @@ public class AechorPlant extends AetherAnimal {
 			}
 		}
 
-		if (this.worldObj.getBlock(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY) - 1, MathHelper.floor_double(this.posZ)) != BlocksAether.aether_grass) {
-			this.setDead();
+		if(this.worldObj.getBlock(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY) - 1, MathHelper.floor_double(this.posZ)) != AetherBlocks.aether_grass) {
+			setDead();
 		}
 	}
 
@@ -106,23 +106,21 @@ public class AechorPlant extends AetherAnimal {
 			return;
 		}
 
-		double x = this.getEntityToAttack().posX - this.posX;
-		double z = this.getEntityToAttack().posZ - this.posZ;
+		Entity attack_target = getEntityToAttack();
+		double x = attack_target.posX - this.posX;
+		double z = attack_target.posZ - this.posZ;
 		double y = 0.1D + (Math.sqrt((x * x) + (z * z) + 0.1D) * 0.5D) + ((this.posY - this.getEntityToAttack().posY) * 0.25D);
 
 		double distance = 1.5D / Math.sqrt((x * x) + (z * z) + 0.1D);
 
-		x = x * distance;
-		z = z * distance;
+		x *= distance;
+		z *= distance;
 
-		PoisonNeedleEntity poisonNeedle = new PoisonNeedleEntity(this.worldObj, this, 0.5F);
-
-		poisonNeedle.posY = this.posY + 1D;
-
-		this.playSound("random.bow", 1F, 1.2F / (this.getRNG().nextFloat() * 0.2F + 0.9F));
-		this.worldObj.spawnEntityInWorld(poisonNeedle);
-
-		poisonNeedle.setThrowableHeading(x, y, z, 0.285F + ((float) y * 0.05F), 1F);
+		PoisonNeedleEntity poison_needle = new PoisonNeedleEntity(this.worldObj, this, 0.5F);
+		poison_needle.posY = this.posY + 1D;
+		playSound("random.bow", 1F, 1.2F / (getRNG().nextFloat() * 0.2F + 0.9F));
+		this.worldObj.spawnEntityInWorld(poison_needle);
+		poison_needle.setThrowableHeading(x, y, z, 0.285F + ((float)y * 0.05F), 1F);
 	}
 
 	@Override
@@ -137,7 +135,6 @@ public class AechorPlant extends AetherAnimal {
 	@Override
 	public boolean interact(EntityPlayer player) {
 		ItemStack heldItem = player.getCurrentEquippedItem();
-
 		if (heldItem != null && !this.worldObj.isRemote) {
 			if (heldItem.getItem() == AetherItems.skyroot_bucket && SkyrootBucketType.getType(heldItem.getItemDamage()) == SkyrootBucketType.Empty && this.poisonRemaining > 0) {
 				if (--heldItem.stackSize == 0) {
@@ -145,11 +142,9 @@ public class AechorPlant extends AetherAnimal {
 				} else if (!player.inventory.addItemStackToInventory(new ItemStack(AetherItems.skyroot_bucket, 1, SkyrootBucketType.Poison.meta))) {
 					player.entityDropItem(new ItemStack(AetherItems.skyroot_bucket, 1, SkyrootBucketType.Poison.meta), 1F);
 				}
-
 				--this.poisonRemaining;
 			}
 		}
-
 		return false;
 	}
 

@@ -22,6 +22,7 @@ public class AetherConfig {
 	private static Property repeat_sun_spirit_dialog;
 	private static Property aether_start;
 	private static Property disable_eternal_day;
+	private static Property register_legacy_numeric_ids;
 
 	private static void migrate_old_configuration(File config_file) {
 		Configuration old_config = new Configuration(config_file);
@@ -161,6 +162,7 @@ public class AetherConfig {
 		aether_world_id = get_property(cat, "AetherNumericWorldId", 4, null);
 		aether_biome_id = get_property(cat, "AetherNumericBiomeId", 127, null);
 		inebriation_id = get_property(cat, "InebriationEffectNumericId", 31, null);
+		register_legacy_numeric_ids = get_property(cat, "RegisterLegacyNumericIds", false, "Try to register Aether block and item numeric IDs as same as the default IDs of the original Aether mod for Minecraft 1.2.5; this is for converting saves created by original mod to current format only; if you are going to do this, please also set AetherNumericWorldId to 3 to match the original mod, and remove any other mods before converting.");
 
 		cat = config.getCategory("miscellaneous");
 		skyroot_bucket_only = get_property(cat, "SkyrootBucketOnly", false, "Only Skyroot buckets can be used to active Aether portal");
@@ -199,6 +201,7 @@ public class AetherConfig {
 		set_to_default_if_null(max_life_shards);
 		set_to_default_if_null(repeat_sun_spirit_dialog);
 		set_to_default_if_null(disable_eternal_day);
+		set_to_default_if_null(register_legacy_numeric_ids);
 /*
 		for(String cat_name : config.getCategoryNames()) {
 			cat = config.getCategory(cat_name);
@@ -208,7 +211,7 @@ public class AetherConfig {
 		}
 */
 
-		config.save();
+		if(config.hasChanged()) config.save();
 	}
 
 	public static int get_aether_world_id() {
@@ -275,7 +278,7 @@ public class AetherConfig {
 	}
 */
 
-	public static boolean legacyAltarName() {
+	public static boolean should_use_legacy_altar_name() {
 		return AetherConfig.legacy_altar_name.getBoolean();
 	}
 
@@ -293,5 +296,9 @@ public class AetherConfig {
 
 	public static boolean eternalDayDisabled() {
 		return disable_eternal_day.getBoolean();
+	}
+
+	public static boolean should_register_legacy_numeric_ids() {
+		return register_legacy_numeric_ids.getBoolean();
 	}
 }

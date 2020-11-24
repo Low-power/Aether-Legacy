@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.items.weapons;
 
 import com.gildedgames.the_aether.items.AetherItems;
-import com.gildedgames.the_aether.registry.creative_tabs.AetherCreativeTabs;
+import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -12,7 +12,7 @@ import com.google.common.collect.Multimap;
 
 public class ZaniteSword extends ItemSword {
 
-	public float[] level = new float[]{3.0F, 4.0F, 5.0F, 6.0F, 7.0F};
+	public float[] level = new float[] { 3F, 4F, 5F, 6F, 7F };
 
 	public ZaniteSword() {
 		super(ToolMaterial.IRON);
@@ -62,7 +62,7 @@ public class ZaniteSword extends ItemSword {
 
 	@Override
 	public float getDigSpeed(ItemStack itemstack, Block block, int meta) {
-		return super.getDigSpeed(itemstack, block, meta) * (2.0F * (float) itemstack.getItemDamage() / (float) itemstack.getMaxDamage() + 0.5F);
+		return super.getDigSpeed(itemstack, block, meta) * (2F * (float)itemstack.getItemDamage() / (float)itemstack.getMaxDamage() + 0.5F);
 	}
 
 }
