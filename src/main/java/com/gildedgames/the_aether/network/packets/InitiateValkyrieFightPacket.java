@@ -41,6 +41,7 @@ public class InitiateValkyrieFightPacket extends AetherPacket<InitiateValkyrieFi
 		int slot_i = player.inventory.mainInventory.length - 1;
 		do {
 			ItemStack item_stack = player.inventory.mainInventory[slot_i];
+			if(item_stack == null) continue;
 			if(item_stack.getItem() != AetherItems.victory_medal) continue;
 			int stack_count = item_stack.stackSize;
 			if(medal_count + stack_count > 10) {
