@@ -21,6 +21,7 @@ public class AetherConfig {
 	private static Property inebriation_id;
 	private static Property repeat_sun_spirit_dialog;
 	private static Property aether_start;
+	private static Property always_respawn_in_aether;
 	private static Property disable_eternal_day;
 	private static Property register_legacy_numeric_ids;
 
@@ -177,6 +178,7 @@ public class AetherConfig {
 
 		cat = config.getCategory("gameplay");
 		aether_start = get_property(cat, "GivePlayerAetherPortalFrameOnFirstSpawn", false, null);
+		always_respawn_in_aether = get_property(cat, "AlwaysRespawnInAether", false, null);
 		max_life_shards = get_property(cat, "MaxLifeShards", 10, null);
 		repeat_sun_spirit_dialog = get_property(cat, "RepeatSunSpiritDialog", true, "The Sun Spirit's dialogue will show only once per player if disabled");
 		disable_eternal_day = get_property(cat, "DisableEternalDay", false, "Disables eternal day making time cycle in the Aether without having to kill the Sun Spirit. This is mainly intended for use in modpacks.");
@@ -198,6 +200,7 @@ public class AetherConfig {
 		set_to_default_if_null(menu_button_enabled);
 		set_to_default_if_null(show_trivia_message);
 		set_to_default_if_null(aether_start);
+		set_to_default_if_null(always_respawn_in_aether);
 		set_to_default_if_null(max_life_shards);
 		set_to_default_if_null(repeat_sun_spirit_dialog);
 		set_to_default_if_null(disable_eternal_day);
@@ -292,6 +295,10 @@ public class AetherConfig {
 
 	public static boolean shouldAetherStart() {
 		return aether_start.getBoolean();
+	}
+
+	public static boolean should_always_respawn_in_aether() {
+		return always_respawn_in_aether.getBoolean();
 	}
 
 	public static boolean eternalDayDisabled() {

@@ -3,6 +3,7 @@ package com.gildedgames.the_aether.world;
 import com.gildedgames.the_aether.AetherConfig;
 import com.gildedgames.the_aether.network.AetherNetwork;
 import com.gildedgames.the_aether.network.packets.TimePacket;
+import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.player.PlayerAether;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,6 +12,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.block.Block;
 import net.minecraftforge.client.IRenderHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -118,17 +120,21 @@ public class AetherWorldProvider extends WorldProvider {
 
 	@Override
 	public int getRespawnDimension(EntityPlayerMP player) {
-		return PlayerAether.get(player).getBedLocation() == null ? 0 : AetherConfig.get_aether_world_id();
+		return AetherConfig.should_always_respawn_in_aether() ||
+			PlayerAether.get(player).getBedLocation() != null ?
+				AetherConfig.get_aether_world_id() : 0;
 	}
 
 	@Override
 	public boolean canCoordinateBeSpawn(int x, int z) {
-		return false;
+		if(!AetherConfig.should_always_respawn_in_aether()) return false;
+		Block block = worldObj.getTopBlock(x, z);
+		return block == AetherBlocks.aether_grass || block == AetherBlocks.enchanted_aether_grass || block == AetherBlocks.aether_dirt;
 	}
 
 	@Override
 	public boolean canRespawnHere() {
-		return false;
+		return AetherConfig.should_always_respawn_in_aether();
 	}
 
 	@Override
