@@ -13,24 +13,21 @@ public class CommonProxy {
 	public static int aetherFlowerRenderID;
 
 	public void init() {
-
 	}
 
 	public void openSunAltar() {
-
 	}
 
 	public void sendMessage(EntityPlayer player, String text) {
-
 	}
 
 	public EntityPlayer getPlayer() {
 		return null;
 	}
 
-	public static void registerEvent(Object event) {
-		FMLCommonHandler.instance().bus().register(event);
-		MinecraftForge.EVENT_BUS.register(event);
+	public static void registerEvent(Object listener) {
+		FMLCommonHandler.instance().bus().register(listener);
+		MinecraftForge.EVENT_BUS.register(listener);
 	}
 
 }

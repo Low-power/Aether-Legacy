@@ -28,6 +28,10 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class AetherEntityEvents {
+	public AetherEntityEvents() {
+		void_teleport_disabled = AetherConfig.get_travel_world_name().equalsIgnoreCase("the_aether");
+	}
+
 	private static Hashtable<Integer, WorldServer> worlds;
 	private static Hashtable<Integer, Class<? extends WorldProvider>> world_providers;
 
@@ -144,6 +148,8 @@ public class AetherEntityEvents {
 		teleport_entity(should_spawn_portal, entity, transfer_world);
 	}
 
+	private boolean void_teleport_disabled;
+
 	@SubscribeEvent
 	public void on_living_entity_update(LivingEvent.LivingUpdateEvent event) {
 		EntityLivingBase entity = event.entityLiving;
@@ -155,9 +161,10 @@ public class AetherEntityEvents {
 		}
 
 		if(entity.worldObj.isRemote) return;
+		if(void_teleport_disabled) return;
 		if(entity instanceof EntityPlayer && entity.posY < 256) {
 			String travel_world_name = AetherConfig.get_travel_world_name();
-			if(entity.worldObj.provider.getDimensionName().equals(travel_world_name)) {
+			if(entity.worldObj.provider.getDimensionName().equalsIgnoreCase(travel_world_name)) {
 				PlayerAether aplayer = (PlayerAether)AetherAPI.get((EntityPlayer)event.entity);
 				if(aplayer.ridden_entity != null && aplayer.ridden_entity.worldObj.provider.getDimensionName().equals(travel_world_name)) {
 					if(!entity.worldObj.loadedEntityList.contains(aplayer.ridden_entity)) {
@@ -176,8 +183,7 @@ public class AetherEntityEvents {
 				return;
 			}
 		}
-		if(!(entity.worldObj.provider instanceof AetherWorldProvider)) return;
-		if(entity.posY < 0) {
+		if(entity.worldObj.provider instanceof AetherWorldProvider && entity.posY < 0) {
 			teleport_entity(false, entity);
 		}
 	}

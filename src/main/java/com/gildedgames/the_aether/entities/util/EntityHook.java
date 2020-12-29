@@ -41,14 +41,6 @@ public class EntityHook implements IExtendedEntityProperties {
 	public void onUpdate() {
 		this.entity.worldObj.theProfiler.startSection("portal");
 
-		if (this.entity.dimension == AetherConfig.get_aether_world_id()) {
-			if (this.entity.posY < -2 && this.entity.riddenByEntity == null && this.entity.ridingEntity == null) {
-				if (!this.entity.worldObj.isRemote) {
-					AetherEntityEvents.teleport_entity(false, entity);
-				}
-			}
-		}
-
 		if (this.inPortal) {
 			if (this.entity.ridingEntity == null) {
 				this.entity.timeUntilPortal = this.entity.getPortalCooldown();
@@ -68,13 +60,11 @@ public class EntityHook implements IExtendedEntityProperties {
 		this.entity.worldObj.theProfiler.endSection();
 
 		if (this.entity instanceof EntityLiving) {
-			EntityLiving livingEntity = (EntityLiving) this.entity;
-
-			if (livingEntity.getAttackTarget() instanceof EntityPlayer) {
-				PlayerAether playerAether = PlayerAether.get((EntityPlayer) livingEntity.getAttackTarget());
-
-				if (playerAether.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
-					livingEntity.setAttackTarget(null);
+			EntityLiving mob = (EntityLiving)this.entity;
+			if(mob.getAttackTarget() instanceof EntityPlayer) {
+				PlayerAether player_info = PlayerAether.get((EntityPlayer)mob.getAttackTarget());
+				if(player_info.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
+					mob.setAttackTarget(null);
 				}
 			}
 		}
@@ -83,8 +73,8 @@ public class EntityHook implements IExtendedEntityProperties {
 			EntityCreature creature = (EntityCreature) this.entity;
 
 			if (creature.getEntityToAttack() instanceof EntityPlayer) {
-				PlayerAether aplayer = PlayerAether.get((EntityPlayer)creature.getEntityToAttack());
-				if(aplayer.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
+				PlayerAether player_info = PlayerAether.get((EntityPlayer)creature.getEntityToAttack());
+				if(player_info.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
 					creature.setTarget(null);
 				}
 			}
@@ -94,8 +84,8 @@ public class EntityHook implements IExtendedEntityProperties {
 			EntityLivingBase living = (EntityLivingBase) this.entity;
 
 			if (living.getAITarget() instanceof EntityPlayer) {
-				PlayerAether aplayer = PlayerAether.get((EntityPlayer)living.getAITarget());
-				if(aplayer.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
+				PlayerAether player_info = PlayerAether.get((EntityPlayer)living.getAITarget());
+				if(player_info.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.invisibility_cape))) {
 					living.setRevengeTarget(null);
 				}
 			}
