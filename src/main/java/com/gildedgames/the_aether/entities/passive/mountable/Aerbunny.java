@@ -130,7 +130,7 @@ public class Aerbunny extends AetherAnimal implements IEntityAdditionalSpawnData
 			this.motionY = -0.1D;
 		}
 
-		if (this.ridingEntity != null && this.ridingEntity instanceof EntityPlayer) {
+		if(this.ridingEntity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) this.ridingEntity;
 
 			if (this.worldObj.isRemote) {
@@ -158,8 +158,8 @@ public class Aerbunny extends AetherAnimal implements IEntityAdditionalSpawnData
 
 				if (player.motionY < -0.22499999403953552D) {
 					if (PlayerAether.get((EntityPlayer) this.ridingEntity).isJumping()) {
-						this.setPuffinessClient(11);
-						this.spawnExplosionParticle();
+						setPuffinessClient(11);
+						spawnExplosionParticle();
 						player.motionY = 0.125D;
 					}
 				}
@@ -186,25 +186,23 @@ public class Aerbunny extends AetherAnimal implements IEntityAdditionalSpawnData
 	@Override
 	public boolean interact(EntityPlayer player) {
 		ItemStack itemstack = player.inventory.getCurrentItem();
-
-		if (itemstack != null && (itemstack.getItem() == Items.name_tag)) {
+		if (itemstack != null && itemstack.getItem() == Items.name_tag) {
 			return super.interact(player);
-		} else {
-			this.worldObj.playSound(this.posX, this.posY, this.posZ, "aether_legacy:aemob.aerbunny.lift", 1F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1F, false);
-
-			if (this.isRiding()) {
-				this.mountEntity(null);
-			} else {
-				this.mountEntity(player);
-			}
-
-			return true;
 		}
+
+		if(isRiding()) {
+			if(player != this.ridingEntity) return false;
+			mountEntity(null);
+		} else {
+			mountEntity(player);
+		}
+		this.worldObj.playSound(this.posX, this.posY, this.posZ, "aether_legacy:aemob.aerbunny.lift", 1F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1F, false);
+		return true;
 	}
 
 	@Override
-	protected void dropFewItems(boolean recentlyHit, int var2) {
-		this.dropItem(Items.string, 1);
+	protected void dropFewItems(boolean recentlyHit, int loot_modifier) {
+		dropItem(Items.string, 1);
 	}
 
 	@Override
