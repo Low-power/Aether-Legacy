@@ -3,6 +3,8 @@ package com.gildedgames.the_aether.entities.block;
 import com.gildedgames.the_aether.blocks.util.FloatingBlock;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;
@@ -71,7 +73,10 @@ public class FloatingBlockEntity extends Entity implements IEntityAdditionalSpaw
 		}
 
 		if (this.ticksExisted > 200) {
-			this.setDead();
+			if(!this.worldObj.isRemote) {
+				entityDropItem(new ItemStack(Item.getItemFromBlock(get_block())), 0F);
+			}
+			setDead();
 			return;
 		}
 
@@ -83,6 +88,11 @@ public class FloatingBlockEntity extends Entity implements IEntityAdditionalSpaw
 			this.posX = x + 0.5D;
 			this.posY = y;
 			this.posZ = z + 0.5D;
+		}
+
+		if(!this.worldObj.isRemote && this.posY > this.worldObj.getHeight()) {
+			entityDropItem(new ItemStack(Item.getItemFromBlock(get_block())), 0F);
+			setDead();
 		}
 	}
 
