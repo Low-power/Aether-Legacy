@@ -447,23 +447,20 @@ public class SunSpirit extends EntityFlying implements IMob, IAetherBoss {
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		if (source.getEntity() instanceof EntityCrystal && ((EntityCrystal) source.getEntity()).getCrystalType() == EnumCrystalType.ICE) {
-			this.velocity = 0.5D - (double) this.getHealth() / 70D * 0.2D;
-			boolean flag = super.attackEntityFrom(source, amount);
-
-			if (flag) {
-				EntityFireMinion minion = new EntityFireMinion(this.worldObj);
-				minion.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0F);
-				minion.setAttackTarget(this.getAttackTarget());
-
-				if (!this.worldObj.isRemote) {
+		Entity direct_source = source.getSourceOfDamage();
+		if(direct_source instanceof EntityCrystal && ((EntityCrystal)direct_source).getCrystalType() == EnumCrystalType.ICE) {
+			this.velocity = 0.5D - (double)getHealth() / 70D * 0.2D;
+			if(super.attackEntityFrom(source, amount)) {
+				if(!this.worldObj.isRemote) {
+					EntityFireMinion minion = new EntityFireMinion(this.worldObj);
+					minion.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0F);
+					minion.setAttackTarget(this.getAttackTarget());
 					this.worldObj.spawnEntityInWorld(minion);
 				}
+				return true;
 			}
-			return flag;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	@Override
