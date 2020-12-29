@@ -20,9 +20,11 @@ import net.minecraft.world.WorldServer;
 
 public class InebriationPotion extends Potion {
 	public static Potion inebriation;
+	public static DamageSource inebriation_damage;
 
 	public static void static_initialize() {
 		inebriation = new InebriationPotion();
+		inebriation_damage = new DamageSource("inebriation").setDamageBypassesArmor();
 	}
 
 	private int duration;
@@ -43,10 +45,10 @@ public class InebriationPotion extends Potion {
 
 	@Override
 	public void performEffect(EntityLivingBase entity, int amplifier) {
-		this.distractEntity(entity);
+		distractEntity(entity);
 
 		if (this.duration % 50 == 0) {
-			entity.attackEntityFrom(new DamageSource("inebriation"), 1F);
+			entity.attackEntityFrom(inebriation_damage, 1F);
 		}
 
 		if (entity instanceof EntityPlayer && this.duration >= 500) {
