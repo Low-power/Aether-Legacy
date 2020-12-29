@@ -19,7 +19,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 
 public class InebriationPotion extends Potion {
-	public static Potion inebriation = new InebriationPotion();
+	public static Potion inebriation;
+
+	public static void static_initialize() {
+		inebriation = new InebriationPotion();
+	}
 
 	private int duration;
 

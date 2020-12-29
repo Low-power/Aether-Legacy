@@ -35,6 +35,7 @@ import com.gildedgames.the_aether.entities.projectile.PoisonNeedleEntity;
 import com.gildedgames.the_aether.entities.projectile.ZephyrSnowballEntity;
 import com.gildedgames.the_aether.entities.util.AetherMoaTypes;
 import com.gildedgames.the_aether.entities.util.AetherItemEntity;
+import com.gildedgames.the_aether.entities.effects.InebriationPotion;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -91,6 +92,8 @@ public class AetherEntities {
 		register(AetherItemEntity.class, "aether_item", 32, 160, 20, true);
 
 		AetherMoaTypes.initialization();
+
+		InebriationPotion.static_initialize();
 	}
 
 	public static void register(Class<? extends Entity> entity_class, String entity_name, int entity_id, int tracking_range, int update_frequency, boolean has_velocity_updates) {
