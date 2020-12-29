@@ -18,21 +18,19 @@ import com.gildedgames.the_aether.items.dungeon.DungeonKey;
 import com.gildedgames.the_aether.items.util.SkyrootBucketType;
 import com.gildedgames.the_aether.items.weapons.SkyrootSword;
 import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
-import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.common.ChestGenHooks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
@@ -42,15 +40,15 @@ import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.world.gen.feature.WorldGeneratorBonusChest;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.World;
@@ -198,7 +196,7 @@ public class AetherEventHandler {
 	}
 
 	@SubscribeEvent
-	public void on_crafting(ItemCraftedEvent event) {
+	public void on_crafting(PlayerEvent.ItemCraftedEvent event) {
 		Item item = event.crafting.getItem();
 		if(is_gravitite_tool(item)) {
 			event.player.triggerAchievement(AetherAchievements.grav_tools);
@@ -311,7 +309,6 @@ public class AetherEventHandler {
 		for (Object entity : world.loadedEntityList) {
 			if (entity instanceof EntityItem) {
 				EntityItem item_entity = (EntityItem)entity;
-
 				if (item_entity.getEntityItem().getItem() == AetherItems.dungeon_key) {
 					ObfuscationReflectionHelper.setPrivateValue(Entity.class, item_entity, true, "invulnerable", "field_83001_bt");
 				}
@@ -353,5 +350,48 @@ public class AetherEventHandler {
 
 			PlayerAether.get(event.entityPlayer).setBedLocation(event.entityPlayer.getBedLocation(AetherConfig.get_aether_world_id()));
 		}
+	}
+
+	private int find_top_block(World world, Block[] appropriated_blocks, int x, int z) {
+		int y = world.getHeightValue(x, z);
+		Block block = world.getBlock(x, y, z);
+		for(Block b : appropriated_blocks) {
+			if(b == block) return y;
+		}
+		return -1;
+	}
+
+	@SubscribeEvent
+	public void on_create_world_spawn_point(WorldEvent.CreateSpawnPosition event) {
+		WorldProvider world_provider = event.world.provider;
+		if(!(world_provider instanceof AetherWorldProvider)) return;
+		if(!AetherConfig.should_always_respawn_in_aether()) return;
+		event.world.findingSpawnPoint = true;
+		Random random = new Random(event.world.getSeed());
+		Block[] appropriated_blocks = new Block[] {
+			AetherBlocks.aether_grass, AetherBlocks.enchanted_aether_grass, AetherBlocks.aether_dirt
+		};
+		int i = 0, x = 0, y, z = 0;
+		do {
+			y = find_top_block(event.world, appropriated_blocks, x, z);
+			if(y >= 0) break;
+			x += random.nextInt(64) - random.nextInt(64);
+			z += random.nextInt(64) - random.nextInt(64);
+		} while(++i < 4096);
+		//if(y++ < 0) y = world_provider.getAverageGroundLevel();
+		if(y++ < 0) return;
+		world_provider.setSpawnPoint(x, y, z);
+		event.world.findingSpawnPoint = false;
+		if(event.settings.isBonusChestEnabled()) {
+			random = event.world.rand;
+			WorldGeneratorBonusChest bonus_chest_feature = new WorldGeneratorBonusChest(ChestGenHooks.getItems("bonusChest", random), ChestGenHooks.getCount("bonusChest", random));
+			int y1 = y + 1;
+			for(i = 0; i < 10; i++) {
+				int x1 = x + random.nextInt(6) - random.nextInt(6);
+				int z1 = z + random.nextInt(6) - random.nextInt(6);
+				if(bonus_chest_feature.generate(event.world, random, x1, y1, z1)) break;
+			}
+		}
+		event.setCanceled(true);
 	}
 }
