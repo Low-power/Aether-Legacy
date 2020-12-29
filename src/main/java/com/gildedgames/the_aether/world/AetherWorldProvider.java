@@ -127,7 +127,6 @@ public class AetherWorldProvider extends WorldProvider {
 
 	@Override
 	public boolean canCoordinateBeSpawn(int x, int z) {
-		if(!AetherConfig.should_always_respawn_in_aether()) return false;
 		Block block = worldObj.getTopBlock(x, z);
 		return block == AetherBlocks.aether_grass || block == AetherBlocks.enchanted_aether_grass || block == AetherBlocks.aether_dirt;
 	}
