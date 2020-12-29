@@ -3,6 +3,7 @@ package com.gildedgames.the_aether.player.abilities;
 import com.gildedgames.the_aether.api.accessories.AccessoryType;
 import com.gildedgames.the_aether.api.player.IPlayerAether;
 import com.gildedgames.the_aether.api.player.util.IAetherAbility;
+import com.gildedgames.the_aether.api.player.util.IAccessoryInventory;
 import com.gildedgames.the_aether.items.AetherItems;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -10,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityLivingBase;
 
 public class AccessoriesAbility implements IAetherAbility {
 
@@ -61,8 +64,7 @@ public class AccessoriesAbility implements IAetherAbility {
 		}
 
 		if (this.player.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.agility_cape))) {
-			if (!this.player.getEntity().isSneaking())
-			{
+			if (!this.player.getEntity().isSneaking()) {
 				this.player.getEntity().stepHeight = 1F;
 				this.stepUpdate = true;
 			} else {
@@ -94,11 +96,17 @@ public class AccessoriesAbility implements IAetherAbility {
 			}
 		}
 
-		if (this.player.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.phoenix_gloves)) && this.player.getEntity().isWet()) {
-			this.player.getAccessoryInventory().damageWornStack(1, new ItemStack(AetherItems.phoenix_gloves));
-
-			if (this.player.getAccessoryInventory().getStackInSlot(AccessoryType.GLOVES) == null) {
-				this.player.getAccessoryInventory().setAccessorySlot(AccessoryType.GLOVES, new ItemStack(AetherItems.obsidian_gloves));
+		if (this.player.getAccessoryInventory().wearingAccessory(new ItemStack(AetherItems.phoenix_gloves))) {
+			EntityLivingBase entity = this.player.getEntity();
+			if(entity.isWet() && entity.worldObj.getTotalWorldTime() % 5 == 0) {
+				IAccessoryInventory inventory = this.player.getAccessoryInventory();
+				ItemStack phoenix_item_stack = inventory.getStackInSlot(AccessoryType.GLOVES);
+				inventory.damageWornStack(1, phoenix_item_stack);
+				if(inventory.getStackInSlot(AccessoryType.GLOVES) == null) {
+					ItemStack obsidian_item_stack = new ItemStack(AetherItems.obsidian_gloves);
+					EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(phoenix_item_stack), obsidian_item_stack);
+					inventory.setAccessorySlot(AccessoryType.GLOVES, obsidian_item_stack);
+				}
 			}
 		}
 
