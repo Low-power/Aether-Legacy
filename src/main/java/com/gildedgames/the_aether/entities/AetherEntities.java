@@ -28,8 +28,8 @@ import com.gildedgames.the_aether.entities.passive.mountable.Moa;
 import com.gildedgames.the_aether.entities.passive.mountable.ParachuteEntity;
 import com.gildedgames.the_aether.entities.passive.mountable.Phyg;
 import com.gildedgames.the_aether.entities.passive.mountable.Swet;
-import com.gildedgames.the_aether.entities.projectile.EntityHammerProjectile;
-import com.gildedgames.the_aether.entities.projectile.EntityLightningKnife;
+import com.gildedgames.the_aether.entities.projectile.HammerProjectileEntity;
+import com.gildedgames.the_aether.entities.projectile.LightningKnifeEntity;
 import com.gildedgames.the_aether.entities.projectile.EntityPhoenixArrow;
 import com.gildedgames.the_aether.entities.projectile.PoisonNeedleEntity;
 import com.gildedgames.the_aether.entities.projectile.ZephyrSnowballEntity;
@@ -86,8 +86,8 @@ public class AetherEntities {
 
 		register(EntityPhoenixArrow.class, "phoenix_arrow", 27, 64, 20, false);
 		register(ZephyrSnowballEntity.class, "zephyr_snowball", 28, 64, 20, false);
-		register(EntityHammerProjectile.class, "hammer_projectile", 29, 64, 20, false);
-		register(EntityLightningKnife.class, "lightning_knife", 30, 64, 10, true);
+		register(HammerProjectileEntity.class, "hammer_projectile", 29, 64, 20, false);
+		register(LightningKnifeEntity.class, "lightning_knife", 30, 64, 10, true);
 		register(ParachuteEntity.class, "parachute", 31, 160, 20, true);
 		register(AetherItemEntity.class, "aether_item", 32, 160, 20, true);
 

@@ -1,58 +1,56 @@
 package com.gildedgames.the_aether.client.renders.entity;
 
 import com.gildedgames.the_aether.Aether;
-import com.gildedgames.the_aether.entities.projectile.EntityHammerProjectile;
+import com.gildedgames.the_aether.entities.projectile.HammerProjectileEntity;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 public class HammerProjectileRenderer extends Render {
 
-    public HammerProjectileRenderer() {
-        super();
+	public HammerProjectileRenderer() {
+		super();
 
-        this.shadowSize = 0.0F;
-    }
+		this.shadowSize = 0F;
+	}
 
-    public void doRenderNotchWave(EntityHammerProjectile notchwave, double par2, double par4, double par6, float par8, float par9) {
-        GL11.glPushMatrix();
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GL11.glTranslated(par2, par4, par6);
+	@Override
+	protected ResourceLocation getEntityTexture(Entity entity) {
+		return Aether.locate("textures/entities/projectile/notch_wave.png");
+	}
 
-        this.bindTexture(this.getEntityTexture(notchwave));
+	public void doRenderNotchWave(HammerProjectileEntity notchwave, double x, double y, double z, float yaw, float ticks) {
+		GL11.glPushMatrix();
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		GL11.glTranslated(x, y, z);
 
-        Tessellator tessellator = Tessellator.instance;
+		bindTexture(getEntityTexture(notchwave));
 
-        GL11.glRotatef(180F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		Tessellator tessellator = Tessellator.instance;
 
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(-0.5F, -0.25F, 0.0F, 0.0F, 0.0F);
-        tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        tessellator.addVertexWithUV(0.5F, -0.25F, 0.0F, 0.0F, 1.0F);
-        tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        tessellator.addVertexWithUV(0.5F, 0.75F, 0.0F, 1.0F, 1.0F);
-        tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        tessellator.addVertexWithUV(-0.5F, 0.75F, 0.0F, 1.0F, 0.0F);
-        tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        tessellator.draw();
+		GL11.glRotatef(180F - this.renderManager.playerViewY, 0F, 1F, 0F);
+		GL11.glRotatef(-this.renderManager.playerViewX, 1F, 0F, 0F);
 
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        GL11.glPopMatrix();
-    }
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(-0.5F, -0.25F, 0F, 0F, 0F);
+		tessellator.setNormal(0F, 1F, 0F);
+		tessellator.addVertexWithUV(0.5F, -0.25F, 0F, 0F, 1F);
+		tessellator.setNormal(0F, 1F, 0F);
+		tessellator.addVertexWithUV(0.5F, 0.75F, 0F, 1F, 1F);
+		tessellator.setNormal(0F, 1F, 0F);
+		tessellator.addVertexWithUV(-0.5F, 0.75F, 0F, 1F, 0F);
+		tessellator.setNormal(0F, 1F, 0F);
+		tessellator.draw();
 
-    @Override
-    public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9) {
-        this.doRenderNotchWave((EntityHammerProjectile) par1Entity, par2, par4, par6, par8, par9);
-    }
+		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		GL11.glPopMatrix();
+	}
 
-    @Override
-    protected ResourceLocation getEntityTexture(Entity entity) {
-        return Aether.locate("textures/entities/projectile/notch_wave.png");
-    }
-
+	@Override
+	public void doRender(Entity entity, double x, double y, double z, float yaw, float ticks) {
+		doRenderNotchWave((HammerProjectileEntity)entity, x, y, z, yaw, ticks);
+	}
 }

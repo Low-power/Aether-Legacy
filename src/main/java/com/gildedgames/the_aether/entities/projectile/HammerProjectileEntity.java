@@ -1,7 +1,7 @@
 package com.gildedgames.the_aether.entities.projectile;
 
-import java.util.ArrayList;
-
+import com.gildedgames.the_aether.api.player.util.IAetherBoss;
+import com.gildedgames.the_aether.entities.util.EntitySaddleMount;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,30 +10,28 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
+import java.util.ArrayList;
 
-import com.gildedgames.the_aether.api.player.util.IAetherBoss;
-import com.gildedgames.the_aether.entities.util.EntitySaddleMount;
-
-public class EntityHammerProjectile extends EntityProjectileBase {
+public class HammerProjectileEntity extends BaseProjectileEntity {
 
 	public ArrayList<Block> harvestBlockBans = new ArrayList<Block>();
 
-	public EntityHammerProjectile(World worldIn) {
-		super(worldIn);
+	public HammerProjectileEntity(World world) {
+		super(world);
 	}
 
-	public EntityHammerProjectile(World worldIn, EntityLivingBase shooter) {
-		super(worldIn, shooter);
+	public HammerProjectileEntity(World world, EntityLivingBase shooter) {
+		super(world, shooter);
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
 
-		this.worldObj.spawnParticle("reddust", this.posX, this.posY + 0.2F, this.posZ, 1.0D, 1.0D, 1.0D);
+		this.worldObj.spawnParticle("reddust", this.posX, this.posY + 0.2F, this.posZ, 1D, 1D, 1D);
 
 		if (this.ticksInAir > 100) {
-			this.setDead();
+			setDead();
 		} else {
 			this.ticksInAir++;
 		}
@@ -52,11 +50,11 @@ public class EntityHammerProjectile extends EntityProjectileBase {
 		}
 
 		for (int j = 0; j < 8; j++) {
-			this.worldObj.spawnParticle("explode", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
-			this.worldObj.spawnParticle("explode", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
-			this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
-			this.worldObj.spawnParticle("largesmoke", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
-			this.worldObj.spawnParticle("flame", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+			this.worldObj.spawnParticle("explode", this.posX, this.posY, this.posZ, 0D, 0D, 0D);
+			this.worldObj.spawnParticle("explode", this.posX, this.posY, this.posZ, 0D, 0D, 0D);
+			this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0D, 0D, 0D);
+			this.worldObj.spawnParticle("largesmoke", this.posX, this.posY, this.posZ, 0D, 0D, 0D);
+			this.worldObj.spawnParticle("flame", this.posX, this.posY, this.posZ, 0D, 0D, 0D);
 		}
 	}
 
@@ -67,7 +65,7 @@ public class EntityHammerProjectile extends EntityProjectileBase {
 
 	@Override
 	protected float getGravityVelocity() {
-		return 0.0F;
+		return 0F;
 	}
 
 }

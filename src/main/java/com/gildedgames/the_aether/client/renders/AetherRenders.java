@@ -54,8 +54,8 @@ import com.gildedgames.the_aether.entities.passive.mountable.Moa;
 import com.gildedgames.the_aether.entities.passive.mountable.ParachuteEntity;
 import com.gildedgames.the_aether.entities.passive.mountable.Phyg;
 import com.gildedgames.the_aether.entities.passive.mountable.Swet;
-import com.gildedgames.the_aether.entities.projectile.EntityHammerProjectile;
-import com.gildedgames.the_aether.entities.projectile.EntityLightningKnife;
+import com.gildedgames.the_aether.entities.projectile.HammerProjectileEntity;
+import com.gildedgames.the_aether.entities.projectile.LightningKnifeEntity;
 import com.gildedgames.the_aether.entities.projectile.EntityPhoenixArrow;
 import com.gildedgames.the_aether.entities.projectile.ZephyrSnowballEntity;
 import com.gildedgames.the_aether.entities.projectile.crystals.EntityCrystal;
@@ -72,12 +72,12 @@ public class AetherRenders {
 
 	public static void initialization() {
 		/* Misc */
-		register(EntityHammerProjectile.class, new HammerProjectileRenderer());
+		register(HammerProjectileEntity.class, new HammerProjectileRenderer());
 		register(FloatingBlockEntity.class, new FloatingBlockRenderer());
 		register(ParachuteEntity.class, new ParachuteRenderer());
 		register(ZephyrSnowballEntity.class, new ZephyrSnowballRenderer());
 		register(EntityPhoenixArrow.class, new PhoenixArrowRenderer());
-		register(EntityLightningKnife.class, new LightningKnifeRenderer());
+		register(LightningKnifeEntity.class, new LightningKnifeRenderer());
 
 		/* Darts */
 		register(BaseDartEntity.class, new DartBaseRenderer());

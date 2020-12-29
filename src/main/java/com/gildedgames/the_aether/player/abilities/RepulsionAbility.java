@@ -2,7 +2,7 @@ package com.gildedgames.the_aether.player.abilities;
 
 import com.gildedgames.the_aether.api.player.IPlayerAether;
 import com.gildedgames.the_aether.api.player.util.IAetherAbility;
-import com.gildedgames.the_aether.entities.projectile.EntityProjectileBase;
+import com.gildedgames.the_aether.entities.projectile.BaseProjectileEntity;
 import com.gildedgames.the_aether.items.AetherItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IProjectile;
@@ -37,56 +37,44 @@ public class RepulsionAbility implements IAetherAbility {
 			return;
 		}
 
-		List<?> entities = this.player.getEntity().worldObj.getEntitiesWithinAABBExcludingEntity(this.player.getEntity(), this.player.getEntity().boundingBox.expand(3D, 3D, 3D));
+		List<Entity> entities = (List<Entity>)this.player.getEntity().worldObj.getEntitiesWithinAABBExcludingEntity(this.player.getEntity(), this.player.getEntity().boundingBox.expand(3D, 3D, 3D));
+		for(Entity e : entities) {
+			if(!isProjectile(e)) continue;
+			Entity shooter = this.getShooter(e);
+			if(shooter == null) return;
+			if(shooter == this.player.getEntity()) continue;
 
-		for (int size = 0; size < entities.size(); ++size) {
-			Entity projectile = (Entity) entities.get(size);
+			double x = this.player.getEntity().posX - shooter.posX;
+			double y = this.player.getEntity().boundingBox.minY - shooter.boundingBox.minY;
+			double z = this.player.getEntity().posZ - shooter.posZ;
+			double difference = -Math.sqrt((x * x) + (y * y) + (z * z));
+			x /= difference;
+			y /= difference;
+			z /= difference;
 
-			if (isProjectile(projectile) && this.getShooter(projectile) != this.player.getEntity()) {
-				double x, y, z;
+			e.setDead();
 
-				Entity shooter = this.getShooter(projectile);
+			double packX = (-e.motionX * 0.15F) + ((this.rand.nextFloat() - 0.5F) * 0.05F);
+			double packY = (-e.motionY * 0.15F) + ((this.rand.nextFloat() - 0.5F) * 0.05F);
+			double packZ = (-e.motionZ * 0.15F) + ((this.rand.nextFloat() - 0.5F) * 0.05F);
 
-				if (shooter == null)
-				{
-					return;
-				}
+			((WorldServer)this.player.getEntity().worldObj).func_147487_a("flame", e.posX, e.posY, e.posZ, 12, packX, packY, packZ, 0.625F);
 
-				x = this.player.getEntity().posX - shooter.posX;
-				y = this.player.getEntity().boundingBox.minY - shooter.boundingBox.minY;
-				z = this.player.getEntity().posZ - shooter.posZ;
-
-				double difference = -Math.sqrt((x * x) + (y * y) + (z * z));
-
-				x /= difference;
-				y /= difference;
-				z /= difference;
-
-				projectile.setDead();
-
-				double packX, packY, packZ;
-				packX = (-projectile.motionX * 0.15F) + ((this.rand.nextFloat() - 0.5F) * 0.05F);
-				packY = (-projectile.motionY * 0.15F) + ((this.rand.nextFloat() - 0.5F) * 0.05F);
-				packZ = (-projectile.motionZ * 0.15F) + ((this.rand.nextFloat() - 0.5F) * 0.05F);
-
-				((WorldServer) this.player.getEntity().worldObj).func_147487_a("flame", projectile.posX, projectile.posY, projectile.posZ, 12, packX, packY, packZ, 0.625F);
-
-				this.player.getEntity().worldObj.playSoundAtEntity(this.player.getEntity(), "note.snare", 1F, 1F);
-				this.player.getAccessoryInventory().damageWornStack(1, new ItemStack(AetherItems.repulsion_shield));
-			}
+			this.player.getEntity().worldObj.playSoundAtEntity(this.player.getEntity(), "note.snare", 1F, 1F);
+			this.player.getAccessoryInventory().damageWornStack(1, new ItemStack(AetherItems.repulsion_shield));
 		}
 	}
 
 	public boolean onPlayerAttacked(DamageSource source) {
-		if (isProjectile(source.getEntity())) {
-			return true;
-		}
-
-		return false;
+		return isProjectile(source.getEntity());
 	}
 
-	private Entity getShooter(Entity ent) {
-		return ent instanceof EntityArrow ? ((EntityArrow) ent).shootingEntity : ent instanceof EntityThrowable ? ((EntityThrowable) ent).getThrower() : ent instanceof EntityProjectileBase ? ((EntityProjectileBase) ent).getThrower() : ent instanceof EntityFireball ? ((EntityFireball) ent).shootingEntity : null;
+	private Entity getShooter(Entity e) {
+		if(e instanceof EntityArrow) return ((EntityArrow)e).shootingEntity;
+		if(e instanceof EntityThrowable) return ((EntityThrowable)e).getThrower();
+		if(e instanceof BaseProjectileEntity) return ((BaseProjectileEntity)e).getThrower();
+		if(e instanceof EntityFireball) return ((EntityFireball)e).shootingEntity;
+		return null;
 	}
 
 	public static boolean isProjectile(Entity entity) {

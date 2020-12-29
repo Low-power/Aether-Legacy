@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.items.weapons;
 
-import com.gildedgames.the_aether.entities.projectile.EntityLightningKnife;
+import com.gildedgames.the_aether.entities.projectile.LightningKnifeEntity;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.registry.AetherCreativeTabs;
 import net.minecraft.enchantment.Enchantment;
@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 
 public class LightningKnife extends Item {
 	public LightningKnife() {
-		this.setMaxStackSize(16);
-		this.setCreativeTab(AetherCreativeTabs.weapons);
+		setMaxStackSize(16);
+		setCreativeTab(AetherCreativeTabs.weapons);
 	}
 
 	@Override
@@ -31,9 +31,9 @@ public class LightningKnife extends Item {
 		world.playSoundEffect(player.posX, player.posY, player.posZ, "aether_legacy:projectile.shoot", 1F, 1F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 		if (!world.isRemote) {
-			EntityLightningKnife lightningKnife = new EntityLightningKnife(world, player);
-			lightningKnife.shoot(player, player.rotationPitch, player.rotationYaw, 0F, 1.5F, 1F);
-			world.spawnEntityInWorld(lightningKnife);
+			LightningKnifeEntity knife = new LightningKnifeEntity(world, player);
+			knife.shoot(player, player.rotationPitch, player.rotationYaw, 0F, 1.5F, 1F);
+			world.spawnEntityInWorld(knife);
 		}
 
 		return heldItem;
