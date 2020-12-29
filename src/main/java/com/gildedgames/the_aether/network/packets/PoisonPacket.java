@@ -3,6 +3,7 @@ package com.gildedgames.the_aether.network.packets;
 import com.gildedgames.the_aether.api.AetherAPI;
 import com.gildedgames.the_aether.player.PlayerAether;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.Entity;
 import io.netty.buffer.ByteBuf;
 
 public class PoisonPacket extends AetherPacket<PoisonPacket> {
@@ -28,8 +29,10 @@ public class PoisonPacket extends AetherPacket<PoisonPacket> {
 	@Override
 	public void handleClient(PoisonPacket message, EntityPlayer player) {
 		if(player == null || player.worldObj == null) return;
-		EntityPlayer parent = (EntityPlayer)player.worldObj.getEntityByID(message.entity_id);
-		if(parent != null) ((PlayerAether)AetherAPI.get(parent)).setPoisoned();
+		Entity entity = player.worldObj.getEntityByID(message.entity_id);
+		if(!(entity instanceof EntityPlayer)) return;
+		EntityPlayer parent = (EntityPlayer)entity;
+		((PlayerAether)AetherAPI.get(parent)).setPoisoned();
 	}
 
 	@Override

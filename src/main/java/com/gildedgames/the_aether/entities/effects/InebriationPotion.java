@@ -51,7 +51,7 @@ public class InebriationPotion extends Potion {
 			entity.attackEntityFrom(inebriation_damage, 1F);
 		}
 
-		if (entity instanceof EntityPlayer && this.duration >= 500) {
+		if(!entity.worldObj.isRemote && entity instanceof EntityPlayer && this.duration >= 500) {
 			((PlayerAether)AetherAPI.get((EntityPlayer)entity)).setPoisoned();
 			AetherNetwork.sendToAll(new PoisonPacket((EntityPlayer)entity));
 		}
