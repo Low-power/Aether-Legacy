@@ -506,10 +506,7 @@ public class ValkyrieQueen extends BossMob implements IAetherBoss {
 
 	@Override
 	public boolean getCanSpawnHere() {
-		int x = MathHelper.floor_double(this.posX);
-		int y = MathHelper.floor_double(this.boundingBox.minY);
-		int z = MathHelper.floor_double(this.posZ);
-		return this.worldObj.getBlockLightValue(x, y, z) > 8 && this.worldObj.checkBlockCollision(this.boundingBox) && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty() && !this.worldObj.isAnyLiquid(this.boundingBox);
+		return this.worldObj.checkBlockCollision(this.boundingBox) && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty();
 	}
 
 	@Override
