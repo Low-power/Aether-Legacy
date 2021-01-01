@@ -6,25 +6,13 @@ This is Rivoreo's forked version of The Aether mod, from Gilded Games' [original
 
 Gilded Games presents the original Aether mod! Up to date for modern Minecraft versions and fully compatible with multiplayer! The Aether is a dimension high in the sky composed of floating islands! Ascend through a Glowstone portal and begin a new survival adventure packed with new ores, mythical creatures and perilous Dungeons! All you need to do is build a Glowstone frame and add water to light the mystical portal, step in and you'll be transported immediately to the luscious hostile paradise known as the Aether! Gilded Games has ensured to keep The Aether as close to the original mod from 2011 as possible, while continuing to work on the sequel, Aether II.
 
-## :heart: Support Gilded Games
-
-[![Patreon pledgers](https://img.shields.io/badge/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.herokuapp.com%2FGildedGames&style=flat-square)](https://patreon.com/GildedGames)
-[![Discord user count](https://img.shields.io/discord/118816101936267265.svg?logoColor=FFFFFF&logo=discord&color=7289DA&style=flat-square)](https://discord.gg/YgTv7Vg)
-[![Twitter followers](https://img.shields.io/twitter/follow/DevAether.svg?logo=twitter&label=twitter&style=flat-square)](https://twitter.com/DevAether)
-
-If you enjoy our work, [please consider making a pledge](https://patreon.com/GildedGames) today to help fund development and gain access to special perks. Every pledge goes directly into the development process and enables us to continue making the Minecraft mods you know and love.
-
-You can also support the Aether project and Gilded Games by telling your friends, joining our Discord server, and sharing our progress and announcements on social media. Every bit helps!
-
 ## :bug: Report bugs or other issues
-If you're running into bugs or other problems, feel free to open an issue on our [issue tracker](https://gitea.gildedgames.com/GildedGames/The-Aether/issues). When doing so, we ask that you provide the following information:
+If you're running into bugs or other problems, feel free to [create a ticket](https://sourceforge.net/p/rivoreo-mc-plugins/forks/tickets/). When doing so, we ask that you provide the following information:
 
-- The exact version of the Aether you are running, such as `1.7.10-1.1.1`, and the version of Forge you are using, such as `10.13.4.1558`. Please do not state "the latest stable release" or "latest Forge".
+- The exact version of the Aether you are running, such as `1.7.10-1.1.1-rivoreo-r5`, and the version of Forge you are using, such as `10.13.4.1558`. Please do not state "the latest stable release" or "latest Forge".
 - If your issue is a bug or otherwise unexpected behavior, state what you expected to happen.
 - If your issue is a crash, attach the latest client or server log and the complete crash report as a file.
 - If your issue only occurs with other mods/plugins installed, list the exact mod/plugin versions installed.
-
-Make sure to keep your issue's description clear and concise. Your issue's title should also be easy to digest, giving our developers and reporters a good idea of what's wrong without including too many details. Failure to follow any of the above may result in your issue being closed.
 
 ## :scroll: License information
 If you're wanting to create a gameplay video/review, extension or addon, parody, or any other fan work of your own for the Aether, go for it! We love seeing the content our community creates, and we hope to make it as welcoming as possible for everyone. We ask however that if you are using code or assets from The Aether project that you adhere to the licenses below, and that you please don't advertise using our brand. If you're interested in sponsoring The Aether project or Gilded Games or wish to otherwise use our brand, please [contact us](mailto:support@gildedgames.com).
