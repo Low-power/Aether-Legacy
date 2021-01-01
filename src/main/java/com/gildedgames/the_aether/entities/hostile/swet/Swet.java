@@ -263,16 +263,14 @@ public class Swet extends MountableEntity {
 			if (this.onGround && this.riddenByEntity == null && this.hops != 0 && this.hops != 3) {
 				this.hops = 0;
 			}
-
-			if (this.getAttackTarget() == null && this.riddenByEntity == null) {
-				Entity entity = this.getPrey();
-				if (entity != null) {
-					this.setAttackTarget((EntityLivingBase) entity);
-				}
-			} else if (this.getAttackTarget() != null && this.riddenByEntity == null) {
-				if (this.getDistanceToEntity(this.getAttackTarget()) <= 9F) {
-					if (this.onGround && this.canEntityBeSeen(this.getAttackTarget())) {
-						this.splotch();
+			EntityLivingBase attack_target = getAttackTarget();
+			if(attack_target == null && this.riddenByEntity == null) {
+				EntityLivingBase entity = get_prey();
+				if(entity != null) setAttackTarget(entity);
+			} else if(attack_target != null && this.riddenByEntity == null) {
+				if(getDistanceToEntity(attack_target) <= 9F) {
+					if (this.onGround && canEntityBeSeen(attack_target)) {
+						splotch();
 						this.flutter = 10;
 						this.isJumping = true;
 						this.moveForward = 16F;
@@ -280,35 +278,39 @@ public class Swet extends MountableEntity {
 						this.rotationYaw += 5F * (this.rand.nextFloat() - this.rand.nextFloat());
 					}
 				} else {
-					this.setAttackTarget(null);
+					setAttackTarget(null);
 					this.isJumping = false;
 					this.moveStrafing = this.moveForward = 0F;
 				}
 			} else if (this.riddenByEntity != null && this.riddenByEntity != null && this.onGround) {
-				if (this.hops == 0) {
-					this.splotch();
-					this.onGround = false;
-					this.motionY = 0.34999999403953552D;
-					this.moveForward = 0.8F;
-					this.hops = 1;
-					this.flutter = 5;
-					this.rotationYaw += 20F * (this.rand.nextFloat() - this.rand.nextFloat());
-				} else if (this.hops == 1) {
-					this.splotch();
-					this.onGround = false;
-					this.motionY = 0.44999998807907104D;
-					this.moveForward = 0.9F;
-					this.hops = 2;
-					this.flutter = 5;
-					this.rotationYaw += 20F * (this.rand.nextFloat() - this.rand.nextFloat());
-				} else if (this.hops == 2) {
-					this.splotch();
-					this.onGround = false;
-					this.motionY = 1.25D;
-					this.moveForward = 1.25F;
-					this.hops = 3;
-					this.flutter = 5;
-					this.rotationYaw += 20F * (this.rand.nextFloat() - this.rand.nextFloat());
+				switch(this.hops) {
+					case 0:
+						splotch();
+						this.onGround = false;
+						this.motionY = 0.34999999403953552D;
+						this.moveForward = 0.8F;
+						this.hops = 1;
+						this.flutter = 5;
+						this.rotationYaw += 20F * (this.rand.nextFloat() - this.rand.nextFloat());
+						break;
+					case 1:
+						splotch();
+						this.onGround = false;
+						this.motionY = 0.44999998807907104D;
+						this.moveForward = 0.9F;
+						this.hops = 2;
+						this.flutter = 5;
+						this.rotationYaw += 20F * (this.rand.nextFloat() - this.rand.nextFloat());
+						break;
+					case 2:
+						splotch();
+						this.onGround = false;
+						this.motionY = 1.25D;
+						this.moveForward = 1.25F;
+						this.hops = 3;
+						this.flutter = 5;
+						this.rotationYaw += 20F * (this.rand.nextFloat() - this.rand.nextFloat());
+						break;
 				}
 			}
 
@@ -316,7 +318,7 @@ public class Swet extends MountableEntity {
 		}
 
 		if (this.onGround && this.hops >= 3) {
-			this.dissolve();
+			dissolve();
 		}
 	}
 
@@ -467,7 +469,7 @@ public class Swet extends MountableEntity {
 
 	@Override
 	public void applyEntityCollision(Entity entity) {
-		if(this.hops == 0 && !isFriendly() && this.riddenByEntity == null && this.getAttackTarget() != null && entity != null && entity == this.getAttackTarget() && (entity.ridingEntity == null || !(entity.ridingEntity instanceof Swet))) {
+		if(this.hops == 0 && !isFriendly() && this.riddenByEntity == null && getAttackTarget() != null && entity != null && entity == getAttackTarget() && (entity.ridingEntity == null || !(entity.ridingEntity instanceof Swet))) {
 			capturePrey(entity);
 		}
 
@@ -487,15 +489,23 @@ public class Swet extends MountableEntity {
 		return super.interact(player);
 	}
 
-	protected Entity getPrey() {
-		List<?> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(6D, 6D, 6D));
-		for (int i = 0; i < list.size(); i++) {
-			Entity entity = (Entity) list.get(i);
-			if ((entity instanceof EntityLivingBase) && !(entity instanceof Swet) && (this.isFriendly() ? !(entity instanceof EntityPlayer) : !(entity instanceof EntityMob))) {
-				return entity;
+	private EntityLivingBase get_prey() {
+		List<Entity> list = (List<Entity>)this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(6D, 6D, 6D));
+		for(Entity entity : list) {
+			if(!(entity instanceof EntityLivingBase)) continue;
+			if(entity instanceof Swet) continue;
+			if(isFriendly()) {
+				if(entity instanceof EntityPlayer) continue;
+			} else {
+				if(entity instanceof EntityPlayer) {
+					EntityPlayer player = (EntityPlayer)entity;
+					if(player.capabilities.isCreativeMode) continue;
+				}
+				// Monster
+				if(entity instanceof EntityMob) continue;
 			}
+			return (EntityLivingBase)entity;
 		}
-
 		return null;
 	}
 
