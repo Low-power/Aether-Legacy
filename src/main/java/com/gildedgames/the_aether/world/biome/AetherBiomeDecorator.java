@@ -26,13 +26,13 @@ public class AetherBiomeDecorator extends BiomeDecorator {
 
 	private AetherFoilageFeature foilage = new AetherFoilageFeature();
 	private AetherMinableFeature ores = new AetherMinableFeature();
-	private AetherSkyrootTreeFeature skyroot_tree = new AetherSkyrootTreeFeature(false);
+	//private AetherSkyrootTreeFeature skyroot_tree = new AetherSkyrootTreeFeature(false);
 	private AetherDungeonOakTreeFeature golden_oak_tree_dungeon = new AetherDungeonOakTreeFeature();
-	private AetherQuicksoilFeature quicksoil_patches = new AetherQuicksoilFeature();
+	//private AetherQuicksoilFeature quicksoil_patches = new AetherQuicksoilFeature();
 	private AetherFloatingIslandFeature crystal_island = new AetherFloatingIslandFeature();
-	private AetherLiquidsFeature liquid_overhang = new AetherLiquidsFeature();
+	//private AetherLiquidsFeature liquid_overhang = new AetherLiquidsFeature();
 	private AetherHolidayTreeFeature holiday_tree = new AetherHolidayTreeFeature();
-	private AetherLakesFeature aether_lakes = new AetherLakesFeature();
+	//private AetherLakesFeature aether_lakes = new AetherLakesFeature();
 	private AetherCloudsFeature clouds = new AetherCloudsFeature();
 	private final WorldGenDoublePlant double_grass = new WorldGenDoublePlant();
 
@@ -88,7 +88,7 @@ public class AetherBiomeDecorator extends BiomeDecorator {
 		}
 
 		if (AetherConfig.shouldLoadHolidayContent()) {
-			if (this.shouldSpawn(15)) {
+			if(shouldSpawn(15)) {
 				int x = this.chunk_X + 8;
 				int z = this.chunk_Z + 8;
 				int y = this.world.getHeightValue(x, z);
@@ -151,10 +151,9 @@ public class AetherBiomeDecorator extends BiomeDecorator {
 	}
 
 	public void generateClouds(int meta, int amount, int chance, int y) {
-		if (this.shouldSpawn(chance)) {
+		if(shouldSpawn(chance)) {
 			this.clouds.setCloudMeta(meta);
 			this.clouds.setCloudAmount(amount);
-
 			this.clouds.generate(this.world, this.rand, this.chunk_X + this.nextInt(16), this.nextInt(y), this.chunk_Z + this.nextInt(16));
 		}
 	}
