@@ -1,11 +1,10 @@
 package com.gildedgames.the_aether.entities.hostile;
 
-import com.gildedgames.the_aether.entities.passive.AetherAnimal;
 import com.gildedgames.the_aether.entities.projectile.PoisonNeedleEntity;
 import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.items.util.SkyrootBucketType;
-import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,7 +14,7 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 
-public class AechorPlant extends AetherAnimal {
+public class AechorPlant extends EntityCreature {
 
 	public float sinage;
 
@@ -29,23 +28,23 @@ public class AechorPlant extends AetherAnimal {
 		this.sinage = this.rand.nextFloat() * 6F;
 		this.poisonRemaining = this.rand.nextInt(4) + 2;
 
-		this.setSize(this.rand.nextInt(4) + 1);
-		this.setPosition(this.posX, this.posY, this.posZ);
-		this.setSize(0.75F + ((float) this.getSize() * 0.125F), 0.5F + ((float) this.getSize() * 0.075F));
+		setSize(this.rand.nextInt(4) + 1);
+		setPosition(this.posX, this.posY, this.posZ);
+		setSize(0.75F + ((float)getSize() * 0.125F), 0.5F + ((float)getSize() * 0.075F));
 	}
 
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20D);
+		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20D);
 	}
 
 	@Override
 	public void entityInit() {
 		super.entityInit();
 
-		this.dataWatcher.addObject(20, new Byte((byte) 0));
+		dataWatcher.addObject(20, Byte.valueOf((byte)0));
 	}
 
 	@Override
@@ -73,21 +72,20 @@ public class AechorPlant extends AetherAnimal {
 
 		if (this.getEntityToAttack() == null) {
 			EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, 10F);
-
-			this.setTarget(player);
+			if(player != null) setTarget(player);
 		}
 
-		if (!this.isDead && this.getEntityToAttack() != null) {
+		if (!this.isDead && getEntityToAttack() != null) {
 			double distanceToPlayer = this.getEntityToAttack().getDistanceToEntity(this);
 			double lookDistance = 5.5D + ((double) this.getSize() / 2D);
 
-			if (this.getEntityToAttack().isDead || distanceToPlayer > lookDistance) {
-				this.setTarget(null);
+			if(getEntityToAttack().isDead || distanceToPlayer > lookDistance) {
+				setTarget(null);
 				this.reloadTime = 0;
 			}
 
-			if (this.reloadTime == 20 && this.canEntityBeSeen(this.getEntityToAttack())) {
-				this.shootAtPlayer();
+			if (this.reloadTime == 20 && canEntityBeSeen(getEntityToAttack())) {
+				shootAtPlayer();
 				this.reloadTime = -10;
 			}
 
@@ -188,11 +186,6 @@ public class AechorPlant extends AetherAnimal {
 	@Override
 	protected boolean isMovementBlocked() {
 		return true;
-	}
-
-	@Override
-	public EntityAgeable createChild(EntityAgeable baby) {
-		return null;
 	}
 
 	@Override
