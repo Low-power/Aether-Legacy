@@ -6,6 +6,7 @@ import com.gildedgames.the_aether.entities.util.EntityHook;
 import com.gildedgames.the_aether.player.PlayerAether;
 import com.gildedgames.the_aether.world.AetherWorldProvider;
 import com.gildedgames.the_aether.world.AetherTeleporter;
+import com.gildedgames.the_aether.registry.achievements.AetherAchievements;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -194,6 +195,13 @@ public class AetherEntityEvents {
 			event.entity.registerExtendedProperties("aether_legacy:player_aether", new PlayerAether());
 		} else if (event.entity instanceof EntityLivingBase) {
 			event.entity.registerExtendedProperties("aether_legacy:entity_hook", new EntityHook());
+		}
+	}
+
+	@SubscribeEvent
+	public void on_player_login(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+		if(void_teleport_disabled && event.player.worldObj.provider instanceof AetherWorldProvider) {
+			event.player.triggerAchievement(AetherAchievements.enter_aether);
 		}
 	}
 }
