@@ -27,7 +27,7 @@ import com.gildedgames.the_aether.entities.passive.mountable.FlyingCow;
 import com.gildedgames.the_aether.entities.passive.mountable.Moa;
 import com.gildedgames.the_aether.entities.passive.mountable.ParachuteEntity;
 import com.gildedgames.the_aether.entities.passive.mountable.Phyg;
-import com.gildedgames.the_aether.entities.passive.mountable.Swet;
+import com.gildedgames.the_aether.entities.hostile.swet.Swet;
 import com.gildedgames.the_aether.entities.projectile.HammerProjectileEntity;
 import com.gildedgames.the_aether.entities.projectile.LightningKnifeEntity;
 import com.gildedgames.the_aether.entities.projectile.EntityPhoenixArrow;

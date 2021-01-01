@@ -11,7 +11,7 @@ import com.gildedgames.the_aether.entities.passive.mountable.Aerbunny;
 import com.gildedgames.the_aether.entities.passive.mountable.FlyingCow;
 import com.gildedgames.the_aether.entities.passive.mountable.Moa;
 import com.gildedgames.the_aether.entities.passive.mountable.Phyg;
-import com.gildedgames.the_aether.entities.passive.mountable.Swet;
+import com.gildedgames.the_aether.entities.hostile.swet.Swet;
 import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.world.biome.decoration.AetherOakTreeFeature;
 import com.gildedgames.the_aether.world.biome.decoration.AetherSkyrootTreeFeature;

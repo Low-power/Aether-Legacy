@@ -1,6 +1,6 @@
 package com.gildedgames.the_aether.client;
 
-import com.gildedgames.the_aether.entities.passive.mountable.Swet;
+import com.gildedgames.the_aether.entities.hostile.swet.Swet;
 import com.gildedgames.the_aether.entities.util.MountableEntity;
 import com.gildedgames.the_aether.entities.util.EntitySaddleMount;
 import com.gildedgames.the_aether.network.AetherNetwork;

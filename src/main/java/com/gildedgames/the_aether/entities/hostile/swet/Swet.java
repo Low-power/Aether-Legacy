@@ -1,7 +1,7 @@
-package com.gildedgames.the_aether.entities.passive.mountable;
+package com.gildedgames.the_aether.entities.hostile.swet;
 
 import com.gildedgames.the_aether.entities.util.MountableEntity;
-import com.gildedgames.the_aether.entities.hostile.swet.EnumSwetType;
+import com.gildedgames.the_aether.entities.hostile.swet.SwetType;
 import com.gildedgames.the_aether.blocks.AetherBlocks;
 import com.gildedgames.the_aether.items.AetherItems;
 import com.gildedgames.the_aether.player.PlayerAether;
@@ -35,13 +35,13 @@ public class Swet extends MountableEntity {
 	public Swet(World world) {
 		super(world);
 
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(25);
-		this.setHealth(25);
+		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(25);
+		setHealth(25);
 
-		this.setSwetType(this.rand.nextInt(2));
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(1.5F);
-		this.setSize(0.8F, 0.8F);
-		this.setPosition(this.posX, this.posY, this.posZ);
+		set_swet_type(this.rand.nextInt(2));
+		getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(1.5F);
+		setSize(0.8F, 0.8F);
+		setPosition(this.posX, this.posY, this.posZ);
 		this.hops = 0;
 		this.flutter = 0;
 		this.ticker = 0;
@@ -53,7 +53,7 @@ public class Swet extends MountableEntity {
 		super.entityInit();
 
 		this.dataWatcher.addObject(20, new Byte((byte) 0));
-		this.dataWatcher.addObject(21, new Byte((byte) this.rand.nextInt(EnumSwetType.values().length)));
+		this.dataWatcher.addObject(21, new Byte((byte) this.rand.nextInt(SwetType.values().length)));
 	}
 
 	@Override
@@ -72,11 +72,10 @@ public class Swet extends MountableEntity {
 
 		if(getAttackTarget() != null) {
 			for (int i = 0; i < 3; i++) {
-				double d = (float) this.posX + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.3F;
-				double d1 = (float) this.posY + this.height;
-				double d2 = (float) this.posZ + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.3F;
-
-				this.worldObj.spawnParticle("splash", d, d1 - 0.25D, d2, 0D, 0D, 0D);
+				double x = (float)this.posX + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.3F;
+				double y = (float)this.posY + this.height;
+				double z = (float)this.posZ + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.3F;
+				this.worldObj.spawnParticle("splash", x, y - 0.25D, z, 0D, 0D, 0D);
 			}
 		}
 
@@ -100,16 +99,15 @@ public class Swet extends MountableEntity {
 
 	@Override
 	protected boolean canDespawn() {
-		return !this.isFriendly();
+		return !isFriendly();
 	}
 
 	@Override
 	public void fall(float distance) {
-		if (!this.isFriendly()) {
+		if(!isFriendly()) {
 			super.fall(distance);
-
 			if (this.hops >= 3 && this.getHealth() >= 0) {
-				this.dissolve();
+				dissolve();
 			}
 		}
 	}
@@ -135,7 +133,7 @@ public class Swet extends MountableEntity {
 	}
 
 	public void capturePrey(Entity entity) {
-		this.splorch();
+		splorch();
 
 		this.prevPosX = this.posX = entity.posX;
 		this.prevPosY = this.posY = entity.posY + 0.0099999997764825821D;
@@ -146,8 +144,8 @@ public class Swet extends MountableEntity {
 		this.motionY = entity.motionY;
 		this.motionZ = entity.motionZ;
 
-		this.setSize(entity.width, entity.height);
-		this.setPosition(this.posX, this.posY, this.posZ);
+		setSize(entity.width, entity.height);
+		setPosition(this.posX, this.posY, this.posZ);
 
 		entity.mountEntity(this);
 
@@ -164,14 +162,13 @@ public class Swet extends MountableEntity {
 
 		boolean attack_ok = super.attackEntityFrom(damageSource, damage);
 		if(attack_ok && this.riddenByEntity != null && (this.riddenByEntity instanceof EntityLivingBase)) {
-			EntityLivingBase rider = (EntityLivingBase) this.riddenByEntity;
+			EntityLivingBase rider = (EntityLivingBase)this.riddenByEntity;
 			if (entity != null && rider == entity) {
 				if (this.rand.nextInt(3) == 0) {
 					this.kickoff = true;
 				}
 			} else {
 				rider.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
-
 				if(getHealth() <= 0) {
 					this.kickoff = true;
 				}
@@ -433,13 +430,13 @@ public class Swet extends MountableEntity {
 		playSound("mob.slime.small", 1F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1F) * 0.8F);
 	}
 
-	public void setSwetType(int id) {
-		this.dataWatcher.updateObject(21, (byte) id);
+	protected void set_swet_type(int id) {
+		this.dataWatcher.updateObject(21, (byte)id);
 	}
 
-	public EnumSwetType getSwetType() {
+	public SwetType get_swet_type() {
 		int id = this.dataWatcher.getWatchableObjectByte(21);
-		return EnumSwetType.get(id);
+		return SwetType.get(id);
 	}
 
 	public void setFriendly(boolean friendly) {
@@ -508,7 +505,7 @@ public class Swet extends MountableEntity {
 		if (lootLevel > 0) {
 			count += this.rand.nextInt(lootLevel + 1);
 		}
-		int id = getSwetType().getId();
+		int id = get_swet_type().get_id();
 		entityDropItem(new ItemStack(id == 0 ? AetherBlocks.aercloud : Blocks.glowstone, count, id == 0 ? 1 : 0), 1F);
 		entityDropItem(new ItemStack(AetherItems.swet_ball, count), 1F);
 	}
@@ -522,10 +519,10 @@ public class Swet extends MountableEntity {
 	public void writeEntityToNBT(NBTTagCompound compound) {
 		super.writeEntityToNBT(compound);
 
-		compound.setShort("Hops", (short) this.hops);
-		compound.setShort("Flutter", (short) this.flutter);
-		compound.setBoolean("isFriendly", this.isFriendly());
-		compound.setInteger("swetType", this.getSwetType().getId());
+		compound.setShort("Hops", (short)this.hops);
+		compound.setShort("Flutter", (short)this.flutter);
+		compound.setBoolean("isFriendly", isFriendly());
+		compound.setInteger("swetType", get_swet_type().get_id());
 	}
 
 	@Override
@@ -536,7 +533,7 @@ public class Swet extends MountableEntity {
 		this.flutter = compound.getShort("Flutter");
 
 		setFriendly(compound.getBoolean("isFriendly"));
-		setSwetType(compound.getInteger("swetType"));
+		set_swet_type(compound.getInteger("swetType"));
 	}
 
 }

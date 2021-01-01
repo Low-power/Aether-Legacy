@@ -1,8 +1,8 @@
 package com.gildedgames.the_aether.client.renders.entity;
 
 import com.gildedgames.the_aether.Aether;
-import com.gildedgames.the_aether.entities.hostile.swet.EnumSwetType;
-import com.gildedgames.the_aether.entities.passive.mountable.Swet;
+import com.gildedgames.the_aether.entities.hostile.swet.Swet;
+import com.gildedgames.the_aether.entities.hostile.swet.SwetType;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
@@ -78,6 +78,6 @@ public class SwetRenderer extends RenderLiving {
 
 	@Override
 	public ResourceLocation getEntityTexture(Entity swet) {
-		return ((Swet)swet).getSwetType() == EnumSwetType.BLUE ? TEXTURE_BLUE : TEXTURE_GOLDEN;
+		return ((Swet)swet).get_swet_type() == SwetType.BLUE ? TEXTURE_BLUE : TEXTURE_GOLDEN;
 	}
 }
